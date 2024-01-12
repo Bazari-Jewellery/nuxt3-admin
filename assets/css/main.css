@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+
+
+
+@layer base {
+  @font-face {
+    font-family: "SF-Pro-Display";
+    src: url("../fonts/sf-pro-display.OTF") format("opentype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "LibreBaskerville";
+    src: url("../fonts/LibreBaskerville-Regular.ttf") format("truetype");
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Amethysta";
+    src: url("../fonts/Amethysta-Regular.ttf") format("truetype");
+    font-display: swap;
+  }
+
+  body {
+    @apply bg-gray-100/50 dark:bg-gray-900 text-sm font-SF-Pro-Display text-gray-500 dark:text-gray-400;
+  }
+
+  .cy-icon {
+    @apply w-5 h-5;
+  }
+
+  .cy-container {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-[1300px];
+  }
+
+  .section {
+    @apply my-16;
+  }
+  .cy-border {
+    @apply border border-gray-200 dark:border-gray-800 rounded-lg
+  }
+  .cy-account-bg {
+    @apply bg-gray-50 dark:bg-gray-800/40
+  }
+  .cyIcon{
+    @apply cursor-pointer
+  }
+  .cy-bg{
+    /** For the background of containers*/
+    @apply bg-white dark:bg-gray-900
+  }
+  .highlight{
+    @apply text-gray-900 dark:text-white
+  }
+
+  .h{
+    @apply  font-semibold text-black dark:text-white
+  }
+  .h2{
+    @apply text-lg xl:text-xl
+  }
+  .h3 {
+    @apply text-base xl:text-lg
+  }
+}
+
+
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar{
+  overflow: -moz-scrollbars-none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
