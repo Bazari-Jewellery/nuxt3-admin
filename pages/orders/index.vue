@@ -117,6 +117,10 @@ const fulfillment_col = {
   canceled: {
     color: 'red',
     icon: 'i-heroicons-x-mark'
+  },
+  partially_fulfilled:{
+    color: 'orange',
+    icon: ''
   }
 } as any
 
@@ -173,25 +177,29 @@ function selectRow(row: any) {
 
 //fetch data
 async function fetchOrders() {
-  await useLazyAsyncData('all_orders', async () => {
-  const { orders: _orders, count: _count } = await useCybandyClient().admin.orders.list({
-    q: q.value,
-    limit: limit.value * offset.value,
-    offset: (offset.value - 1) * limit.value
-  })
-  if (_orders) {
-    orders.value = _orders
-    count.value = _count
+  const {error} = await useLazyAsyncData('all_orders', async () => {
+    const { orders: _orders, count: _count, response:orders_response } = await useCybandyClient().admin.orders.list({
+      q: q.value,
+      limit: limit.value * offset.value,
+      offset: (offset.value - 1) * limit.value,
+      expand: 'customer,shipping_address,sales_channel',
+      fields: 'id,status,display_id,created_at,email,fulfillment_status,payment_status,total,currency_code',
+    })
+    
+    
+    if (_orders) {
+      orders.value = _orders
+      count.value = _count
 
-  }
-  return {orders:_orders, count: _count}
-}, {
-  watch: [q, limit, offset,],
-  pick:['orders', 'count']
-})
+    }
+    return { orders: _orders, count: _count }
+  }, {
+    watch: [q, limit, offset,],
+    pick: ['orders', 'count']
+  })
 }
 
-onBeforeMount(async()=>{
+onBeforeMount(async () => {
   await fetchOrders()
 })
 
@@ -209,8 +217,8 @@ onBeforeMount(async()=>{
           <UInput v-model="q" name="q" placeholder="Search..." icon="i-heroicons-magnifying-glass-20-solid"
             autocomplete="off" :ui="{ icon: { trailing: { pointer: '' } } }">
             <template #trailing>
-              <UButton v-show="q !== undefined" color="gray" variant="link" icon="i-heroicons-x-mark-20-solid" :padded="false"
-                @click="q = undefined" />
+              <UButton v-show="q !== undefined" color="gray" variant="link" icon="i-heroicons-x-mark-20-solid"
+                :padded="false" @click="q = undefined" />
             </template>
           </UInput>
           <UFormGroup label="# of rows">
@@ -245,7 +253,7 @@ onBeforeMount(async()=>{
         <template #fulfillment-data="{ row }">
           <UButton class="" variant="ghost"
             :color="fulfillment_col?.[row.fulfillment]?.color ? fulfillment_col?.[row.fulfillment]?.color : 'gray'"
-            :trailing-icon="fulfillment_col?.[row.fulfillment as string].icon ? fulfillment_col?.[row.fulfillment as string].icon : ''">
+            :trailing-icon="fulfillment_col?.[row.fulfillment as string]?.icon ? fulfillment_col?.[row.fulfillment as string]?.icon : ''">
             <span class="capitalize truncate">{{ row.fulfillment.split('_').join(' ') }}</span>
           </UButton>
         </template>

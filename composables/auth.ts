@@ -10,12 +10,28 @@ export async function useLogin(email: string, password: string) {
   }
   const res = {} as Results
   try {
-    const { access_token } = await cybandy.admin.auth.getToken({ email, password })
-    if (access_token) {
-      useCookie('x-bazari-token', { httpOnly: true, sameSite: true, secure: true })
 
+    const {data,error} = await useLazyAsyncData('login_auth', async()=>{
+      return await cybandy.admin.auth.getToken({ email, password })
+    })
+
+    const bazariToken = useNuxtApp().$currentUser.token
+
+    if(error.value){
+      res.status = false
+      res.error = error.value
+      return res
+    }else{
+      // console.log('useLogin', data.value?.access_token);
+      
       res.status = true
+      bazariToken.value = data.value?.access_token
+      isCustomerLoggedIn().value = true
+      
+      // await useLazyAsyncData(async()=>await useNuxtApp().$currentUser.getUser(data.value?.access_token))
+      
       useToastSuccess('Successfully logged in')
+      navigateTo('/orders')
       return res
     }
   } catch (error: any) {

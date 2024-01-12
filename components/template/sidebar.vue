@@ -58,7 +58,8 @@ const isLoggedIn = computed(()=>isCustomerLoggedIn().value)
 </script>
 
 <template>
-  <UCard :ui="{
+  <UCard 
+  :ui="{
     base: 'overflow-hidden h-full flex flex-col w-full',
     background: '',
     divide: '',
@@ -92,10 +93,10 @@ const isLoggedIn = computed(()=>isCustomerLoggedIn().value)
     <template #footer>
       <div v-if="isLoggedIn" class="flex items-center justify-center gap-5">
         <!-- <UAvatar src="https://avatars.githubusercontent.com/u/739984?v=4" /> -->
-        <UtilitiesAvatar src="" :name="userData.first_name" />
+        <UtilitiesAvatar src="" :name="userData?.first_name" />
         <div class="w-fit h-fit flex flex-col gap-1">
-          <span :class="collapse ? 'hidden' : 'inline-block capitalize'">{{ userData.first_name }}</span>
-          <span :class="collapse ? 'hidden' : 'inline-block capitalize'">{{ userData.role }}</span>
+          <span :class="collapse ? 'hidden' : 'inline-block capitalize'">{{ userData?.first_name }}</span>
+          <span :class="collapse ? 'hidden' : 'inline-block capitalize'">{{ userData?.role }}</span>
         </div>
         <UIcon name="i-heroicons-chevron-down" class="w-4 h-4" />
       </div>

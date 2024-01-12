@@ -129,7 +129,7 @@ const number_of_rows = ref([10, 20, 30])
     },
   }">
   <template #header>
-        <div class="flex gap-5 items-end px-3 py-3.5">
+    <div class="flex gap-5 items-end px-3 py-3.5">
           <UInput v-model="q" name="q" placeholder="Search..." icon="i-heroicons-magnifying-glass-20-solid"
             autocomplete="off" :ui="{ icon: { trailing: { pointer: '' } } }">
             <template #trailing>
@@ -141,9 +141,12 @@ const number_of_rows = ref([10, 20, 30])
             <USelect v-model="limit" :options="number_of_rows" />
           </UFormGroup>
 
-          <USelectMenu v-model="selectedColumns" :options="columns" multiple >
-          <UButton color="gray" size="xs" icon="i-heroicons-view-columns">Columns</UButton>
+          <USelectMenu v-model="selectedColumns" :options="columns" multiple>
+            <UButton color="gray" size="xs" icon="i-heroicons-view-columns">Columns</UButton>
           </USelectMenu>
+        </div>
+        <div class="flex justify-end">
+          <UPagination v-model="offset" :total="count" :active-button="{ variant: 'solid' }" />
         </div>
       </template>
 

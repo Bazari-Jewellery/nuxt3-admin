@@ -27,7 +27,7 @@
   }
 
   body {
-    @apply bg-gray-100/50 dark:bg-gray-900 text-sm font-SF-Pro-Display text-gray-500 dark:text-gray-400;
+    @apply bg-gray-100/50 dark:bg-gray-950 text-sm font-SF-Pro-Display text-gray-500 dark:text-gray-400;
   }
 
   .cy-icon {
@@ -66,6 +66,9 @@
   }
   .h3 {
     @apply text-base xl:text-lg
+  }
+  .title {
+    @apply font-semibold text-base text-gray-900 dark:text-white;
   }
 }
 

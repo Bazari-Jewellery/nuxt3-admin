@@ -37,9 +37,7 @@ async function onSubmit (event: FormSubmitEvent<Schema>) {
   //   }
   // })
   const res = await useLogin(event.data.email, event.data.password)
-  if(res?.status){
-    navigateTo('/orders')
-  }
+  
 }
 
 watchEffect(()=>{
