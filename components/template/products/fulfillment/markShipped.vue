@@ -25,7 +25,7 @@ const order = ref(props.order)
 
 const send_notification = ref(false)
 
-const tracking_numbers = ref([] as string[])
+const tracking_numbers = ref([''] as string[])
 
 function add_tracking_number(){
   tracking_numbers.value.push('')
@@ -36,7 +36,7 @@ function remove_tracking_number(ind:number){
 }
 
 function reset(){
-  tracking_numbers.value = []
+  tracking_numbers.value = ['']
   modal.value = false
 }
 
@@ -46,9 +46,13 @@ async function ship_fulfillment(){
     return await cybandy.admin.orders.createShipment(order.value.id,{
       fulfillment_id: props.fulfillment_id,
       tracking_numbers: tracking_numbers.value,
-      no_notification: send_notification.value
+      no_notification: !send_notification.value
     })
   },{pick:['order']})
+  if(!error.value && data.value){
+    useNuxtApp().$order.singleOrder.value = data.value.order
+    toastNotification('Items are shipped').default_toast()
+  }
 }
 </script>
 
@@ -57,17 +61,17 @@ async function ship_fulfillment(){
     <UCard :ui="{header:{base:''}}">
       <template #header>
         <div class="flex items-center">
-          <h3 class="flex-grow">Mark Fulfillment Shipped</h3>
-          <UIcon @click="reset" name="i-heroicons-x-mark" class="w-5 h-5 cursor-pointer p-5 ring shadow" />
+          <h3 class="flex-grow text-lg lg:text-xl font-semibold text-gray-900 dark:text-gray-50">Mark Fulfillment Shipped</h3>
+          <UButton @click="reset" size="sm" color="gray" variant="ghost" icon="i-heroicons-x-mark"/>
         </div>
       </template>
 
 
-      <div class="flex flex-col">
-        <p>Tracking</p>
-        <div>
+      <div class="flex flex-col gap-4">
+        <p class="text-gray-700 dark:text-gray-200">Tracking</p>
+        <div class="flex flex-col gap-4">
           <!-- <span class="text-xs">Tracking Number</span> -->
-          <div v-for="(number,ind) of tracking_numbers" class="flex flex-col">
+          <div v-for="(number,ind) of tracking_numbers" class="flex flex-col gap-1">
             <div class="flex items-center justify-between">
               <span >Tracking number</span>
               <UIcon @click="()=>remove_tracking_number(ind)" v-if="tracking_numbers.length>1" name="i-heroicons-trash" class="w-4 h-4 cursor-pointer"/>
@@ -80,14 +84,14 @@ async function ship_fulfillment(){
       </div>
 
 
-      <template>
+      <template #footer>
         <div class="flex justify-between items-center">
           <div class="flex items-center gap-5">
-            <UCheckbox v-model="send_notification" label="Send"/>
+            <UCheckbox v-model="send_notification" label="Send notification"/>
             
           </div>
           <div class="flex items-center gap-5">
-            <UButton @click="reset" variant="ghost" label="Cancel"/>
+            <UButton @click="reset" variant="outline" label="Cancel"/>
             <UButton @click="ship_fulfillment" variant="solid" label="Complete" />
           </div>
         </div>

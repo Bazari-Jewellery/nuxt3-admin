@@ -81,43 +81,9 @@ onBeforeMount(async () => {
   await fetchOrder()
 })
 
-const fulfillment_col = {
-  shipped: {
-    color: 'emerald',
-    icon: 'i-carbon-delivery'
-  },
-  fulfilled: {
-    color: 'cyan',
-    icon: 'i-ph-package'
-  },
-  not_fulfilled: {
-    color: 'gray',
-    icon: ''
-  },
-  canceled: {
-    color: 'red',
-    icon: 'i-heroicons-x-circle'
-  },
-  partially_fulfilled: {
-    color: 'orange',
-    icon: ''
-  }
-} as any
+const fulfillment_col = useNuxtApp().$order.styles.fulfillment_col
 
-const payment_col = {
-  captured: {
-    color: 'emerald',
-  },
-  refunded: {
-    color: 'amber',
-  },
-  awaiting: {
-    color: 'gray',
-  },
-  canceled: {
-    color: 'red'
-  }
-} as any
+const payment_col = useNuxtApp().$order.styles.payment_col
 
 async function capture_payment() {
   useAsyncData('capture_payment', async () => {
@@ -174,12 +140,18 @@ const order_edit_changes = {
 }
 
 const create_fulfillment = ref(false)
+
+//order fulfillment -> mark shipped
+const current_fulfillment = ref('')
+const mark_fulfillment_shipped = ref(false)
 const fulfillment_menu = (row:any) => [
   [{
     label: 'Mark Shipped',
     icon: 'i-ph-package',
     click: () => {
       console.log(row);
+      current_fulfillment.value = row.id as string
+      mark_fulfillment_shipped.value = true
     }
   }],
   [{
@@ -191,7 +163,7 @@ const fulfillment_menu = (row:any) => [
   }],
 ]
 
-const current_fulfillment = ref('')
+
 
 // reset on closing modal
 // watch(modal, () => {
@@ -449,7 +421,7 @@ const current_fulfillment = ref('')
                   <p>{{ fulfillment.shipped_at ? `Shipped at ${dateFormatter(fulfillment.shipped_at)}` : 'Not shipped' }}
                   </p>
                 </div>
-                <UDropdown :items="fulfillment_menu(fulfillment)">
+                <UDropdown v-if="!fulfillment.shipped_at" :items="fulfillment_menu(fulfillment)">
                   <UButton size="xs" color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid"/>
                 </UDropdown>
               </div>
@@ -642,7 +614,7 @@ const current_fulfillment = ref('')
     <div v-else>
       loading
     </div>
-    <TemplateProductsFulfillmentMarkShipped v-model="modal.trigger" :order="(order as Order)" :fulfillment_id="current_fulfillment" />
+    <TemplateProductsFulfillmentMarkShipped v-model="mark_fulfillment_shipped" :order="(order as Order)" :fulfillment_id="current_fulfillment" />
     <UModal v-model="modal.trigger" :fullscreen="modal.fullscreen">
       <div>
 

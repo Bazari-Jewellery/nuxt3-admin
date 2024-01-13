@@ -39,7 +39,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             },
             canceled: {
               color: 'red',
-              icon: 'i-heroicons-x-mark'
+              icon: 'i-heroicons-no-symbol'
             },
             partially_fulfilled: {
               color: 'orange',

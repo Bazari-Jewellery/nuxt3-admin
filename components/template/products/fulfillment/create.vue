@@ -136,7 +136,7 @@ async function send_fulfillment() {
         <UCard :ui="{ divide: '' }">
           <template #header>
             <div class="w-full flex items-center justify-between">
-              <UIcon @click="cancel" name="i-heroicons-x-mark-20-solid" class="w-5 h-5 cursor-pointer p-5 ring" />
+              <UButton @click="cancel" size="sm" color="gray" variant="ghost" icon="i-heroicons-x-mark"/>
 
               <div class="flex items-center gap-5">
                 <UButton @click="cancel" label="Cancel" color="black" variant="outline" />
