@@ -1,5 +1,5 @@
 <script setup lang=ts>
-import type { FindParams, Note, OrderEdit } from "@medusajs/medusa/dist"
+import type { FindParams, Note, OrderEdit, Order } from "@medusajs/medusa/dist"
 import type { Dict } from '~/types';
 
 
@@ -174,22 +174,35 @@ const order_edit_changes = {
 }
 
 const create_fulfillment = ref(false)
-// watch(create_fulfillment, () => {
-//   if (create_fulfillment.value) {
-//     modal.value = { trigger: true, fullscreen: true }
-//   }
-// })
+const fulfillment_menu = (row:any) => [
+  [{
+    label: 'Mark Shipped',
+    icon: 'i-ph-package',
+    click: () => {
+      console.log(row);
+    }
+  }],
+  [{
+    label: 'Cancel Fulfillment',
+    icon: 'i-heroicons-no-symbol',
+    click: () => {
+      console.log(row);
+    }
+  }],
+]
+
+const current_fulfillment = ref('')
 
 // reset on closing modal
-watch(modal, () => {
-  if (!modal.value.trigger) {
-    // create_fulfillment.value = false
-    modal.value = {
-      trigger: false,
-      fullscreen: false
-    }
-  }
-})
+// watch(modal, () => {
+//   if (!modal.value.trigger) {
+//     // create_fulfillment.value = false
+//     modal.value = {
+//       trigger: false,
+//       fullscreen: false
+//     }
+//   }
+// })
 </script>
 
 <template>
@@ -197,10 +210,57 @@ watch(modal, () => {
 
     <div v-if="order" class="space-y-6 sm:space-y-8">
 
-      <UCard :ui="{ divide: '' }">
-        <template #header>
-          <div class="relative space-y-8">
-            <UButton to="/orders" label="Back to orders" icon="i-heroicons-arrow-left" variant="link" class=" right-0" />
+      <!-- <UCard :ui="{ divide: '' }">
+        <template #header> -->
+      <div class="relative">
+        <UButton to="/orders" label="Back to orders" icon="i-heroicons-arrow-left" variant="link" class=" right-0" />
+        <!-- <div class="text-base">
+              <span>Order #</span>
+              <span class="font-medium">{{ order.display_id }}</span>
+            </div>
+            <span class="text-gray-500 dark:text-gray-400">{{ dateFormatter(order.created_at) }}</span>
+            <div class="flex gap-5 my-4">
+              <div class="flex flex-col gap-2">
+                <span>Email</span>
+                <span class="text-gray-500 dark:text-gray-400">{{ order.email }}</span>
+              </div>
+              <div>
+                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 "></div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <span>Phone</span>
+                <span class="text-gray-500 dark:text-gray-400">
+                  {{ order.shipping_address?.phone ? order.shipping_address?.phone : 'N/A' }}
+                </span>
+              </div>
+              <div>
+                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 "></div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <span>Payment</span>
+                <span class="text-gray-500 dark:text-gray-400">{{ order.payments?.[0]?.provider_id }}</span>
+              </div>
+              <div class="flex flex-col items-end gap-2">
+                <span>&nbsp;</span>
+                <UAvatar :src="`https://flagcdn.com/${order.shipping_address?.country_code}.svg` || ''"
+                  :alt="(order.shipping_address?.country_code || '')" size="3xs" :ui="{ rounded: 'rounded-none' }" />
+              </div>
+
+            </div> -->
+      </div>
+      <!-- </template>
+
+
+      </UCard> -->
+
+      <div class="grid grid-cols-10 gap-5">
+        <div class="col-span-6 space-y-8">
+          <!-- pre data -->
+          <UCard class="" :ui="{
+            body: {
+              base: 'space-y-8 text-gray-700 dark:text-gray-200'
+            }
+          }">
             <div class="text-base">
               <span>Order #</span>
               <span class="font-medium">{{ order.display_id }}</span>
@@ -234,15 +294,9 @@ watch(modal, () => {
               </div>
 
             </div>
-          </div>
-        </template>
+          </UCard>
 
-
-      </UCard>
-
-      <div class="grid grid-cols-10 gap-5">
-        <div class="col-span-6 space-y-8">
-          <!-- pre data -->
+          <!-- summary -->
           <UCard class="" :ui="{
             body: {
               base: 'space-y-8 text-gray-700 dark:text-gray-200'
@@ -330,7 +384,7 @@ watch(modal, () => {
 
 
           <!-- payment section -->
-          <UCard class="" :ui="{
+          <UCard v-if="order.payments" class="" :ui="{
             body: {
               base: 'space-y-8 text-gray-700 dark:text-gray-200'
             }
@@ -369,7 +423,7 @@ watch(modal, () => {
           </UCard>
 
           <!-- fulfillment section -->
-          <UCard class="" :ui="{
+          <UCard v-if="order.fulfillments" class="" :ui="{
             body: {
               base: 'space-y-8 text-gray-700 dark:text-gray-200'
             }
@@ -382,27 +436,22 @@ watch(modal, () => {
                   <span class="truncate capitalize">{{ order.fulfillment_status?.split('_').join(' ')
                   }}</span>
                 </UBadge>
-                <UButton v-if="order.fulfillment_status != 'fulfilled'" label="Create Fulfillment" variant="outline"
+                <UButton v-if="['not_fulfilled', 'partially_fulfilled'].includes(order.fulfillment_status)" label="Create Fulfillment" variant="outline"
                   @click="() => create_fulfillment = true" size="xs" color="black" />
               </div>
-              <TemplateProductsFulfillmentCreate :order="(order as any)" v-model="create_fulfillment"/>
+              <TemplateProductsFulfillmentCreate :order="(order as any)" v-model="create_fulfillment" />
             </div>
 
-            <div v-for="pay of order.payments" class="space-y-5">
+            <div v-for="(fulfillment, ind) of order.fulfillments" class="space-y-5">
               <div class="flex justify-between">
-                <span>Payment ID:</span>
-                <span>{{ pay.id }}</span>
-              </div>
-              <div class="flex justify-between">
-                <span>Date:</span>
-                <span>{{ dateFormatter(pay.created_at) }}</span>
-              </div>
-              <div class="flex justify-between text-gray-900 dark:text-white">
-                <span>Total Paid:</span>
-                <span class="flex gap-3">
-                  <span>{{ priceFormatter(pay.amount, order.currency_code) }}</span>
-                  <span class="uppercase">{{ pay.currency_code }}</span>
-                </span>
+                <div>
+                  <p>Fulfillment #{{ ind + 1 }} by <span class="capitalize">{{ fulfillment.provider_id }}</span></p>
+                  <p>{{ fulfillment.shipped_at ? `Shipped at ${dateFormatter(fulfillment.shipped_at)}` : 'Not shipped' }}
+                  </p>
+                </div>
+                <UDropdown :items="fulfillment_menu(fulfillment)">
+                  <UButton size="xs" color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid"/>
+                </UDropdown>
               </div>
             </div>
           </UCard>
@@ -593,7 +642,7 @@ watch(modal, () => {
     <div v-else>
       loading
     </div>
-
+    <TemplateProductsFulfillmentMarkShipped v-model="modal.trigger" :order="(order as Order)" :fulfillment_id="current_fulfillment" />
     <UModal v-model="modal.trigger" :fullscreen="modal.fullscreen">
       <div>
 
@@ -607,7 +656,7 @@ watch(modal, () => {
                   class="w-5 h-5 cursor-pointer" />
 
                 <div class="flex items-center gap-5">
-                  <UButton label="Cancel" color="black" variant="outline"/>
+                  <UButton label="Cancel" color="black" variant="outline" />
                   <UButton label="Create fulfillment" />
                 </div>
               </div>

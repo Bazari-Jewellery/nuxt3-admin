@@ -101,43 +101,9 @@ type tableType = {
 /**
  * column styles
  */
-const fulfillment_col = {
-  shipped: {
-    color: 'emerald',
-    icon: 'i-carbon-delivery'
-  },
-  fulfilled: {
-    color: 'cyan',
-    icon: 'i-ph-package'
-  },
-  not_fulfilled: {
-    color: 'gray',
-    icon: ''
-  },
-  canceled: {
-    color: 'red',
-    icon: 'i-heroicons-x-mark'
-  },
-  partially_fulfilled:{
-    color: 'orange',
-    icon: ''
-  }
-} as any
+const fulfillment_col = useNuxtApp().$order.styles.fulfillment_col
 
-const payment_col = {
-  paid: {
-    color: 'emerald',
-  },
-  refunded: {
-    color: 'amber',
-  },
-  awaiting: {
-    color: 'gray',
-  },
-  canceled: {
-    color: 'red'
-  }
-} as any
+const payment_col = useNuxtApp().$order.styles.payment_col
 
 
 const tableData = ref([] as tableType[])
@@ -171,8 +137,6 @@ watch(orders, () => {
 function selectRow(row: any) {
   singleOrder.value = row.order_data
   navigateTo(`/orders/${row.order_data.id}`)
-
-
 }
 
 //fetch data

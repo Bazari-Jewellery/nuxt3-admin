@@ -7,11 +7,11 @@ export default defineNuxtPlugin((nuxtApp) => {
   async function getUser(token=''){
     const _token = token ? token : bazariToken.value as string
     const cybandy = useCybandyClient(_token)
-    const {user} = await cybandy.admin.auth.getSession()
-    if(user){
-      userData.value = user
+    const {data, error} = await useAsyncData('currentUser', async()=>await cybandy.admin.auth.getSession(), {pick:['user']})
+    if(data.value && !error.value){
+      userData.value = data.value.user
     }
-    return user
+    return data.value?.user
   }
 
   return {
