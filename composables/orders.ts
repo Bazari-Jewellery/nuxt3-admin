@@ -1,5 +1,12 @@
-import type {AdminPostOrdersOrderReq, AdminGetOrdersParams} from "@medusajs/medusa"
+import type {AdminPostOrdersOrderReq, AdminGetOrdersParams,} from "@medusajs/medusa"
+import type { Ref, ComputedRef, WritableComputedRef } from "vue"
 
+
+/**
+ * 
+ * @param id 
+ * @param payload 
+ */
 export async function useOrderUpdate(id:string, payload:AdminPostOrdersOrderReq){
 
   const cybandy = useCybandyClient()
@@ -10,7 +17,11 @@ export async function useOrderUpdate(id:string, payload:AdminPostOrdersOrderReq)
   }, {pick:['order']})
 }
 
-export async function useOrderList(payload:AdminGetOrdersParams){
+/**
+ * 
+ * @param payload 
+ */
+export async function useOrderList(payload:Ref<AdminGetOrdersParams>|WritableComputedRef<AdminGetOrdersParams>|ComputedRef<AdminGetOrdersParams>){
   const cybandy = useCybandyClient()
-  return await useAsyncData('list_orders', async()=>await cybandy.admin.orders.list(payload),{pick:['orders','count', 'offset', 'limit']})
+  return await useAsyncData( async()=>await cybandy.admin.orders.list(payload.value),{pick:['orders','count', 'offset', 'limit'], watch:[payload]})
 }

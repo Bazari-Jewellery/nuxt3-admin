@@ -1,0 +1,121 @@
+<script setup lang=ts>
+import { AdminGetCustomersParams } from '@medusajs/medusa/dist'
+import type { Dict } from "@/types"
+import { useCustomerGetSingle } from "~/composables/customers";
+
+const nuxtApp = useNuxtApp()
+const customer = nuxtApp.$customer.single
+definePageMeta({
+  // title:  ,
+  layout: 'default'
+});
+watch(customer,()=>{
+  useHead({
+  title: `Customer: ${customer.value.first_name} ${customer.value.last_name}` as string
+})
+}, {deep:true})
+// const orders = ref<Array<Order>>()
+const orders = ref([] as any[])
+const count = ref(0)
+const limit = ref(15)
+const offset = ref(1)
+const loading = ref(true)
+
+const id = useRoute().params.id
+const final_id = customer.value?.id ? customer.value.id : id as string
+
+const { data, error } = await useCustomerGetSingle(final_id)
+if (data.value) {
+  customer.value = data.value.customer
+}
+const reqQuery = computed(()=>{
+  return {
+    customer_id: final_id,
+    limit: limit.value * offset.value,
+    offset: (offset.value - 1) * limit.value,
+    expand: 'customer,shipping_address,sales_channel',
+    fields: 'id,status,display_id,created_at,email,fulfillment_status,payment_status,total,currency_code',
+  } as AdminGetCustomersParams
+})
+
+
+asyncComputed(async()=>{
+  loading.value = true
+  const { data: _data_order, error: _order_error } = await useOrderList(reqQuery)
+
+  if (_data_order.value) {
+    orders.value = _data_order.value.orders
+    count.value = _data_order.value.count
+  }
+  loading.value = false
+})
+
+
+
+
+</script>
+
+<template>
+  <div>
+
+    <UCard :ui="{ divide: '' }">
+      <template #header>
+        <div class="relative space-y-8">
+          <UButton to="/customers" label="Back to customers" icon="i-heroicons-arrow-left" variant="link"
+            class="right-0" />
+
+          <div class="flex gap-7 items-center">
+            <UtilitiesAvatar :name="`${customer.first_name} ${customer.last_name}`" size="3xl" />
+            <div class="flex flex-col gap-2">
+              <span class="text-base">{{ customer.first_name }} {{ customer.last_name }}</span>
+              <div class="flex items-center gap-1 text-gray-500">
+                <UIcon name="i-ph-at-bold" class="w-4 h-4" />
+                <span>{{ customer.email }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-5 my-4">
+            <div class="flex flex-col gap-2">
+              <span>Created</span>
+              <span class="text-gray-500 dark:text-gray-400">{{ dateFormatter(customer.created_at) }}</span>
+            </div>
+            <div>
+              <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 "></div>
+            </div>
+            <div class="flex flex-col gap-2">
+              <span>Phone</span>
+              <span class="text-gray-500 dark:text-gray-400">
+                {{ customer.phone ? customer.phone : customer.shipping_addresses[0]?.phone }}
+              </span>
+            </div>
+            <div>
+              <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 "></div>
+            </div>
+            <div class="flex flex-col gap-2">
+              <span>Customer</span>
+              <span
+                :class="customer.has_account ? 'text-emerald-500 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'">
+                {{ customer.has_account ? 'Registered' : 'Not registered' }}
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+      </template>
+    </UCard>
+
+    <UCard :ui="{ divide: '' }">
+      <template #header>
+        <div class="flex flex-col gap-2">
+          <span class="text-lg md:text-xl">Orders {{ customer.orders.length }}</span>
+          <span>An overview of Customer Orders</span>
+        </div>
+      </template>
+      <TemplateOrdersTable :orders="orders" :loading="loading" :offset="offset" :count="count" :limit="limit" />
+    </UCard>
+
+    <!-- <pre>{{ customer }}</pre> -->
+  </div>
+</template>
