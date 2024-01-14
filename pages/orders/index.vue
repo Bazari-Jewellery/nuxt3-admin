@@ -190,7 +190,7 @@ onBeforeMount(async () => {
           </UFormGroup>
 
           <USelectMenu v-model="selectedColumns" :options="columns" multiple>
-            <UButton color="gray" size="xs" icon="i-heroicons-view-columns">Columns</UButton>
+            <UButton color="gray" variant="ghost" size="xs" icon="i-heroicons-view-columns">Columns</UButton>
           </USelectMenu>
         </div>
         <div class="flex justify-end">

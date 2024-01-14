@@ -6,8 +6,10 @@ const props = defineProps({
 const { data, error } = await useFetch('/api/regions/countryCode')
 
 
+
 // const country = ref(data?.value[0])
 const nu = data.value.filter((x)=>x.country_code.toLowerCase()==props.modelValue?.toLowerCase())[0]
+
 const country = ref(nu ? nu : data.value[0])
 
 
