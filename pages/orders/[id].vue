@@ -139,17 +139,32 @@ const order_edit_changes = {
   'item_update': 'Updated Item'
 }
 
+// order fulfillment -> create
 const create_fulfillment = ref(false)
 
 //order fulfillment -> mark shipped
 const current_fulfillment = ref('')
 const mark_fulfillment_shipped = ref(false)
-const fulfillment_menu = (row:any) => [
+
+// order fulfillment -> cancel
+const cancel_fulfillment = ref(false)
+async function cancel_fulfillment_func(fulfillment_id = current_fulfillment.value) {
+  const cybandy = useCybandyClient()
+  const { data, error, pending } = await useAsyncData(`cancel_fulfillment - ${fulfillment_id}`, async () => await cybandy.admin.orders.cancelFulfillment(order.value.id, fulfillment_id), { pick: ['order'] })
+
+
+  if (data.value) {
+    order.value = data.value.order
+  }
+}
+
+
+
+const fulfillment_menu = (row: any) => [
   [{
     label: 'Mark Shipped',
     icon: 'i-ph-package',
     click: () => {
-      console.log(row);
       current_fulfillment.value = row.id as string
       mark_fulfillment_shipped.value = true
     }
@@ -158,7 +173,51 @@ const fulfillment_menu = (row:any) => [
     label: 'Cancel Fulfillment',
     icon: 'i-heroicons-no-symbol',
     click: () => {
+      current_fulfillment.value = row.id as string
+      cancel_fulfillment.value = true
+    }
+  }],
+]
+
+const changeCustomer = ref(false)
+const customer_menu = (row: any) => [
+  [{
+    label: 'Go to customer',
+    icon: 'i-ph-user',
+    click: () => {
+      navigateTo(`/customer/${row.id as string}`)
+    }
+  }],
+  [{
+    label: 'Transfer ownership',
+    icon: 'i-heroicons-arrow-path-rounded-square',
+    click: () => {
+      changeCustomer.value = true
+      
+    }
+  }],
+  [{
+    label: 'Edit Shipping Address',
+    icon: 'i-carbon-delivery',
+    click: () => {
       console.log(row);
+      
+    }
+  }],
+  [{
+    label: 'Edit Billing Address',
+    icon: 'i-heroicons-credit-card',
+    click: () => {
+      console.log(row);
+      
+    }
+  }],
+  [{
+    label: 'Edit Email Address',
+    icon: 'i-ph-at',
+    click: () => {
+      console.log(row);
+      
     }
   }],
 ]
@@ -274,7 +333,13 @@ const fulfillment_menu = (row:any) => [
               base: 'space-y-8 text-gray-700 dark:text-gray-200'
             }
           }">
-            <h5 class="title">Summary</h5>
+            <div class="flex justify-between">
+              <h5 class="title">Summary</h5>
+              <div class="flex items-center gap-5">
+                <UButton label="Edit Order" variant="solid" color="gray" size="xs" />
+              </div>
+
+            </div>
             <div class="space-y-5">
 
               <div v-for="item of order.items" class="w-full flex justify-between">
@@ -405,11 +470,17 @@ const fulfillment_menu = (row:any) => [
               <div class="flex items-center gap-5">
                 <UBadge variant="subtle"
                   :color="fulfillment_col[order.fulfillment_status]?.color ? fulfillment_col[order.fulfillment_status]?.color : 'gray'">
-                  <span class="truncate capitalize">{{ order.fulfillment_status?.split('_').join(' ')
-                  }}</span>
+
+                  <span v-if="order.fulfillment_status!=='not_fulfilled'" class="truncate capitalize">
+                    {{ order.fulfillment_status?.split('_').join(' ')}}
+                  </span>
+                  <span v-else>
+                    Awaiting fulfillment
+                  </span>
                 </UBadge>
-                <UButton v-if="['not_fulfilled', 'partially_fulfilled'].includes(order.fulfillment_status)" label="Create Fulfillment" variant="outline"
-                  @click="() => create_fulfillment = true" size="xs" color="black" />
+                <UButton v-if="['not_fulfilled', 'partially_fulfilled', 'canceled'].includes(order.fulfillment_status)"
+                  label="Create Fulfillment" variant="solid" @click="() => create_fulfillment = true" size="xs"
+                  color="gray" />
               </div>
               <TemplateProductsFulfillmentCreate :order="(order as any)" v-model="create_fulfillment" />
             </div>
@@ -417,12 +488,20 @@ const fulfillment_menu = (row:any) => [
             <div v-for="(fulfillment, ind) of order.fulfillments" class="space-y-5">
               <div class="flex justify-between">
                 <div>
-                  <p>Fulfillment #{{ ind + 1 }} by <span class="capitalize">{{ fulfillment.provider_id }}</span></p>
-                  <p>{{ fulfillment.shipped_at ? `Shipped at ${dateFormatter(fulfillment.shipped_at)}` : 'Not shipped' }}
+                  <p v-if="!fulfillment.canceled_at">Fulfillment #{{ ind + 1 }} by <span class="capitalize">{{
+                    fulfillment.provider_id }}</span></p>
+                  <p v-if="fulfillment.canceled_at">Fulfillment canceled</p>
+
+                  <p v-if="fulfillment.shipped_at">
+                    Tracking <span class="text-primary">
+                      {{ fulfillment.tracking_links.map((x) => x.tracking_number).join(' ') }}
+                    </span>
                   </p>
+                  <p v-else>Not shipped</p>
                 </div>
-                <UDropdown v-if="!fulfillment.shipped_at" :items="fulfillment_menu(fulfillment)">
-                  <UButton size="xs" color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid"/>
+                <UDropdown v-if="!fulfillment.shipped_at && !fulfillment.canceled_at"
+                  :items="fulfillment_menu(fulfillment)">
+                  <UButton size="xs" color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
                 </UDropdown>
               </div>
             </div>
@@ -434,7 +513,16 @@ const fulfillment_menu = (row:any) => [
               base: 'space-y-8 text-gray-700 dark:text-gray-200'
             }
           }">
-            <h5 class="title">Customer</h5>
+          <div class="flex justify-between">
+              <h5 class="title">Customer</h5>
+              <div class="flex items-center gap-5">
+                <UDropdown
+                  :items="customer_menu(order.customer)">
+                  <UButton size="xs" color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+                </UDropdown>
+              </div>
+
+            </div>
             <div class="flex gap-5 items-center">
               <UAvatar :alt="`${first_name} ${last_name}`" :src="(order.customer?.metadata.avatar_src as string || '')"
                 size="lg" />
@@ -614,30 +702,10 @@ const fulfillment_menu = (row:any) => [
     <div v-else>
       loading
     </div>
-    <TemplateProductsFulfillmentMarkShipped v-model="mark_fulfillment_shipped" :order="(order as Order)" :fulfillment_id="current_fulfillment" />
-    <UModal v-model="modal.trigger" :fullscreen="modal.fullscreen">
-      <div>
-
-
-
-        <div v-if="create_fulfillment" class="p5 max-w-3xl">
-          <UCard>
-            <template #header>
-              <div class="w-full flex items-center justify-between">
-                <UIcon @click="() => modal.trigger = false" name="i-heroicons-x-mark-20-solid"
-                  class="w-5 h-5 cursor-pointer" />
-
-                <div class="flex items-center gap-5">
-                  <UButton label="Cancel" color="black" variant="outline" />
-                  <UButton label="Create fulfillment" />
-                </div>
-              </div>
-            </template>
-          </UCard>
-          create fulfillment
-        </div>
-      </div>
-    </UModal>
+    <TemplateProductsFulfillmentMarkShipped v-model="mark_fulfillment_shipped" :order="(order as Order)"
+      :fulfillment_id="current_fulfillment" />
+    <DialogueCancelConfirm v-model="cancel_fulfillment" what="fulfillment" @confirm="cancel_fulfillment_func" />
+    <TemplateOrdersChangeCustomer :order="(order as Order)" v-model="changeCustomer"/>
   </div>
 </template>
 

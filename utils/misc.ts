@@ -113,7 +113,19 @@ export function toastNotification(title='', description='', timeout=0, icon='', 
   }
 
   function default_toast(){
+    const my_title = title ? title : 'Notification'
+    const my_desc = description
+    const my_timeout = timeout ? timeout : 3000
+    const my_icon = icon ? icon : 'i-heroicons-bell-20-solid'
+    const my_color = color ? color : 'primary'
 
+    toast.add({
+      title: my_title,
+      description: my_desc,
+      color: my_color as any,
+      timeout: my_timeout,
+      icon : my_icon
+    })
   }
 
   return {success, error, default_toast}

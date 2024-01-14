@@ -47,6 +47,9 @@ export default defineAppConfig({
         "background": "",
         "padding": "px-4 py-4 sm:px-6"
       }
+    },
+    modal:{
+      width:'w-full sm:max-w-lg lg:max-w-fit'
     }
     
     

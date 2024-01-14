@@ -59,8 +59,10 @@ function reset() {
 
   order.value.fulfillments.map((x) => {
     x.items.map((_it) => {
-      res_inp_boxes.value[_it.item_id].fulfilled += _it.quantity
-      res_inp_boxes.value[_it.item_id].to_fulfil -= _it.quantity
+      if (!x.canceled_at) {
+        res_inp_boxes.value[_it.item_id].fulfilled += _it.quantity
+        res_inp_boxes.value[_it.item_id].to_fulfil -= _it.quantity
+      }
 
     })
   })
@@ -102,7 +104,7 @@ function cancel() {
   reset()
   modal.value = false
 }
-const send_notification = ref(false)
+const send_notification = ref(true)
 
 async function send_fulfillment() {
   const _items = Object.values(quantity_input_boxes.value).map((x) => {
@@ -136,7 +138,7 @@ async function send_fulfillment() {
         <UCard :ui="{ divide: '' }">
           <template #header>
             <div class="w-full flex items-center justify-between">
-              <UButton @click="cancel" size="sm" color="gray" variant="ghost" icon="i-heroicons-x-mark"/>
+              <UButton @click="cancel" size="sm" color="gray" variant="ghost" icon="i-heroicons-x-mark" />
 
               <div class="flex items-center gap-5">
                 <UButton @click="cancel" label="Cancel" color="black" variant="outline" />
@@ -150,17 +152,17 @@ async function send_fulfillment() {
             <div class="w-full flex gap-4">
               <UIcon name="i-ph-package" class="w-5 h-5 text-black dark:text-white" />
               <div>
-              <h3 class="text-base text-black dark:text-white">Items to be fulfilled</h3>                
-              <p class="py-2">Select the number of items that you wish to fulfill</p>
+                <h3 class="text-base text-black dark:text-white">Items to be fulfilled</h3>
+                <p class="py-2">Select the number of items that you wish to fulfill</p>
               </div>
-              
+
             </div>
             <div v-if="order.fulfillments" v-for="it_ff of order.items">
-              <div v-if="quantity_input_boxes[it_ff.id].to_fulfil > 0" class="text-gray-500 dark:text-gray-400 text-xs space-y-2 pl-4 py-2">
+              <div v-if="quantity_input_boxes[it_ff.id].to_fulfil > 0"
+                class="text-gray-500 dark:text-gray-400 text-xs space-y-2 pl-4 py-2">
                 <div class="flex justify-between">
                   <div class="flex gap-4">
-                    <NuxtImg width="36" height="48" :src="(it_ff?.thumbnail as string)"
-                      format="webp" />
+                    <NuxtImg width="36" height="48" :src="(it_ff?.thumbnail as string)" format="webp" />
                     <div class="flex flex-col gap-1">
                       <span class="text-gray-700 dark:text-gray-200">
                         {{ it_ff.title }}
@@ -177,10 +179,8 @@ async function send_fulfillment() {
                       <span class="flex items-center gap-1">
                         <span>/{{ quantity_input_boxes[it_ff.id].quantity }}</span>
                         <span class="flex items-center gap-2">
-                          <UIcon @click="() => minus(it_ff.id)" name="i-heroicons-minus"
-                            class="w-4 h-4 cursor-pointer" />
-                          <UIcon @click="() => plus(it_ff.id)" name="i-heroicons-plus"
-                            class="w-4 h-4 cursor-pointer" />
+                          <UIcon @click="() => minus(it_ff.id)" name="i-heroicons-minus" class="w-4 h-4 cursor-pointer" />
+                          <UIcon @click="() => plus(it_ff.id)" name="i-heroicons-plus" class="w-4 h-4 cursor-pointer" />
                         </span>
                       </span>
                     </template>

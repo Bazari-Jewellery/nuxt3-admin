@@ -23,7 +23,7 @@ const modal = computed({
 
 const order = ref(props.order)
 
-const send_notification = ref(false)
+const send_notification = ref(true)
 
 const tracking_numbers = ref([''] as string[])
 
@@ -42,7 +42,7 @@ function reset(){
 
 async function ship_fulfillment(){
   const cybandy = useCybandyClient()
-  const {data, error} = useAsyncData(`order: ${props.fulfillment_id}-ship`,async()=>{
+  const {data, error} = await useAsyncData(`order: ${props.fulfillment_id}-ship`,async()=>{
     return await cybandy.admin.orders.createShipment(order.value.id,{
       fulfillment_id: props.fulfillment_id,
       tracking_numbers: tracking_numbers.value,
@@ -51,6 +51,7 @@ async function ship_fulfillment(){
   },{pick:['order']})
   if(!error.value && data.value){
     useNuxtApp().$order.singleOrder.value = data.value.order
+    modal.value = false
     toastNotification('Items are shipped').default_toast()
   }
 }
@@ -67,7 +68,7 @@ async function ship_fulfillment(){
       </template>
 
 
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 lg:min-w-[550px] xl:min-w-[600px]">
         <p class="text-gray-700 dark:text-gray-200">Tracking</p>
         <div class="flex flex-col gap-4">
           <!-- <span class="text-xs">Tracking Number</span> -->
