@@ -1,7 +1,8 @@
 <script setup lang=ts>
 definePageMeta({
     title: '' ,
-    layout: 'default'
+    layout: 'default',
+    scrollToTop:true
 });
 useHead({
     title: useRoute().meta?.title as string

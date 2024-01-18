@@ -3,6 +3,9 @@
 useHead({
     title: 'Products'
 })
+definePageMeta({
+  scrollToTop:true
+})
 const view = ref('product')
 </script>
 

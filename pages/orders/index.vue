@@ -4,6 +4,11 @@ useHead({
   title: 'Orders'
 })
 
+definePageMeta({
+  // middleware:['auth']
+  scrollToTop:true
+})
+
 const orders = ref<Order[]>([])
 const singleOrder = useNuxtApp().$order?.singleOrder
 const loading = ref(false)
@@ -144,7 +149,7 @@ async function fetchOrders() {
   const {error} = await useLazyAsyncData('all_orders', async () => {
     const { orders: _orders, count: _count, response:orders_response } = await useCybandyClient().admin.orders.list({
       q: q.value,
-      limit: limit.value * offset.value,
+      limit: limit.value,
       offset: (offset.value - 1) * limit.value,
       expand: 'customer,shipping_address,sales_channel',
       fields: 'id,status,display_id,created_at,email,fulfillment_status,payment_status,total,currency_code',

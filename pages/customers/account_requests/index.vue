@@ -22,7 +22,7 @@ const q = ref()
 
 const reqQuery = computed(()=>{
   return {
-    limit: limit.value * offset.value,
+    limit: limit.value,
     offset: (offset.value -1) * limit.value
   }
 })

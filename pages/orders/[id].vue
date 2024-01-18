@@ -2,14 +2,16 @@
 import type { FindParams, Note, OrderEdit, Order } from "@medusajs/medusa/dist"
 import type { Dict } from '~/types';
 
-
+definePageMeta({
+  scrollToTop:true
+})
 
 const emits = defineEmits(['update:modelValue', 'update:openClose'])
-const order_val = useNuxtApp().$order.singleOrder
-const order = computed({
-  set: (val) => order_val.value = val,
-  get: () => order_val.value
-})
+const order = useNuxtApp().$order.singleOrder
+// const order = computed({
+//   set: (val) => order_val.value = val,
+//   get: () => order_val.value
+// })
 
 // modal
 const modal = ref({

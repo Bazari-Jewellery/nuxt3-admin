@@ -55,6 +55,34 @@ const links = computed(() => {
 })
 
 const isLoggedIn = computed(()=>isCustomerLoggedIn().value)
+const name = computed(()=>userData.value.first_name + ' ' + userData.value.last_name)
+const userMenu = [
+  [
+  {
+    label:'View',
+    icon: 'i-heroicons-arrow-up-right',
+    click: ()=>{
+
+    }
+  },
+  {
+    label:'Edit',
+    icon: 'i-heroicons-pencil-square',
+    click: ()=>{
+
+    }
+  },
+  ],
+  [
+  {
+    label:'Logout',
+    icon: 'i-ph-sign-out',
+    click: ()=>{
+
+    }
+  },
+  ]
+]
 </script>
 
 <template>
@@ -91,21 +119,19 @@ const isLoggedIn = computed(()=>isCustomerLoggedIn().value)
 
 
     <template #footer>
-      <div v-if="isLoggedIn" class="flex items-center justify-center gap-5">
-        <!-- <UAvatar src="https://avatars.githubusercontent.com/u/739984?v=4" /> -->
-        <UtilitiesAvatar src="" :name="userData?.first_name" />
+      <div v-if="userData.id" class="flex items-center justify-center gap-5">
+        <UtilitiesAvatar src="" :name="name" />
         <div class="w-fit h-fit flex flex-col gap-1">
           <span :class="collapse ? 'hidden' : 'inline-block capitalize'">{{ userData?.first_name }}</span>
           <span :class="collapse ? 'hidden' : 'inline-block capitalize'">{{ userData?.role }}</span>
         </div>
-        <UIcon name="i-heroicons-chevron-down" class="w-4 h-4" />
+        <UDropdown :items="userMenu">
+          <UButton variant="link" color="gray" icon="i-heroicons-chevron-down" />
+        </UDropdown>
       </div>
 
       <div v-else class="w-full flex items-center justify-center">
-        <span class="w-fit flex items-center justify-center p-2 rounded-full ring-1 ring-gray-900 dark:ring-white">
-          
-        <UIcon name="i-heroicons-user" class="w-5 h-5 cursor-pointer" @click="navigateTo('/auth')" />
-        </span>
+        <UButton to="/auth" icon="i-ph-user" color="gray" variant="ghost" size="md" />
       </div>
     </template>
   </UCard>

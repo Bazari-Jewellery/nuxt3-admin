@@ -3,7 +3,7 @@ import type {PricedProduct} from "@medusajs/medusa/dist/types/pricing"
 import type { Dict } from "@/types"
 
 export default defineNuxtPlugin((nuxtApp) => {
-  const singleProduct = ref({} as Product)
+  const singleProduct = ref({} as Product|PricedProduct)
   const allProducts = ref<Array<PricedProduct|Product>>()
   const collections_all = ref<Array<ProductCollection>>()
   const categories_all = ref<Array<ProductCategory>>()
@@ -20,7 +20,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   const reqQuery = computed(() => {
     return {
-      limit: limit.value * offset.value,
+      limit: limit.value,
       offset: (offset.value - 1) * limit.value,
       expand: 'variants,options,variants.prices,variants.options,collection,tags,type,images,sales_channels,categories',
       fields: 'id,title,thumbnail,status,handle,collection_id',
@@ -101,6 +101,22 @@ export default defineNuxtPlugin((nuxtApp) => {
             set:(val)=> collections_all.value = val,
             get: ()=>collections_all.value
           })
+        },
+        styles:{
+          status:{
+            published:{
+              color:'emerald'
+            },
+            draft:{
+              color:'amber'
+            },
+            rejected:{
+              color:'red'
+            },
+            proposed:{
+              color:'cyan'
+            },
+          } as Dict
         }
       },
     }

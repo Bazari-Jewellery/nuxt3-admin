@@ -3,7 +3,8 @@ import type { Dict, AccountRequest } from '~/types';
 
 definePageMeta({
   title: 'Account Requests',
-  layout: 'default'
+  layout: 'default',
+  scrollToTop:true
 });
 useHead({
   title: useRoute().meta?.title as string

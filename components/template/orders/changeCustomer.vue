@@ -26,11 +26,12 @@ const q_customer = ref<string|undefined>()
 
 const customer = asyncComputed(async()=> {
   loading.value = true
-  const {data} = await useCustomersList({
+  const _payload = ref({
     q:q_customer.value,
     limit: 5,
     offset:0
   })
+  const {data} = await useCustomersList(_payload)
   loading.value = false
   return data.value?.customers
 })
@@ -45,11 +46,12 @@ type ImyCustomer = {
 
 async function searchCustomer(q='') {
   loading.value = true
-  const {data} = await useCustomersList({
-    q:q=='' ? undefined : q,
+  const _payload = ref({
+    q:q_customer.value,
     limit: 5,
     offset:0
   })
+  const {data} = await useCustomersList(_payload)
   loading.value = false
   return data.value?.customers.map((_first_cus)=>{
     return {

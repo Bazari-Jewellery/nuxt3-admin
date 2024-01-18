@@ -1,13 +1,12 @@
 <script setup lang=ts>
 import { AdminGetCustomersParams } from '@medusajs/medusa/dist'
 import type { Dict } from "@/types"
-import { useCustomerGetSingle } from "~/composables/customers";
 
 const nuxtApp = useNuxtApp()
 const customer = nuxtApp.$customer.single
 definePageMeta({
   // title:  ,
-  layout: 'default'
+  scrollToTop:true
 });
 watch(customer,()=>{
   useHead({
@@ -20,13 +19,15 @@ const count = ref(0)
 const limit = ref(15)
 const offset = ref(1)
 const loading = ref(true)
+const cus_loading = ref(true)
 
-const id = useRoute().params.id
-const final_id = customer.value?.id ? customer.value.id : id as string
+const id = useRoute().params.id as string
+const final_id = id ? id : customer.value.id
 
 const { data, error } = await useCustomerGetSingle(final_id)
 if (data.value) {
   customer.value = data.value.customer
+  cus_loading.value = false
 }
 const reqQuery = computed(()=>{
   return {
@@ -58,7 +59,8 @@ asyncComputed(async()=>{
 <template>
   <div>
 
-    <UCard :ui="{ divide: '' }">
+    <div v-if="cus_loading">
+      <UCard :ui="{ divide: '' }">
       <template #header>
         <div class="relative space-y-8">
           <UButton to="/customers" label="Back to customers" icon="i-heroicons-arrow-left" variant="link"
@@ -115,7 +117,10 @@ asyncComputed(async()=>{
       </template>
       <TemplateOrdersTable :orders="orders" :loading="loading" :offset="offset" :count="count" :limit="limit" />
     </UCard>
+    </div>
 
-    <!-- <pre>{{ customer }}</pre> -->
+    <div v-else>
+      loading...
+    </div>
   </div>
 </template>

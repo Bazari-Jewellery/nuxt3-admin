@@ -3,11 +3,11 @@ import type { Customer } from "@medusajs/medusa/dist"
 import type { Dict } from "@/types"
 
 definePageMeta({
-  title: 'Customers',
-  layout: 'default'
+  layout: 'default',
+  scrollToTop:true
 });
 useHead({
-  title: useRoute().meta?.title as string
+  title: 'Customers'
 })
 const nuxtApp = useNuxtApp()
 const customers = ref<Customer[]>()
@@ -25,7 +25,7 @@ const count = ref(0)
 const reqQuery = computed(() => {
   return {
     q: search_customer.value==''? undefined: search_customer.value,
-    limit: limit.value * offset.value,
+    limit: limit.value,
     offset: (offset.value - 1) * limit.value,
     expand: 'orders',
 
@@ -151,5 +151,11 @@ const pageCount = computed(() => {
       </template>
 
     </UTable>
+
+    <template>
+      <div class="flex items-center justify-end">
+        <UPagination v-model="offset" :total="count" />
+      </div>
+    </template>
   </UCard>
 </template>
