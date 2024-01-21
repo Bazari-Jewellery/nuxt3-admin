@@ -66,30 +66,36 @@ const togglePassword = () => {
 </script>
 
 <template>
-  <div class="w-full h-screen flex flex-col items-center justify-center space-y-5">
-
-    <h1 class="text-xl sm:text-2xl font-semibold">Login</h1>
-    <div class="mx-auto min-w-[320px] sm:min-w-[450px]">
-      <UForm :schema="schema" :state="state" class="space-y-4 w-full" @submit="onSubmit">
-    <UFormGroup label="Email" name="email">
-      <UInput v-model="state.email" placeholder="test@bazari.com" autocomplete="username" icon="i-ph-at"/>
-    </UFormGroup>
-
-    <UFormGroup label="Password" name="password">
-      <UInput v-model="state.password" :type="passwordType" icon="i-ph-lock" autocomplete="current-password" :ui="{ icon: { trailing: { pointer: '' } } }">
-        <template #trailing>
-            <span class="cursor-pointer" @click="togglePassword">
-                <UIcon v-if="passwordType == 'password'" name="i-ph-eye" />
-                <UIcon v-else name="i-ph-eye-slash" />
-            </span>
-        </template>
-        </UInput>
-    </UFormGroup>
-
-    <UButton type="submit">
-      Submit
-    </UButton>
-  </UForm>
+  <div class="w-full h-screen flex flex-col items-center justify-center gap-14">
+    <div class="flex justify-center">
+      <LogoSvg/>
     </div>
+
+    <div class=" flex flex-col items-center justify-center space-y-5">
+
+<h1 class="text-xl sm:text-2xl font-semibold">Login</h1>
+<div class="mx-auto min-w-[320px] sm:min-w-[450px]">
+  <UForm :schema="schema" :state="state" class="space-y-4 w-full" @submit="onSubmit">
+<UFormGroup label="Email" name="email">
+  <UInput v-model="state.email" placeholder="test@bazari.com" autocomplete="username" icon="i-ph-at"/>
+</UFormGroup>
+
+<UFormGroup label="Password" name="password">
+  <UInput v-model="state.password" :type="passwordType" icon="i-ph-lock" autocomplete="current-password" :ui="{ icon: { trailing: { pointer: '' } } }">
+    <template #trailing>
+        <span class="cursor-pointer" @click="togglePassword">
+            <UIcon v-if="passwordType == 'password'" name="i-ph-eye" />
+            <UIcon v-else name="i-ph-eye-slash" />
+        </span>
+    </template>
+    </UInput>
+</UFormGroup>
+
+<UButton type="submit">
+  Submit
+</UButton>
+</UForm>
+</div>
+</div>
   </div>
 </template>

@@ -9,7 +9,8 @@ const props = defineProps({
     default: 'Are you sure you want to cancel'
   },
   what:String,
-  modelValue:Boolean
+  modelValue:Boolean,
+  confirmButtonColor:String
 })
 
 const emits = defineEmits(['cancel', 'confirm', 'update:modelValue'])
@@ -33,7 +34,7 @@ function confirmFunc(){
 
 <template>
   <UModal v-model="modal">
-    <UCard :ui="{footer:{base:'flex justify-end'}}">
+    <UCard :ui="{footer:{base:'flex justify-end'}, base:'min-w-full lg:min-w-[500px]'}">
       <div>
         <h3 class="text-base lg:text-xl font-semibold text-gray-900 dark:text-white">
           <slot name="title">
@@ -55,7 +56,7 @@ function confirmFunc(){
             </slot>
           </UButton>
 
-          <UButton @click="confirmFunc" type="button" variant="solid" >
+          <UButton @click="confirmFunc" type="button" variant="solid" :color="confirmButtonColor? confirmButtonColor: 'primary'" >
             <slot name="confirmButton">
               Yes, confirm
             </slot>

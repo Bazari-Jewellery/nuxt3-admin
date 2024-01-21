@@ -187,7 +187,7 @@ const customer_menu = (row: any) => [
     label: 'Go to customer',
     icon: 'i-ph-user',
     click: () => {
-      navigateTo(`/customer/${row.id as string}`)
+      navigateTo(`/customers/${row.id as string}`)
     }
   }],
   [{
@@ -226,16 +226,7 @@ const customer_menu = (row: any) => [
 
 
 
-// reset on closing modal
-// watch(modal, () => {
-//   if (!modal.value.trigger) {
-//     // create_fulfillment.value = false
-//     modal.value = {
-//       trigger: false,
-//       fullscreen: false
-//     }
-//   }
-// })
+const addShippingMethod = ref(false)
 </script>
 
 <template>
@@ -485,6 +476,18 @@ const customer_menu = (row: any) => [
                   color="gray" />
               </div>
               <TemplateProductsFulfillmentCreate :order="(order as any)" v-model="create_fulfillment" />
+            </div>
+
+            <div v-if="order.shipping_methods?.length>0">
+              <span class="highlight">Shipping Method</span>
+              <div v-for="ship of order.shipping_methods" class="space-y-2">
+                <span>{{ship.shipping_option.name }}</span>
+              </div>
+            </div>
+
+            <div v-else>
+              <UButton @click="addShippingMethod=true" color="gray" variant="ghost" label="Add shipping method" />
+              <TemplateProductsFulfillmentAddShippingMethod :order="(order as any)" v-model="addShippingMethod" />
             </div>
 
             <div v-for="(fulfillment, ind) of order.fulfillments" class="space-y-5">

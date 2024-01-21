@@ -39,6 +39,17 @@ export function priceFormatter(amount:number|undefined|null, currency='EUR'){
   return nu_price
 }
 
+export function priceFormatterNoSymbol(amount:number|undefined|null, currency=''){
+  const value = convertToDecimal(Number(amount))
+  return value
+}
+
+export function parseCurrencyString(currencyString: string): number {
+  const formattedValue = currencyString.replace(/[^\d.-]/g, ''); // Remove non-numeric characters
+  const numericValue = parseFloat(formattedValue);
+  return isNaN(numericValue) ? 0 : numericValue;
+}
+
 // export function dateFormatter1(dateString:string|Date){
 //   const inputDate = typeof(dateString)=='string' ? new Date(dateString): dateString
 //   const options = {

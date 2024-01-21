@@ -20,6 +20,8 @@ export async function useLogin(email: string, password: string) {
     if(error.value){
       res.status = false
       res.error = error.value
+      const desc = error.value.message.includes('401') ? 'Invalid credentials' : ''
+      toastNotification('Oops!!!', desc,0).error()
       return res
     }else{
       // console.log('useLogin', data.value?.access_token);

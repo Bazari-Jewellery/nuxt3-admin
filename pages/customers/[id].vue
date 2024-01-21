@@ -1,5 +1,5 @@
 <script setup lang=ts>
-import { AdminGetCustomersParams } from '@medusajs/medusa/dist'
+import type{ AdminGetCustomersParams } from '@medusajs/medusa/dist'
 import type { Dict } from "@/types"
 
 const nuxtApp = useNuxtApp()
@@ -25,10 +25,18 @@ const id = useRoute().params.id as string
 const final_id = id ? id : customer.value.id
 
 const { data, error } = await useCustomerGetSingle(final_id)
+
 if (data.value) {
   customer.value = data.value.customer
-  cus_loading.value = false
+  
 }
+
+watch(customer,()=>{
+  if(customer.value.id){
+    cus_loading.value = false
+  }
+}, {deep:true})
+
 const reqQuery = computed(()=>{
   return {
     customer_id: final_id,

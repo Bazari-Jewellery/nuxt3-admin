@@ -33,27 +33,28 @@ await fetchProduct()
 const card_ui = {divide:''}
 const styles = nuxtApp.$product.styles
 
+const edit_product_info = ref(false)
 const general_menu = [
 [
   {
     label:'Edit General Information',
     icon: 'i-heroicons-pencil-square',
     click: ()=>{
-
+      edit_product_info.value = true
     }
   },
-  {
-    label:'Edit Sales Channels',
-    icon: 'i-carbon-network-2',
-    click: ()=>{
+  // {
+  //   label:'Edit Sales Channels',
+  //   icon: 'i-carbon-network-2',
+  //   click: ()=>{
 
-    }
-  },
+  //   }
+  // },
   {
     label:'Delete',
     icon: 'i-heroicons-trash',
     click: ()=>{
-
+      deleteProductVar.value = true
     }
   },
 ]
@@ -104,27 +105,51 @@ const variants_menu = [
     label:'Edit Prices',
     icon: 'i-heroicons-currency-euro',
     click: ()=>{
-
+      edit_prices.value = true
     }
   },
-  {
-    label:'Edit Variants',
-    icon: 'i-heroicons-pencil-square',
-    click: ()=>{
+  // {
+  //   label:'Edit Variants',
+  //   icon: 'i-heroicons-pencil-square',
+  //   click: ()=>{
 
-    }
-  },
+  //   }
+  // },
   {
     label:'Edit Options',
     icon: 'i-heroicons-cog-8-tooth-solid',
     click: ()=>{
-
+      edit_options.value = true
     }
   },
   ]
 ]
 
+const deleteProductVar = ref(false)
+async function deleteProductFunction(){
+  console.log('delete');
+  const {id:_id, object, deleted} = await useCybandyClient().admin.products.delete(id)
+  if(id==_id && deleted){
+    useToastSuccess('Product deleted')
+    navigateTo('/products')
+  }
+}
 
+const edit_options = ref(false)
+
+watch(edit_options,async()=>{
+  if(!edit_options.value){
+    await fetchProduct()
+  }
+})
+const u_card_ui = {divide:''}
+
+const edit_prices = ref(false)
+watch(edit_prices,async()=>{
+  if(!edit_prices.value){
+    await fetchProduct()
+  }
+})
 </script>
 
 <template>
@@ -142,6 +167,9 @@ const variants_menu = [
     </div>
 
     <div v-else>
+      <div class="my-6">
+        <UButton variant="link" icon="i-heroicons-arrow-left" to="/products" label="Back to Products" />
+      </div>
       <div class="grid grid-cols-10 gap-5">
 
       
@@ -219,10 +247,47 @@ const variants_menu = [
             <TemplateProductsVariantsTable v-if="singleProd" :products="(singleProd as any)" />
           </UCard>
         </div>
-        <div class="col-span-full lg:col-span-6 space-y-8">
+        
+        <div class="col-span-full lg:col-span-4 space-y-8">
+          <UCard :ui="u_card_ui">
+            <template #header>
+              <div class="flex items-center gap-4 justify-between">
+                <span class="text-base lg:text-lg highlight">Thumbnail</span>
+                <div class="flex items-center gap-4">
+                  <UButton size="xs" label="Edit" variant="outline" color="black" />
+                  <UButton size="xs" icon="i-heroicons-trash" variant="outline" color="black" />
+                </div>
+              </div>
+            </template>
+            <NuxtImg class="w-[120px] h-[120px]" :src="(singleProd?.thumbnail as any)" preset="prod_small_thumbnail" />
+          </UCard>
 
+          <UCard :ui="u_card_ui">
+            <template #header>
+              <div class="flex items-center gap-4 justify-between">
+                <span class="text-base lg:text-lg highlight">Images</span>
+                <div class="flex items-center gap-4">
+                  <UButton size="xs" label="Edit Media" variant="outline" color="black" />
+                  <!-- <UButton size="xs" icon="i-heroicons-trash" variant="outline" color="black"/> -->
+                </div>
+              </div>
+            </template>
+            <div class="flex flex-wrap items-center gap-5">
+              <NuxtImg v-for="img of singleProd.images" class="w-[120px] h-[120px]" :src="(img.url as any)"
+                preset="prod_small_thumbnail" />
+            </div>
+          </UCard>
         </div>
       </div>
+
+
+
+
+      <FormsProductsGeneral v-model="edit_product_info" :product="(singleProd as any)"/>
+    <DialogueCancelConfirm v-model="deleteProductVar" title="Delete" description="Are you sure you want to delete this" what="product" @confirm="deleteProductFunction" />
+    <TemplateProductsOptionsEdit :product="(singleProd as any)" v-model="edit_options" />
+    <TemplateProductsVariantsEditPrices v-model="edit_prices" :variants="(singleProd.variants as any)" />
     </div>
+    
   </div>
 </template>

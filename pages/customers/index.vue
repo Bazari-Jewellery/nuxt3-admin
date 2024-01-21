@@ -112,10 +112,7 @@ function selectRow(row: any) {
   navigateTo(`/customers/${row.data.id}`)
 }
 
-// pagination
-const pageCount = computed(() => {
-  return count.value ? Math.ceil(count.value / limit.value) : 15
-})
+
 </script>
 
 <template>
