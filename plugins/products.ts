@@ -70,7 +70,15 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
   }
 
-  
+  async function getSingleProduct(id:string,expand=''){
+   
+  const payload = ref({
+    id: id,
+    expand: expand ? expand : 'options,options.values,variants,categories,collection,type,tags,sales_channels,images,variants.prices,variants.options'
+  })
+  const {data,error} = await useProductsList(payload)
+  return data?.value?.products[0]
+  }
 
 
 
@@ -78,6 +86,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     provide: {
       product: {
         product:{
+          getSingleProduct,
           singleProd: computed({
             set: (val) => singleProduct.value = val,
             get: () => singleProduct.value

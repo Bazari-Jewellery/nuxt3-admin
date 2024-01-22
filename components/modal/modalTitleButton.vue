@@ -1,7 +1,4 @@
 <script setup lang=ts>
-import type { Order } from "@medusajs/medusa"
-import type { PropType } from "vue";
-import type { Dict } from "~/types";
 
 const props = defineProps({
   modelValue: Boolean,
@@ -12,8 +9,8 @@ const props = defineProps({
   buttonConfirmLabel: {
     type:String,
     default: 'Save'
-  }
-  
+  },
+  width:String
 })
 const emits = defineEmits(['update:modelValue', 'send'])
 
@@ -29,7 +26,7 @@ const modal = computed({
 
 <template>
   <UModal v-model="modal">
-    <UCard>
+    <UCard :ui="{base:width}">
       <template #header>
         <slot name="titleSection">
           <div class="flex items-center">

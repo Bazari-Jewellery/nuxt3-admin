@@ -89,9 +89,7 @@ asyncComputed(async () => {
   }
 })
 
-watch(regionList, () => {
-  console.log('regions', regionList.value)
-})
+
 
 const selected_regions = ref(regionList.value)
 
@@ -107,15 +105,7 @@ interface tableType extends Dict {
   cad?: number,
 }
 
-// const tableData = ref([] as tableType[])
 
-// if (variants.value) {
-
-//   tableData.value = variants.value.map((_variants) => {
-//     let price = _variants.prices[0].amount
-//     return { product: _variants.title, data: _variants, eur: price }
-//   })
-// }
 
 const tableData = ref([] as tableType[])
 const _tableData = computed(() => {
@@ -134,9 +124,7 @@ const _tableData = computed(() => {
       }
       temp[_price.currency_code] = _price.amount ? priceFormatterNoSymbol(Number(_price.amount), _price.currency_code) : priceFormatterNoSymbol(Number(0), _price.currency_code)
       temp['id'][_price.currency_code] = _price.id
-      // if(_price.currency_code=='eur'){
-      //   temp.eur = _price.amount
-      // }
+     
     })
 
     // check for columns without data and put undefined there
@@ -155,14 +143,6 @@ const _tableData = computed(() => {
   return data.value
 })
 
-
-
-// watch(columnsTable, () => {
-//   console.log('cols',columnsTable.value);
-
-
-
-// })
 
 
 function changeAllCol(col: string, amount: number) {

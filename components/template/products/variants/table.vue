@@ -1,5 +1,5 @@
 <script setup lang=ts>
-import type{ Product} from '@medusajs/medusa/dist'
+import type{ Product, AdminPostProductsProductVariantsReq, ProductVariant} from '@medusajs/medusa/dist'
 import type {PropType} from 'vue'
 const props = defineProps({
   products:{
@@ -57,15 +57,79 @@ final_data.value = variants.value.map((x)=>{
   } as any;
 })
 
-async function deleteVariant(data:any) {
-  
+
+
+async function deleteVariant(variant_id:string) {
+  try {
+    const ind = variants.value.findIndex((x)=>x.id = variant_id)
+    if(ind>=0){
+      
+    }else{
+      throw new Error('Unknown error occured')
+    }
+
+    const {deleted} = await useCybandyClient().admin.products.deleteVariant(props.products.id as string, variant_id)
+    if(!deleted){
+      throw new Error('not deleted. Try again')
+    }
+    await refreshNuxtData('single_product')
+  } catch (error:any) {
+    toastNotification('', error.message).error()
+  }
 }
-async function duplicateVariant(data:any) {
+
+const edit_variant_variable = ref(false)
+const duplicate_variant_variable = ref(false)
+type IOption = {title:string, value:string, option_id:string}
+const options = ref([] as IOption[])
+const current_variant_id = ref('')
+const variant_req = ref({} as AdminPostProductsProductVariantsReq)
+
+
+function edit_duplicate_preprocessor(data:ProductVariant){
   
+
+  variant_req.value = Object.fromEntries(Object.entries(data).filter(([x,y])=>{
+    if('title,sku,ean,upc,barcode,hs_code,inventory_quantity,allow_backorder,manage_inventory,weight,length,height,width,origin_country,mid,material,metadata,prices'.split(',').includes(x)){
+      return true
+    }
+    return false
+  })) as any
+
+  current_variant_id.value = data.id
 }
-async function editVariant(data:any) {
-  
+
+function editVariant(data:ProductVariant){
+
+  options.value = data.options.map((x: { option_id: any; value: any; })=>{
+    const _title = props.products.options.filter((y)=>y.id==x.option_id)[0].title
+    return {
+      option_id : x.option_id,
+      value: x.value,
+      title: _title as string
+    }
+  })
+  edit_duplicate_preprocessor(data)  
+  edit_variant_variable.value = true
 }
+
+function duplicateVariant(data:ProductVariant){
+  options.value = data.options.map((x: { option_id: any; value: any; })=>{
+    const _title = props.products.options.filter((y)=>y.id==x.option_id)[0].title
+    return {
+      option_id : x.option_id,
+      value: undefined,
+      title: _title as string
+    } as any
+  })
+
+  edit_duplicate_preprocessor(data)
+
+  variant_req.value.title = `${variant_req.value.title} copy`
+  duplicate_variant_variable.value = true
+}
+
+const table_key = ref(Date.now())
 // Actions
 const actions = (row:any) => [
   [{
@@ -73,19 +137,24 @@ const actions = (row:any) => [
     label: 'Edit Variant',
     icon: 'i-heroicons-pencil-square',
     click:()=>{
-      editVariant(row)
-      console.log('edit');
       
+      editVariant(row.data)
     }
   }], [{
     key: 'duplicate_variant',
     label: 'Duplicate Variant',
-    icon: 'i-ph-copy'
+    icon: 'i-ph-copy',
+    click: ()=>{
+      duplicateVariant(row.data)
+    }
   }],
   [{
     key: 'delete_variant',
     label: 'Delete Variant',
-    icon: 'i-ph-trash'
+    icon: 'i-ph-trash',
+    click:async()=>{
+      await deleteVariant(row.data.id)
+    }
   }]
 ]
 </script>
@@ -101,5 +170,8 @@ const actions = (row:any) => [
       </UDropdown>
     </template>
     </UTable>
+    <TemplateProductsVariantsEdit :variant-id="current_variant_id" :variant-req="variant_req" :options="options" v-model="edit_variant_variable" :product-id="products.id" :key="table_key"/>
+
+    <TemplateProductsVariantsDuplicate :variant-req="variant_req" :options="options" v-model="duplicate_variant_variable" :product-id="products.id" :key="table_key+1"/>
   </div>
 </template>
