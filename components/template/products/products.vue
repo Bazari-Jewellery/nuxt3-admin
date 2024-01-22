@@ -60,23 +60,7 @@ const columns = [
 const selectedColumns = ref(columns)
 const columnsTable = computed(()=>columns.filter((col)=> selectedColumns.value.includes(col)))
 
-const status_col = {
-  published: {
-    color: 'emerald',
-  },
-  draft: {
-    color: 'amber',
-  },
-  private: {
-    color: 'purple',
-  },
-  rejected: {
-    color: 'rose'
-  },
-  proposed: {
-    color: 'indigo'
-  },
-} as any
+const status_col = nuxtApp.$product.styles.status
 
 const tableData = ref([] as tableType[])
 const final_data = computed({

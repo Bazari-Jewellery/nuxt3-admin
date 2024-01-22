@@ -38,9 +38,18 @@ export default defineNuxtConfig({
         modifiers: {
           format: 'webp',
           width: 150,
-          height: 150
+          height: 150,
+          fit:'fill'
         }
-      }
+      },
+      prod_tiny_thumbnail: {
+        modifiers: {
+          format: 'webp',
+          width: 36,
+          height: 48,
+          fit:'fill'
+        }
+      },
     }
   },
   experimental:{

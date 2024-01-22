@@ -5,6 +5,25 @@ const nuxtApp = useNuxtApp()
 const collections = nuxtApp.$product.collections.list
 const loading = ref(false)
 const q = ref('')
+const limit = ref(10)
+const offset = ref(1)
+const count = ref(30)
+
+const reqQuery = computed(()=>{
+  return {
+    limit: limit.value,
+    offset: (offset.value -1) * limit.value,
+    q: q.value
+  }
+})
+
+await useLazyAsyncData('product_collections',async()=>{
+  const {collections:_coll,count:_count, offset:_offset, limit:_limit} = await useCybandyClient().admin.collections.list(reqQuery.value)
+  if(_coll){
+    collections.value = _coll
+    count.value = _count
+  }
+})
 
 type tableType = {
   title: string,
@@ -19,7 +38,7 @@ type tableType = {
 const columns = [
   {
     key: 'title',
-    label: 'title',
+    label: 'Title',
     sortable:true
   },
   {
@@ -55,7 +74,7 @@ const final_data = computed({
   get: () => tableData.value
 })
 
-onMounted( ()=>{
+watch(collections, ()=>{
   if(collections.value){
     loading.value = true
     final_data.value = collections.value.map((x) => {
@@ -75,7 +94,9 @@ onMounted( ()=>{
 })
 
 function selectRow(row:any){
-
+  // console.log(row);
+  
+  navigateTo(`/collections/${row.data.id}`)
 }
 </script>
 

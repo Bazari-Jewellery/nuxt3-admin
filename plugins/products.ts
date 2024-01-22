@@ -81,7 +81,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
 
 
-
+  const pageView = ref('product')
   return {
     provide: {
       product: {
@@ -126,7 +126,11 @@ export default defineNuxtPlugin((nuxtApp) => {
               color:'cyan'
             },
           } as Dict
-        }
+        },
+        view:computed({
+          set:(val)=>pageView.value=val,
+          get:()=>pageView.value
+        })
       },
     }
   }
