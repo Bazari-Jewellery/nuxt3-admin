@@ -16,24 +16,34 @@ watch(singleProd, () => {
 })
 
 const id = useRoute().params.id as string
-async function fetchProduct() {
-  isLoading.value = true
-  const payload = ref({
-    id: id,
-    expand: 'options,options.values,variants,categories,collection,type,tags,sales_channels,images,variants.prices,variants.options'
-  })
 
-  await useAsyncData('single_product', async () => {
+
+
+async function fetchProduct() {
+
+  return await useAsyncData( async () => {
+    isLoading.value = true
+    const payload = ref({
+      id: id,
+      expand: 'options,options.values,variants,categories,collection,type,tags,sales_channels,images,variants.prices,variants.options'
+    })
+
     const { data, error } = await useProductsList(payload)
     if (data.value) {
       singleProd.value = data.value.products[0] as any
     }
-    isLoading.value = false
+    setTimeout(() => isLoading.value = false, 500)
     return data.value?.products[0]
   })
 
 }
-await fetchProduct()
+
+onMounted(async () => {
+  console.log('call function');
+  await fetchProduct()
+})
+
+
 const card_ui = { divide: '' }
 const styles = nuxtApp.$product.styles
 
@@ -152,6 +162,7 @@ const edit_prices = ref(false)
 watch(edit_prices, async () => {
   if (!edit_prices.value) {
     await fetchProduct()
+    // fetchProduct.value
   }
 })
 
@@ -163,28 +174,38 @@ watchDeep(add_varaint, async () => {
   if (!add_varaint.value) {
     add_variant_variable.value = {} as AdminPostProductsProductVariantsReq
     await fetchProduct()
+    // fetchProduct.value
+  }
+})
+
+// upload thumbnail
+const isThumbnail = ref(false)
+const thumbnail_files = ref([] as File[])
+const thumbnail_urls = ref([singleProd.value.thumbnail] as string[])
+watch(isThumbnail,()=>{
+  if(isThumbnail.value==false){
+    thumbnail_urls.value = [singleProd.value.thumbnail as string]
+  }
+})
+
+
+// upload images
+const isEditImages = ref(false)
+const images_urls = ref(singleProd.value.images?.map((x)=>x.url))
+watch(isEditImages,()=>{
+  if(isEditImages.value==false){
+    images_urls.value = singleProd.value.images?.map((x)=>x.url)
   }
 })
 </script>
 
 <template>
   <div>
-    <div v-if="isLoading" class="flex justify-between gap-5">
-      <div v-for="j of [1, 2, 3]" class="space-y-4 basis-full md:basis-1/2 lg:basis-1/3 ">
-        <div v-for="i of [1, 2, 3]" class="flex items-center space-x-4">
-          <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
-          <div class="space-y-2 w-full">
-            <USkeleton class="h-4 w-5/6" />
-            <USkeleton class="h-4 w-9/12" />
-          </div>
-        </div>
-      </div>
+    <div class="my-6">
+      <UButton variant="link" icon="i-heroicons-arrow-left" to="/products" label="Back to Products" />
     </div>
+    <div v-if="singleProd.id">
 
-    <div v-else>
-      <div class="my-6">
-        <UButton variant="link" icon="i-heroicons-arrow-left" to="/products" label="Back to Products" />
-      </div>
       <div class="grid grid-cols-10 gap-5">
 
 
@@ -269,12 +290,13 @@ watchDeep(add_varaint, async () => {
               <div class="flex items-center gap-4 justify-between">
                 <span class="text-base lg:text-lg highlight">Thumbnail</span>
                 <div class="flex items-center gap-4">
-                  <UButton size="xs" label="Edit" variant="outline" color="black" />
-                  <UButton size="xs" icon="i-heroicons-trash" variant="outline" color="black" />
+                  <UButton @click="() => isThumbnail = true" size="xs" variant="outline" color="black" >{{ singleProd.thumbnail ? 'Edit' : 'Upload' }}</UButton>
+                  <UButton v-if="singleProd.thumbnail" size="xs" icon="i-heroicons-trash" variant="outline" color="black" />
                 </div>
               </div>
             </template>
-            <NuxtImg class="w-[120px] h-[120px]" :src="(singleProd?.thumbnail as any)" preset="prod_small_thumbnail" />
+            <NuxtImg v-if="singleProd.thumbnail" class="w-[120px] h-[120px]" :src="(singleProd?.thumbnail as any || '')"
+              preset="prod_small_thumbnail" />
           </UCard>
 
           <UCard :ui="u_card_ui">
@@ -282,14 +304,14 @@ watchDeep(add_varaint, async () => {
               <div class="flex items-center gap-4 justify-between">
                 <span class="text-base lg:text-lg highlight">Images</span>
                 <div class="flex items-center gap-4">
-                  <UButton size="xs" label="Edit Media" variant="outline" color="black" />
+                  <UButton @click="()=>isEditImages=true" size="xs" label="Edit Media" variant="outline" color="black" />
                   <!-- <UButton size="xs" icon="i-heroicons-trash" variant="outline" color="black"/> -->
                 </div>
               </div>
             </template>
             <div class="flex flex-wrap items-center gap-5">
-              <NuxtImg v-for="img of singleProd.images" class="w-[120px] h-[120px]" :src="(img.url as any)"
-                preset="prod_small_thumbnail" />
+              <NuxtImg v-if="singleProd.images" v-for="img of singleProd.images" class="w-[120px] h-[120px]"
+                :src="(img.url as any)" preset="prod_small_thumbnail" />
             </div>
           </UCard>
         </div>
@@ -307,5 +329,20 @@ watchDeep(add_varaint, async () => {
         v-model="add_varaint" v-model:variant-req="add_variant_variable" />
     </div>
 
+    <div v-else class="flex justify-between gap-5">
+      <div v-for="j of [1, 2, 3]" class="space-y-4 basis-full md:basis-1/2 lg:basis-1/3 ">
+        <div v-for="i of [1, 2, 3]" class="flex items-center space-x-4">
+          <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
+          <div class="space-y-2 w-full">
+            <USkeleton class="h-4 w-5/6" />
+            <USkeleton class="h-4 w-9/12" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <UploadThumbnail v-model="isThumbnail" v-model:image-urls="thumbnail_urls" :upload="true" />
+    <UploadImagesMedia v-model="isEditImages" upload v-model:current-image-urls="images_urls" />
   </div>
 </template>
