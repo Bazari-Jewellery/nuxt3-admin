@@ -1,5 +1,5 @@
 <script setup lang=ts>
-import type { AdminPostProductsProductVariantsReq } from "@medusajs/medusa"
+import type { AdminPostProductsProductVariantsReq, ProductStatus } from "@medusajs/medusa"
 
 definePageMeta({
   scrollToTop: true
@@ -197,6 +197,42 @@ watch(isEditImages,()=>{
     images_urls.value = singleProd.value.images?.map((x)=>x.url)
   }
 })
+
+// set status
+
+async function setStatus(status:'draft'|'published'|'proposed'|'rejected'){
+  const {data} = await useProductUpdate(singleProd.value.id as string, {status:status as any })
+  if(data.value){
+    singleProd.value.status = data.value.product.status
+  }
+}
+
+const status_menu = [[
+  {
+    label:'Draft',
+    click:async()=>{
+      await setStatus('draft')
+    }
+  },
+  {
+    label:'Published',
+    click:async()=>{
+      await setStatus('published')
+    }
+  },
+  {
+    label:'Proposed',
+    click:async()=>{
+      await setStatus('proposed')
+    }
+  },
+  {
+    label:'Rejected',
+    click:async()=>{
+      await setStatus('rejected')
+    }
+  },
+]]
 </script>
 
 <template>
@@ -219,9 +255,12 @@ watch(isEditImages,()=>{
                   {{ singleProd?.title }}
                 </h1>
                 <div class="flex items-center gap-4">
-                  <UBadge v-if="singleProd?.status"
-                    :variant="styles.status?.[singleProd.status as string]?.color ? 'subtle' : 'solid'"
+                  <UDropdown :items="status_menu">
+                    
+                  <UButton v-if="singleProd?.status"  size="xs"
+                    :variant="styles.status?.[singleProd.status as string]?.color ? 'outline' : 'solid'"
                     :label="singleProd.status" :color="styles.status?.[singleProd.status as string]?.color || 'gray'" />
+                  </UDropdown>
 
                   <UDropdown :items="general_menu">
                     <UButton size="xs" color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal" />
