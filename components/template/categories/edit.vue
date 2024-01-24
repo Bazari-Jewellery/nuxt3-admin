@@ -30,22 +30,26 @@ const category = ref({
   metadata: props.category.metadata,
 } as AdminPostProductCategoriesReq)
 
-const target = ref(null)
-const targetIsVisible = useElementVisibility(target)
-// watchDeep(targetIsVisible, () => {
-//   if (targetIsVisible.value) {
-//     category.value = {
-//       name: props.category.name,
-//       handle: props.category.handle,
-//       description: props.category.description,
-//       is_active: props.category.is_active as boolean,
-//       is_internal: props.category.is_internal as boolean,
-//       metadata: props.category.metadata,
-//     }
-//   }else{
-//     category.value = {} as AdminPostProductCategoriesReq
-//   }
-// })
+// const target = ref(null)
+// const targetIsVisible = useElementVisibility(target)
+watch(modal, () => {
+  if (modal.value) {
+    console.log('visible');
+    
+    category.value = {
+      name: props.category.name,
+      handle: props.category.handle,
+      description: props.category.description,
+      is_active: props.category.is_active as boolean,
+      is_internal: props.category.is_internal as boolean,
+      metadata: props.category.metadata,
+    }
+  }else{
+    console.log('hidden');
+    
+    category.value = {} as AdminPostProductCategoriesReq
+  }
+})
 
 async function createCategory() {
 
@@ -67,15 +71,15 @@ async function createCategory() {
 
 
 
-const title = `Edit ${props.category.name}`
+const title = computed(()=>`Edit ${props.category.name}`)
 
 </script>
 
 <template>
   <ModalTitleButton :title="title" v-model="modal" @send="createCategory"
     width="min-w-full sm:min-w-[550px] md:min-w-[650px] lg:min-w-[760px]">
-    <div ref="target">
+    <!-- <div ref="target"> -->
       <FormsCategoriesAddEdit v-model="category" />
-    </div>
+    <!-- </div> -->
   </ModalTitleButton>
 </template>

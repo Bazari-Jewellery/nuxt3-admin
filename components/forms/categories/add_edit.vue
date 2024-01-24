@@ -36,14 +36,14 @@ const model = computed({
     <UTextarea v-model="model.description" name="description" resize :rows="4"/>
    </UFormGroup>
 
-   <UFormGroup label="Visibility" name="is_internal">
+   <UFormGroup label="Status" name="is_internal">
     <div class="flex items-center justify-between gap-5">
       <p>If true category will be available to only administrators</p>
       <UToggle v-model="model.is_internal" />
     </div>
    </UFormGroup>
 
-   <UFormGroup label="Status" name="is_active">
+   <UFormGroup label="Visibility" name="is_active">
     <div class="flex items-center justify-between gap-5">
       <p>If true category will be visible to customers</p>
       <UToggle v-model="model.is_active" />
