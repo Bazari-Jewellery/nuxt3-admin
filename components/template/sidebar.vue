@@ -1,6 +1,15 @@
 <script setup lang=ts>
 import { useLogout } from '~/composables/auth';
 
+const props = defineProps({
+  modelValue: Boolean
+})
+const emits = defineEmits(['update:modelValue'])
+
+const toggle = computed({
+  set:(val)=>emits('update:modelValue', val),
+  get: () => props.modelValue
+})
 
 const nuxtApp = useNuxtApp()
 const collapse = nuxtApp.$theme.sidebar.collapse
@@ -11,42 +20,66 @@ const links = computed(() => {
     {
       label: 'Orders',
       icon: 'i-heroicons-shopping-cart',
-      to: '/orders'
+      to: '/orders',
+      click:()=>{
+        toggle.value = false
+      }
     },
     {
       label: 'Products',
       icon: 'i-heroicons-tag',
-      to: '/products'
+      to: '/products',
+      click:()=>{
+        toggle.value = false
+      }
     },
     {
       label: 'Categories',
       icon: 'i-carbon-category',
-      to: '/categories'
+      to: '/categories',
+      click:()=>{
+        toggle.value = false
+      }
     },
     {
       label: 'Customers',
       icon: 'i-heroicons-users',
-      to: '/customers'
+      to: '/customers',
+      click:()=>{
+        toggle.value = false
+      }
     },
     {
       label: 'Discounts',
       icon: 'i-heroicons-chart-bar',
-      to: '/discounts'
+      to: '/discounts',
+      click:()=>{
+        toggle.value = false
+      }
     },
     {
       label: 'Gift Cards',
       icon: 'i-heroicons-gift',
-      to: '/gift-cards'
+      to: '/gift-cards',
+      click:()=>{
+        toggle.value = false
+      }
     },
     {
       label: 'Pricing',
       icon: 'i-heroicons-currency-euro',
-      to: '/pricing'
+      to: '/pricing',
+      click:()=>{
+        toggle.value = false
+      }
     },
     {
       label: 'Settings',
       icon: 'i-heroicons-cog-6-tooth',
-      to: '/settings'
+      to: '/settings',
+      click:()=>{
+        toggle.value = false
+      }
     },
     {
       label: '',
