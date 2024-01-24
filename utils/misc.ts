@@ -84,14 +84,14 @@ export function dateFormatter(dateString:string|Date) {
   // })
 }
 
-export function toastNotification(title='', description='', timeout=0, icon='', color=''){
+export function toastNotification(title='', description='', timeout=3000, icon='', color=''){
   
   const toast = useToast()
 
   function success(){
     const my_title = title ? title : 'Success'
     const my_desc = description
-    const my_timeout = timeout ? timeout : 3000
+    const my_timeout = timeout
     const my_icon = icon ? icon : 'i-heroicons-check-badge-20-solid'
     const my_color = color ? color : 'emerald'
 
@@ -109,7 +109,7 @@ export function toastNotification(title='', description='', timeout=0, icon='', 
 
     const my_title = title ? title : 'Oops!!!'
     const my_desc = description ? description : 'Something unexpected occurred'
-    const my_timeout = timeout ? timeout : 3000
+    const my_timeout = timeout
     const my_icon = icon ? icon : 'i-heroicons-exclamation-triangle-20-solid'
     const my_color = color ? color : 'red'
 
@@ -126,7 +126,7 @@ export function toastNotification(title='', description='', timeout=0, icon='', 
   function default_toast(){
     const my_title = title ? title : 'Notification'
     const my_desc = description
-    const my_timeout = timeout ? timeout : 3000
+    const my_timeout = timeout
     const my_icon = icon ? icon : 'i-heroicons-bell-20-solid'
     const my_color = color ? color : 'primary'
 

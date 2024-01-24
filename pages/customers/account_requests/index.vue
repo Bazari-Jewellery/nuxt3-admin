@@ -150,7 +150,7 @@ const items = (row:any) =>[
     }">
     <template #header>
       <div class="flex items-center justify-between">
-        <UButton variant="link" icon="i-heroicons-arrow-left" label="Back to customers" to="/customers"/>
+        <UButton variant="link" icon="i-heroicons-arrow-uturn-left" label="Back to customers" to="/customers"/>
         <UButton variant="link" label="Add" icon="i-heroicons-plus" to="/customers/account_requests/create"/>
       </div>
       <div class="flex items-end gap-5">

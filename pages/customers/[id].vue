@@ -71,7 +71,7 @@ asyncComputed(async()=>{
       <UCard :ui="{ divide: '' }">
       <template #header>
         <div class="relative space-y-8">
-          <UButton to="/customers" label="Back to customers" icon="i-heroicons-arrow-left" variant="link"
+          <UButton to="/customers" label="Back to customers" icon="i-heroicons-arrow-uturn-left" variant="link"
             class="right-0" />
 
           <div class="flex gap-7 items-center">

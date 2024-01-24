@@ -64,7 +64,7 @@ const items = [
 <template>
   <div>
     <div>
-      <UButton variant="link" label="Back to Account requests" icon="i-heroicons-arrow-left"
+      <UButton variant="link" label="Back to Account requests" icon="i-heroicons-arrow-uturn-left"
         to="/customers/account_requests" />
     </div>
 

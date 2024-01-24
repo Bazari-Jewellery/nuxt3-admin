@@ -62,7 +62,12 @@ export default defineNuxtPlugin((nuxtApp) => {
   const getCategories  = async () => {
 
     const {data, error} = await useAsyncData('product-categories', async()=>{
-      return await useCybandyClient().admin.productCategories.list()
+      const {product_categories,count,limit,offset} =  await useCybandyClient().admin.productCategories.list(
+        {
+          limit:1000, include_descendants_tree:true, 
+          parent_category_id:JSON.stringify(null)
+        })
+        return {product_categories, count, limit, offset}
     },{pick:['product_categories', 'count', 'limit', 'offset']})
 
     if(data.value?.product_categories){
@@ -130,8 +135,16 @@ export default defineNuxtPlugin((nuxtApp) => {
         view:computed({
           set:(val)=>pageView.value=val,
           get:()=>pageView.value
-        })
+        }),
+        categories:{
+        all:computed({
+          set:(val)=>categories_all.value=val,
+          get:()=>categories_all.value
+        }),
+        getCategories
+      }
       },
+      
     }
   }
 })

@@ -174,7 +174,7 @@ watch(add_products, async () => {
 
     <div class="space-y-8">
       <div class="my-6">
-        <UButton @click="goBack" variant="link" icon="i-heroicons-arrow-left" to="/products"
+        <UButton @click="goBack" variant="link" icon="i-heroicons-arrow-uturn-left" to="/products"
           label="Back to Collections" />
       </div>
 

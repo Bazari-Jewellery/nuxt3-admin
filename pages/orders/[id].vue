@@ -237,7 +237,7 @@ const addShippingMethod = ref(false)
       <!-- <UCard :ui="{ divide: '' }">
         <template #header> -->
       <div class="relative">
-        <UButton to="/orders" label="Back to orders" icon="i-heroicons-arrow-left" variant="link" class=" right-0" />
+        <UButton to="/orders" label="Back to orders" icon="i-heroicons-arrow-uturn-left" variant="link" class=" right-0" />
         <!-- <div class="text-base">
               <span>Order #</span>
               <span class="font-medium">{{ order.display_id }}</span>

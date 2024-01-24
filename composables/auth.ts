@@ -43,3 +43,32 @@ export async function useLogin(email: string, password: string) {
     return res
   }
 }
+
+
+export async function useLogout(){
+  const cybandy = useCybandyClient()
+  
+  try {
+
+    const {data,error} = await useLazyAsyncData('login_auth', async()=>{
+      return await cybandy.admin.auth.deleteSession()
+    })
+
+    const bazariToken = useNuxtApp().$currentUser.token
+
+    if(error.value){
+      toastNotification('Oops!!!', '',0).error()
+    }else{
+      // console.log('useLogin', data.value?.access_token);
+      
+      bazariToken.value = ''
+      isCustomerLoggedIn().value = false
+      
+      toastNotification('See you soon').default_toast()
+      navigateTo('/auth')
+    }
+  } catch (error: any) {
+    useToastFailure()
+    
+  }
+}

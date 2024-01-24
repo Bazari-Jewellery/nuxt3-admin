@@ -1,4 +1,6 @@
 <script setup lang=ts>
+import { useLogout } from '~/composables/auth';
+
 
 const nuxtApp = useNuxtApp()
 const collapse = nuxtApp.$theme.sidebar.collapse
@@ -18,7 +20,7 @@ const links = computed(() => {
     },
     {
       label: 'Categories',
-      icon: 'i-heroicons-swatch',
+      icon: 'i-carbon-category',
       to: '/categories'
     },
     {
@@ -34,7 +36,7 @@ const links = computed(() => {
     {
       label: 'Gift Cards',
       icon: 'i-heroicons-gift',
-      to: '/gift_cards'
+      to: '/gift-cards'
     },
     {
       label: 'Pricing',
@@ -57,28 +59,28 @@ const links = computed(() => {
 const isLoggedIn = computed(()=>isCustomerLoggedIn().value)
 const name = computed(()=>userData.value.first_name + ' ' + userData.value.last_name)
 const userMenu = [
-  [
-  {
-    label:'View',
-    icon: 'i-heroicons-arrow-up-right',
-    click: ()=>{
+  // [
+  // {
+  //   label:'View',
+  //   icon: 'i-heroicons-arrow-up-right',
+  //   click: ()=>{
 
-    }
-  },
-  {
-    label:'Edit',
-    icon: 'i-heroicons-pencil-square',
-    click: ()=>{
+  //   }
+  // },
+  // {
+  //   label:'Edit',
+  //   icon: 'i-heroicons-pencil-square',
+  //   click: ()=>{
 
-    }
-  },
-  ],
+  //   }
+  // },
+  // ],
   [
   {
     label:'Logout',
     icon: 'i-ph-sign-out',
-    click: ()=>{
-
+    click: async()=>{
+      useLogout()
     }
   },
   ]

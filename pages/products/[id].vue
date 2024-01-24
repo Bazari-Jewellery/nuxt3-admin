@@ -238,7 +238,7 @@ const status_menu = [[
 <template>
   <div>
     <div class="my-6">
-      <UButton variant="link" icon="i-heroicons-arrow-left" to="/products" label="Back to Products" />
+      <UButton variant="link" icon="i-heroicons-arrow-uturn-left" to="/products" label="Back to Products" />
     </div>
     <div v-if="singleProd.id">
 
