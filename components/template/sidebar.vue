@@ -121,7 +121,8 @@ const userMenu = [
 
 
     <template #footer>
-      <div v-if="userData.id" class="flex items-center justify-center gap-5">
+      <ClientOnly>
+        <div v-if="userData.id" class="flex items-center justify-center gap-5">
         <UtilitiesAvatar src="" :name="name" />
         <div class="w-fit h-fit flex flex-col gap-1">
           <span :class="collapse ? 'hidden' : 'inline-block capitalize'">{{ userData?.first_name }}</span>
@@ -135,6 +136,7 @@ const userMenu = [
       <div v-else class="w-full flex items-center justify-center">
         <UButton to="/auth" icon="i-ph-user" color="gray" variant="ghost" size="md" />
       </div>
+      </ClientOnly>
     </template>
   </UCard>
 </template>

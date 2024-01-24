@@ -14,6 +14,12 @@ export default defineNuxtPlugin((nuxtApp) => {
     return data.value?.user
   }
 
+  nuxtApp.hook('app:beforeMount',()=>{
+    setTimeout(async() => {
+      await getUser()
+    }, 0);
+  })
+
   return {
     provide:{
       currentUser:{

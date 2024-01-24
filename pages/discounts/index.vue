@@ -6,5 +6,5 @@ useHead({
 </script>
 
 <template>
-<div>discount page</div>
+    <UtilitiesComingSoon />
 </template>

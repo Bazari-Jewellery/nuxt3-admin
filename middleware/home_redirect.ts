@@ -2,6 +2,10 @@
 
 export default defineNuxtRouteMiddleware((to,from) => {
   if(to.path=='/'){
-    return navigateTo('/orders')
+    if(isCustomerLoggedIn().value){
+      return navigateTo('/orders')
+    }else{
+      return navigateTo('/auth')
+    }
   }
 })

@@ -6,5 +6,5 @@ useHead({
 </script>
 
 <template>
-<div>gift cards page</div>
+    <UtilitiesComingSoon />
 </template>

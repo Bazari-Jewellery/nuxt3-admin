@@ -6,5 +6,5 @@ useHead({
 </script>
 
 <template>
-<div>settings-page</div>
+    <UtilitiesComingSoon />
 </template>
