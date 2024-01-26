@@ -1,5 +1,6 @@
 import Medusa from "@medusajs/medusa-js"
 export default defineNuxtRouteMiddleware(async (to, from) => {
+  if(to.path=='/invite') return
   try {
     useAsyncData(async () => {
       const user = await useNuxtApp().$currentUser.getUser();

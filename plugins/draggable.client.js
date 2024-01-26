@@ -1,7 +1,7 @@
 import draggable from "vuedraggable"
 export default defineNuxtPlugin((nuxtApp)=>{
-  nuxtApp.vueApp.use(draggable,{
+  // nuxtApp.vueApp.use(draggable,{
     
-  })
+  // })
  
 })
