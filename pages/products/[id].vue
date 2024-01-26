@@ -263,7 +263,7 @@ const status_menu = [[
                   </UDropdown>
 
                   <UDropdown :items="general_menu">
-                    <UButton size="xs" color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal" />
+                    <UButton size="xs" color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
                   </UDropdown>
 
                 </div>

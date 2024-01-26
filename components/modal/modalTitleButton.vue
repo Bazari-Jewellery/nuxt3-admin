@@ -10,6 +10,7 @@ const props = defineProps({
     type:String,
     default: 'Save'
   },
+  disabled:Boolean,
   width:String
 })
 const emits = defineEmits(['update:modelValue', 'send'])
@@ -43,7 +44,7 @@ const modal = computed({
          
          <div class="flex items-center gap-5">
            <UButton @click="modal=false" variant="outline" label="Cancel"/>
-           <UButton @click="()=>$emit('send',true)" variant="solid" :label="$props.buttonConfirmLabel" />
+           <UButton @click="()=>$emit('send',true)" :disabled="disabled" variant="solid" :label="$props.buttonConfirmLabel" />
          </div>
        </div>
         </slot>

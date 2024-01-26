@@ -94,7 +94,7 @@ async function delFunc(data) {
       <div class="flex items-center gap-5">
         <UIcon @click="() => addFunc(element)" name="i-heroicons-plus" class="w-5 h-4 cursor-pointer" />
         <UDropdown :items="items(element)">
-          <UIcon name="i-heroicons-ellipsis-horizontal" class="w-4 h-4" />
+          <UIcon name="i-heroicons-ellipsis-horizontal-20-solid" class="w-4 h-4" />
         </UDropdown>
 
       </div>

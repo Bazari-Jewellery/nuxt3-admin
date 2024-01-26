@@ -182,7 +182,7 @@ watch(add_products, async () => {
         <div class="flex items-center justify-between">
           <h2 class="text-lg lg:text-xl">Featured Products</h2>
           <UDropdown :items="main_menu">
-            <UButton variant="ghost" color="gray" icon="i-heroicons-ellipsis-horizontal" />
+            <UButton variant="ghost" color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" />
           </UDropdown>
         </div>
       </UCard>

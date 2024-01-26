@@ -1,51 +1,38 @@
 <script setup lang="ts">
-
-const props = defineProps({
-  toggleModal: Boolean,
-  modelValue: Boolean
-})
-
-const emits = defineEmits(['update:modelValue', 'update:toggleModal'])
+import type { PropType } from 'vue';
 
 
 type Ifaq = {
   question: string,
   answer: string
 }
-const section_id = ref('')
+const props = defineProps({
+  modelValue: {
+    type: Array<Ifaq>,
+    required:true
+  },
+  section_id:{
+    type:String
+  }
+})
+
+const emits = defineEmits(['update:modelValue','update:section_id'])
+
+
+
+
+const section_id = computed({
+  set:(val)=>emits('update:section_id',val),
+  get:()=>props.section_id
+})
 const sections = useNuxtApp().$settings.faq.section.list
 
-const _state = ref([
-  { question: '', answer: '' }
-] as Ifaq[])
+const _state = computed({
+  set:(val)=>emits('update:modelValue',val),
+  get:()=>props.modelValue
+})
 
-async function onSubmit() {
-  // Do something with data
-  // console.log(event.data);
 
-  await useLazyFetch('/api/settings/faq/single/create', {
-    method: 'post',
-    body: {
-      faq: _state.value,
-      section_id: section_id.value
-    },
-    watch:false,
-    async onResponse({ response }) {
-      if (response.ok) {
-        // console.log(response._data);
-        
-        emits('update:modelValue', true)
-        emits('update:toggleModal', true)
-        useToastSuccess()
-
-      }else{
-        // console.log(response);
-        useToastFailure()
-      }
-    }
-  })
-
-}
 
 function newFaq(){
   _state.value.push({ question: '', answer: '' })
@@ -55,11 +42,6 @@ function delFaq(ind:number){
   _state.value.splice(ind,1)
 }
 
-const disable_send = computed(()=>{
-  const _filter = _state.value.filter((x)=> !x.answer || !x.question)
-  return _filter.length > 0
-})
-
 watchEffect(()=>{
   console.log(section_id.value);
   
@@ -67,7 +49,7 @@ watchEffect(()=>{
 </script>
 
 <template>
-  <form class="space-y-8" @submit="onSubmit">
+  <form class="space-y-8">
     <UFormGroup label="Section" hint="Section of the FAQs below">
       <USelect v-model="section_id" :options="sections" option-attribute="name" value-attribute="id" />
     </UFormGroup>
@@ -92,9 +74,7 @@ watchEffect(()=>{
       <UButton @click="newFaq" block>
         New
       </UButton>
-      <UButton type="submit" block :disabled="disable_send">
-        Send
-      </UButton>
+      
     </div>
   </form>
 </template>
