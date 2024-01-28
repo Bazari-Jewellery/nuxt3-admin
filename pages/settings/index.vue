@@ -53,7 +53,7 @@ const items = [
         title: 'The Team',
         icon: 'i-ph-users-three',
         description: 'Manage users of your store',
-        to: '#',
+        to: '/settings/team',
         condition: true
     },
 ]
