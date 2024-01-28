@@ -12,27 +12,27 @@ const items = [
         icon: 'i-heroicons-key',
         description: 'Create and manage API keys',
         to: '#',
-        condition: true
+        condition: false
     },
     {
         title: 'Currencies',
         icon: 'i-heroicons-currency-euro',
         description: 'Manage the currencies of your store',
         to: '#',
-        condition: true
+        condition: false
     },
     {
         title: 'Regions',
         icon: 'i-heroicons-map',
         description: 'Manage shipping, payment, and fulfillment across regions',
         to: '#',
-        condition: true
+        condition: false
     },
     {
         title: 'Store Details',
         icon: 'i-heroicons-building-storefront',
         description: 'Manage your business details',
-        to: '#',
+        to: '/settings/store',
         condition: true
     },
     {
@@ -47,7 +47,7 @@ const items = [
         icon: 'i-ph-money',
         description: 'Manage taxes across regions and products',
         to: '#',
-        condition: true
+        condition: false
     },
     {
         title: 'The Team',
@@ -69,7 +69,7 @@ const ui = useAppConfig().ui
             </div>
         </template>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div v-for="item of items" class="col-span-1">
+            <div v-for="item of items.filter((x)=>x.condition)" class="col-span-1">
                 <NuxtLink v-if="item.condition" :to="item.to" class="w-full">
                     <div class="flex items-center gap-5 w-full group hover:shadow-none"
                         :class="[ui.card.base, ui.card.background, ui.card.ring, ui.card.rounded, ui.card.shadow, ui.card.body.padding]">
