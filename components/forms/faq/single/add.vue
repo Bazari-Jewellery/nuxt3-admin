@@ -4,7 +4,8 @@ import type { PropType } from 'vue';
 
 type Ifaq = {
   question: string,
-  answer: string
+  answer: string,
+  id?:string
 }
 const props = defineProps({
   modelValue: {
@@ -16,7 +17,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['update:modelValue','update:section_id'])
+const emits = defineEmits(['update:modelValue','update:section_id', 'add_new', 'delete'])
 
 
 
@@ -34,18 +35,8 @@ const _state = computed({
 
 
 
-function newFaq(){
-  _state.value.push({ question: '', answer: '' })
-}
 
-function delFaq(ind:number){
-  _state.value.splice(ind,1)
-}
 
-watchEffect(()=>{
-  console.log(section_id.value);
-  
-})
 </script>
 
 <template>
@@ -60,7 +51,7 @@ watchEffect(()=>{
           <UInput v-model="faq.question" placeholder="What is your name?" />
 
           <template #hint>
-            <UIcon name="i-heroicons-trash" class="w-4 h-4 cursor-pointer" @click="()=>delFaq(ind)"/>
+            <UIcon name="i-heroicons-trash" class="w-4 h-4 cursor-pointer" @click="()=>$emit('delete',ind)"/>
           </template>
         </UFormGroup>
 
@@ -71,7 +62,7 @@ watchEffect(()=>{
     </div>
 
     <div class="space-y-4">
-      <UButton @click="newFaq" block>
+      <UButton @click="()=>$emit('add_new')" block>
         New
       </UButton>
       

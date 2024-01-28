@@ -55,10 +55,18 @@ const disable_send = computed(()=>{
   const _filter = _state.value.filter((x)=> !x.answer || !x.question)
   return _filter.length > 0 || _state.value.length == 0
 })
+
+function newFaq(){
+  _state.value.push({ question: '', answer: '' })
+}
+
+function delFaq(ind:number){
+  _state.value.splice(ind,1)
+}
 </script>
 
 <template>
   <ModalTitleButton v-model="modal" @send="createFaq" :disabled="disable_send" title="Add FAQs" button-confirm-label="Save & Close" width="min-w-full sm:min-w-[500px] md:min-w-[650px]">
-    <FormsFaqSingleAdd v-model="_state" v-model:section_id="section_id"/>
+    <FormsFaqSingleAdd @add_new="newFaq" @delete="(val)=>delFaq(val)" v-model="_state" v-model:section_id="section_id"/>
   </ModalTitleButton>
 </template>

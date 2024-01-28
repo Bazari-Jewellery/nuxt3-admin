@@ -21,28 +21,39 @@ function addSection() {
 
 
 
-const section_id = ref<string|undefined>(undefined)
+const section_id = ref<string | undefined>(undefined)
+const description = ref('')
+const title = ref('')
+
+const current_faq_section = ref({} as IFAQSECTION)
 
 const sidebar = computed(() => section.value.map((x) => {
   return {
     label: x.name,
-    id:x.id,
+    data: x,
     // to: `/settings/faq/${x.id}`,
     click: () => {
       section_id.value = x.id
+      description.value = x.description
+      title.value = x.name
+      current_faq_section.value = x
     }
   }
 }))
 
 // watch(sidebar, () => {
 
-  
-  if (sidebar.value.length) {
-    console.log(sidebar.value);
-    if (section_id.value == undefined) {
-      section_id.value = sidebar.value[0].id
-    }
+
+if (sidebar.value.length) {
+  console.log(sidebar.value);
+  if (section_id.value == undefined) {
+    const __sec = sidebar.value[0].data
+    section_id.value = __sec.id
+    title.value = __sec.name
+    description.value = __sec.description
+    current_faq_section.value = __sec
   }
+}
 // })
 
 const faq = ref([] as IFAQ[])
@@ -51,7 +62,6 @@ function addFaq() {
   // isOpen.value = true
   _add_faq.value = true
 }
-
 
 
 
@@ -75,13 +85,13 @@ const accordionFaq = computed(() => faq.value.map((x) => {
 
 const items = (item: any) => [
   [
-    {
-      label: 'Edit',
-      icon: 'i-heroicons-pencil-square',
-      click: () => {
+    // {
+    //   label: 'Edit',
+    //   icon: 'i-heroicons-pencil-square',
+    //   click: () => {
 
-      }
-    },
+    //   }
+    // },
     {
       label: 'Delete',
       icon: 'i-heroicons-trash',
@@ -101,6 +111,19 @@ watch(_add_faq, () => {
   }
 })
 
+const _edit_faq_section = ref(false)
+
+watch(current_faq_section,()=>{
+  console.log(current_faq_section.value);
+  
+},{deep:true})
+
+const _edit_faq = ref(false)
+watch(_edit_faq,()=>{
+  if(!_edit_faq.value){
+    refresh()
+  }
+})
 </script>
 
 <template>
@@ -130,15 +153,28 @@ watch(_add_faq, () => {
               class="min-w-[200px] bg-gray-200/80 dark:bg-transparent" />
           </div>
           <div class="flex-grow">
-            <!-- if no faq exist for the section -->
+           
+
+            <UCard class="" :ui="{ divide: '',header:{base:'flex items-center justify-between'} }">
+              <template #header>
+                <div class="space-y-1">
+                  <h4 class="text-base lg:text-lg highlight">{{ title }}</h4>
+                  <p>{{ description }}</p>
+                </div>
+                <div class="flex items-center gap-5">
+                  <UButton @click="_edit_faq_section=true" variant="solid" color="white" label="Edit Section" />
+                  <UButton v-if="faq.length" @click="()=> _edit_faq =true" variant="solid" color="white" label="Edit FAQs" />
+
+                </div>
+              </template>
+               <!-- if no faq exist for the section -->
             <div v-if="faq.length == 0">
               <div class="flex items-center justify-center min-h-[100px]">
                 <UButton @click="addFaq" label="Add FAQ" icon="i-heroicons-plus" variant="outline" size="sm" />
               </div>
             </div>
 
-            <div v-else>
-              <UAccordion :items="accordionFaq" multiple
+              <UAccordion v-else :items="accordionFaq" multiple
                 :ui="{ wrapper: 'flex flex-col w-full gap-1', item: { padding: 'px-4 py-5 sm:p-6', base: 'bg-gray-100 dark:bg-gray-800/40' } }">
                 <template #default="{ item, index, open }">
                   <div class="flex items-center gap-5 justify-between">
@@ -162,7 +198,7 @@ watch(_add_faq, () => {
                   </div>
                 </template>
               </UAccordion>
-            </div>
+            </UCard>
           </div>
         </div>
       </div>
@@ -176,5 +212,7 @@ watch(_add_faq, () => {
     </div>
     <TemplateSettingsFaqSectionAdd v-model="_add_section" />
     <TemplateSettingsFaqSingleAdd v-model="_add_faq" />
+    <TemplateSettingsFaqSectionEdit v-model="_edit_faq_section" :faq="current_faq_section" />
+    <TemplateSettingsFaqSingleEdit v-if="faq.length" :faqs="faq" v-model:section_id="section_id" v-model="_edit_faq" />
   </UCard>
 </template>

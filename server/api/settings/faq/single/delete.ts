@@ -13,9 +13,9 @@ export default defineEventHandler(async (event) => {
     },
     method:'GET',
     headers:{
-      authorization: `Bearer ${cookie}`
+      Authorization: `Bearer ${cookie}`
     }
   })
 
-  return d as {faq:IFAQ}
+  return d as {faq:IFAQ[]}
 })
