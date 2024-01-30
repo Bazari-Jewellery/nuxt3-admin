@@ -34,6 +34,15 @@ async function update(status:string){
     useToastSuccess('',msg)
   }
 }
+async function confirm(){
+  const d = await useCustomersAccountRequestConfirm(id)
+
+  if(d?.data){
+    information.value = d.data
+    // const msg = status =='review'? 'Account under review': `Account ${status}`
+    useToastSuccess('','Account Confirmed')
+  }
+}
 
 const items = [
 
@@ -54,7 +63,40 @@ const items = [
       label: 'Confirmed',
       icon: 'i-heroicons-check-circle',
       click: async () => {
-        await update('confirmed')
+        await confirm()
+      }
+    },
+    {
+      label: 'Delete',
+      icon: 'i-heroicons-trash',
+      click: async () => {
+        const d = await useCustomersAccountRequestDelete(id)
+        if(d?.data){
+          if(d.data.deleted){
+            navigateTo('/customers/account_requests')
+            return
+          }
+        }
+        useToastFailure()
+      }
+    },
+  ]
+]
+
+const confirmed_items = [
+  [
+  {
+      label: 'Delete',
+      icon: 'i-heroicons-trash',
+      click: async () => {
+        const d = await useCustomersAccountRequestDelete(id)
+        if(d?.data){
+          if(d.data.deleted){
+            navigateTo('/customers/account_requests')
+            return
+          }
+        }
+        useToastFailure()
       }
     },
   ]
@@ -78,7 +120,10 @@ const items = [
                 <div class="flex gap-5 items-center">
                   <UBadge variant="soft" :label="information?.status" :ui="{ font: ' font-medium capitalize' }" />
 
-                  <UDropdown :items="items">
+                  <UDropdown v-if="information.status!=='confirmed'" :items="items">
+                    <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+                  </UDropdown>
+                  <UDropdown v-else :items="confirmed_items">
                     <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
                   </UDropdown>
                 </div>

@@ -160,6 +160,19 @@ async function cancel_fulfillment_func(fulfillment_id = current_fulfillment.valu
   }
 }
 
+// check if create fulfillment should show
+const isAllFulfilled = computed(()=>{
+  const items_len = order.value.items.reduce((accumulator, x)=>{
+    return accumulator + x.quantity
+  },0)
+  const fulfilled_items = order.value.fulfillments.reduce((init, y)=>{
+    return init + y.items.reduce((nu,x)=>{
+      return nu + x.quantity
+    },0)
+  },0)
+
+  return items_len === fulfilled_items
+})
 
 
 const fulfillment_menu = (row: any) => [
@@ -227,6 +240,7 @@ const customer_menu = (row: any) => [
 
 
 const addShippingMethod = ref(false)
+
 </script>
 
 <template>
@@ -234,48 +248,12 @@ const addShippingMethod = ref(false)
 
     <div v-if="order" class="space-y-6 sm:space-y-8">
 
-      <!-- <UCard :ui="{ divide: '' }">
-        <template #header> -->
+    
       <div class="relative">
         <UButton to="/orders" label="Back to orders" icon="i-heroicons-arrow-uturn-left" variant="link" class=" right-0" />
-        <!-- <div class="text-base">
-              <span>Order #</span>
-              <span class="font-medium">{{ order.display_id }}</span>
-            </div>
-            <span class="text-gray-500 dark:text-gray-400">{{ dateFormatter(order.created_at) }}</span>
-            <div class="flex gap-5 my-4">
-              <div class="flex flex-col gap-2">
-                <span>Email</span>
-                <span class="text-gray-500 dark:text-gray-400">{{ order.email }}</span>
-              </div>
-              <div>
-                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 "></div>
-              </div>
-              <div class="flex flex-col gap-2">
-                <span>Phone</span>
-                <span class="text-gray-500 dark:text-gray-400">
-                  {{ order.shipping_address?.phone ? order.shipping_address?.phone : 'N/A' }}
-                </span>
-              </div>
-              <div>
-                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 "></div>
-              </div>
-              <div class="flex flex-col gap-2">
-                <span>Payment</span>
-                <span class="text-gray-500 dark:text-gray-400">{{ order.payments?.[0]?.provider_id }}</span>
-              </div>
-              <div class="flex flex-col items-end gap-2">
-                <span>&nbsp;</span>
-                <UAvatar :src="`https://flagcdn.com/${order.shipping_address?.country_code}.svg` || ''"
-                  :alt="(order.shipping_address?.country_code || '')" size="3xs" :ui="{ rounded: 'rounded-none' }" />
-              </div>
-
-            </div> -->
+      
       </div>
-      <!-- </template>
 
-
-      </UCard> -->
 
       <div class="grid grid-cols-10 gap-5">
         <div class="col-span-6 space-y-8">
@@ -471,7 +449,7 @@ const addShippingMethod = ref(false)
                     Awaiting fulfillment
                   </span>
                 </UBadge>
-                <UButton v-if="['not_fulfilled', 'partially_fulfilled', 'canceled'].includes(order.fulfillment_status)"
+                <UButton v-if="!isAllFulfilled"
                   label="Create Fulfillment" variant="solid" @click="() => create_fulfillment = true" size="xs"
                   color="gray" />
               </div>
