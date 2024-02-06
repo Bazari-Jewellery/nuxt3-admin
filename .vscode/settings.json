@@ -5,6 +5,7 @@
     "IFAQSECTION",
     "medusajs",
     "Nuxt",
-    "vuedraggable"
+    "vuedraggable",
+    "weserv"
   ]
 }

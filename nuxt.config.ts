@@ -51,6 +51,9 @@ export default defineNuxtConfig({
           fit:'fill'
         }
       },
+    },
+    weserv:{
+      baseURL: process.env.NODE_ENV === 'production' ? 'https://bash.bazari.it' : "http://localhost:3000"
     }
   },
   experimental:{

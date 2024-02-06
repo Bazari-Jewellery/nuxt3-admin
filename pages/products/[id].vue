@@ -334,7 +334,7 @@ const status_menu = [[
                 </div>
               </div>
             </template>
-            <NuxtImg v-if="singleProd.thumbnail" class="w-[120px] h-[120px]" :src="(singleProd?.thumbnail as any || '')"
+            <NuxtImg v-if="singleProd.thumbnail" provider="weserv" class="w-[120px] h-[120px]" :src="(singleProd?.thumbnail as any || '')"
               preset="prod_small_thumbnail" />
           </UCard>
 
@@ -350,7 +350,7 @@ const status_menu = [[
             </template>
             <div class="flex flex-wrap items-center gap-5">
               <NuxtImg v-if="singleProd.images" v-for="img of singleProd.images" class="w-[120px] h-[120px]"
-                :src="(img.url as any)" preset="prod_small_thumbnail" />
+                :src="(img.url as any)" provider="weserv" preset="prod_small_thumbnail" />
             </div>
           </UCard>
         </div>

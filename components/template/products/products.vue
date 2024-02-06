@@ -149,7 +149,7 @@ const number_of_rows = ref([10, 20, 30])
       <!--Order number column-->
       <template #name-data="{ row }">
         <div class="flex items-center gap-4">
-          <NuxtImg v-if="row.data.thumbnail" :src="row.data.thumbnail" preset="prod_small_thumbnail" placeholder class="w-10 h-10" />
+          <NuxtImg v-if="row.data.thumbnail" provider="weserv" :src="row.data.thumbnail" preset="prod_small_thumbnail" placeholder class="w-10 h-10" />
           <span class="">{{ row.name }}</span>
         </div>
       </template>
