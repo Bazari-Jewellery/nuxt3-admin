@@ -318,7 +318,8 @@ const addShippingMethod = ref(false)
                   <NuxtImg width="48" height="48" :src="(item.thumbnail as string)" format="webp" fit="cover" />
                   <div class="flex flex-col gap-1">
                     <span>
-                      {{ item.title }}
+                      <span>{{ item.title }}</span>
+                      <!-- <span>{{ item }}</span> -->
                     </span>
                     <span>
                       {{ item.description }}

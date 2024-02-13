@@ -3,6 +3,24 @@ useHead({
     title: 'Store Details'
 })
 
+const items = [
+    {
+        label:'General',
+        slot:'general'
+    },
+    {
+        label:'Social',
+        slot:'social'
+    },
+    {
+        label:'Privacy Policy',
+        slot:'Privacy'
+    },
+    {
+        label:'Terms and Condition',
+        slot:'tnc'
+    },
+]
 </script>
 
 <template>
@@ -15,6 +33,17 @@ useHead({
                 <p>Manage Your Store Details</p>
             </div>
         </template>
+
+        <div>
+            <UAccordion :items="items" multiple default-open variant="solid" color="gray">
+            <template #general>
+                <UCard :ui="{divide:''}">
+                
+                    <StoreGeneral />
+                </UCard>
+            </template>
+            </UAccordion>
+        </div>
     </UCard>
 </div>
 </template>

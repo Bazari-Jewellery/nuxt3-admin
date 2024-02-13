@@ -6,6 +6,7 @@
     "medusajs",
     "Nuxt",
     "vuedraggable",
+    "vueuse",
     "weserv"
   ]
 }

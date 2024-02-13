@@ -27,7 +27,7 @@ const title = ref('')
 
 const current_faq_section = ref({} as IFAQSECTION)
 
-const sidebar = computed(() => section.value.map((x) => {
+const sidebar = computed(() => section.value?.map((x) => {
   return {
     label: x.name,
     data: x,
@@ -37,6 +37,8 @@ const sidebar = computed(() => section.value.map((x) => {
       description.value = x.description
       title.value = x.name
       current_faq_section.value = x
+      console.log(section_id.value);
+      
     }
   }
 }))
@@ -44,7 +46,7 @@ const sidebar = computed(() => section.value.map((x) => {
 // watch(sidebar, () => {
 
 
-if (sidebar.value.length) {
+if (sidebar.value?.length) {
   console.log(sidebar.value);
   if (section_id.value == undefined) {
     const __sec = sidebar.value[0].data
@@ -113,10 +115,10 @@ watch(_add_faq, () => {
 
 const _edit_faq_section = ref(false)
 
-watch(current_faq_section,()=>{
-  console.log(current_faq_section.value);
+// watch(current_faq_section,async()=>{
+//   await refresh()
   
-},{deep:true})
+// },{deep:true})
 
 const _edit_faq = ref(false)
 watch(_edit_faq,()=>{
@@ -129,7 +131,7 @@ watch(_edit_faq,()=>{
 <template>
   <UCard :ui="{ divide: '', header: { base: 'relative space-y-8' } }" class="min-h-full">
     <template #header>
-      <UButton to="/settings" label="Back to settings" icon="i-heroicons-arrow-left" variant="link" />
+      <UButton to="/settings" label="Back to settings" icon="i-heroicons-arrow-uturn-left" variant="link" />
       <div class="flex justify-between">
         <div class="space-y-1">
           <h2 class="h h2">FAQ</h2>
@@ -146,7 +148,7 @@ watch(_edit_faq,()=>{
 
     <div>
       <!-- if section -->
-      <div v-if="section.length > 0">
+      <div v-if="section?.length > 0">
         <div class="flex gap-5">
           <div class="w-fit">
             <UVerticalNavigation v-if="sidebar" :links="sidebar"
@@ -163,12 +165,12 @@ watch(_edit_faq,()=>{
                 </div>
                 <div class="flex items-center gap-5">
                   <UButton @click="_edit_faq_section=true" variant="solid" color="white" label="Edit Section" />
-                  <UButton v-if="faq.length" @click="()=> _edit_faq =true" variant="solid" color="white" label="Edit FAQs" />
+                  <UButton v-if="faq?.length" @click="()=> _edit_faq =true" variant="solid" color="white" label="Edit FAQs" />
 
                 </div>
               </template>
                <!-- if no faq exist for the section -->
-            <div v-if="faq.length == 0">
+            <div v-if="faq?.length == 0">
               <div class="flex items-center justify-center min-h-[100px]">
                 <UButton @click="addFaq" label="Add FAQ" icon="i-heroicons-plus" variant="outline" size="sm" />
               </div>
@@ -213,6 +215,6 @@ watch(_edit_faq,()=>{
     <TemplateSettingsFaqSectionAdd v-model="_add_section" />
     <TemplateSettingsFaqSingleAdd v-model="_add_faq" />
     <TemplateSettingsFaqSectionEdit v-model="_edit_faq_section" :faq="current_faq_section" />
-    <TemplateSettingsFaqSingleEdit v-if="faq.length" :faqs="faq" v-model:section_id="section_id" v-model="_edit_faq" />
+    <TemplateSettingsFaqSingleEdit v-if="faq?.length" :faqs="faq" v-model:section_id="section_id" v-model="_edit_faq" />
   </UCard>
 </template>
