@@ -6,6 +6,10 @@ useHead({
   title: 'Bazari Team'
 })
 
+
+console.log(useRuntimeConfig());
+
+
 const columns = [
   {
     key: 'name',
@@ -76,7 +80,8 @@ const actions_invite = (row: any) => [
       icon: 'i-heroicons-arrow-path-rounded-square',
       click: async () => {
         try {
-          await useCybandyClient().admin.invites.resend(row.data.id)
+          await useUsersResendInvite(row.data.id)
+          // await useCybandyClient().admin.invites.resend(row.data.id)
           toastNotification('Invitation sent').default_toast()
           refresh()
         } catch (error) {

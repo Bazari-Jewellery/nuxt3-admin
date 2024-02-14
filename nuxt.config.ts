@@ -1,21 +1,22 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  ssr:false,
-  sourcemap:{
-    client:true,
-    
+  ssr: false,
+  sourcemap: {
+    client: true,
+
   },
   css: ['~/assets/css/main.css'],
-  app:{
+  app: {
     // baseURL: '/orders',
-    buildAssetsDir:'_cybandy'
+    buildAssetsDir: '_cybandy'
   },
   runtimeConfig: {
     medusaBackendUrl: process.env.MEDUSA_URL,
     public: {
       medusaBackendUrl: process.env.MEDUSA_URL,
-      cyStripePk: process.env.STRIPE_API_PK
+      cyStripePk: process.env.STRIPE_API_PK,
+      env: process.env.NODE_ENV,
     },
     jwt_secret: process.env.JWT_SECRET,
     account_req_secret: process.env.ACCOUNT_REQUEST_TOKEN_SECRET
@@ -40,7 +41,7 @@ export default defineNuxtConfig({
           format: 'webp',
           width: 150,
           height: 150,
-          fit:'fill'
+          fit: 'fill'
         }
       },
       prod_tiny_thumbnail: {
@@ -48,15 +49,15 @@ export default defineNuxtConfig({
           format: 'webp',
           width: 36,
           height: 48,
-          fit:'fill'
+          fit: 'fill'
         }
       },
     },
-    weserv:{
+    weserv: {
       baseURL: process.env.NODE_ENV === 'production' ? 'https://bash.bazari.it' : "http://localhost:3000"
     }
   },
-  experimental:{
+  experimental: {
     inlineRouteRules: true
-   },
+  },
 })

@@ -51,7 +51,7 @@ export async function useCustomersAccountRequestList(query: Ref<AccountRequestGe
       "Content-Type": "application/json",
     },
     method: 'get',
-    watch:[query]
+    watch: [query]
   })
   if (data.value) {
     return data.value as { account_requests: AccountRequest[], count: number, limit: number, offset: number }
@@ -79,13 +79,13 @@ export async function useCustomersAccountRequestCreate(payload: AccountRequestPo
 }
 
 
-export async function useCustomersAccountRequestUpdate(payload: AccountRequestPatchParams, id:string) {
+export async function useCustomersAccountRequestUpdate(payload: AccountRequestPatchParams, id: string) {
   const userToken = useNuxtApp().$currentUser.token
   const config = useRuntimeConfig()
   const { data, error } = await useFetch(`${config.public.medusaBackendUrl}/admin/account_request/update`, {
     body: payload,
-    query:{
-      id:id
+    query: {
+      id: id
     },
     headers: {
       Authorization: `Bearer ${userToken.value}`,
@@ -100,13 +100,13 @@ export async function useCustomersAccountRequestUpdate(payload: AccountRequestPa
   }
 }
 
-export async function useCustomersAccountRequestConfirm(id:string){
+export async function useCustomersAccountRequestConfirm(id: string) {
   const config = useRuntimeConfig()
   const userToken = useNuxtApp().$currentUser.token
-  const {data} = await useLazyFetch(`${config.public.medusaBackendUrl}/admin/account_request/confirm`,{
-    method:'get',
-    query:{
-      id:id
+  const { data } = await useLazyFetch(`${config.public.medusaBackendUrl}/admin/account_request/confirm`, {
+    method: 'get',
+    query: {
+      id: id
     },
     headers: {
       Authorization: `Bearer ${userToken.value}`,
@@ -114,17 +114,19 @@ export async function useCustomersAccountRequestConfirm(id:string){
     },
   })
 
-  if(data.value){
-    return {data:data.value as AccountRequest}
+  if (data.value) {
+    return { data: data.value as AccountRequest }
   }
 }
-export async function useCustomersAccountRequestDelete(id:string){
+
+
+export async function useCustomersAccountRequestDelete(id: string) {
   const config = useRuntimeConfig()
   const userToken = useNuxtApp().$currentUser.token
-  const {data} = await useLazyFetch(`${config.public.medusaBackendUrl}/admin/account_request/delete`,{
-    method:'get',
-    query:{
-      id:id
+  const { data } = await useLazyFetch(`${config.public.medusaBackendUrl}/admin/account_request/delete`, {
+    method: 'get',
+    query: {
+      id: id
     },
     headers: {
       Authorization: `Bearer ${userToken.value}`,
@@ -132,7 +134,26 @@ export async function useCustomersAccountRequestDelete(id:string){
     },
   })
 
-  if(data.value){
-    return {data:data.value as {deleted:boolean,id:string}}
+  if (data.value) {
+    return { data: data.value as { deleted: boolean, id: string } }
+  }
+}
+
+
+export async function useUsersResendInvite(invite_id: string) {
+  const userToken = useNuxtApp().$currentUser.token
+  const config = useRuntimeConfig()
+  const { data, error } = await useFetch(`${config.public.medusaBackendUrl}/admin/invites/${invite_id}/resend`, {
+
+    headers: {
+      Authorization: `Bearer ${userToken.value}`,
+      "Content-Type": "application/json",
+    },
+    method: 'post'
+  })
+  if (data.value) {
+    return {
+      data: data.value as AccountRequest
+    }
   }
 }
