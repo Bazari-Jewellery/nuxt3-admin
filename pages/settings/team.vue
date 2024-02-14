@@ -32,7 +32,7 @@ type tableType = {
   email: string,
   role: string,
   status?: string,
-  data:any
+  data: any
 }
 const actions = (row: any) => [
   [
@@ -44,9 +44,9 @@ const actions = (row: any) => [
         currentUser_id.value = row.data.id
         currentUser_email.value = row.email
         currentUser.value = {
-          first_name:row.data.first_name,
-          last_name:row.data.last_name,
-          role:row.data.role,
+          first_name: row.data.first_name,
+          last_name: row.data.last_name,
+          role: row.data.role,
         }
         edit_user.value = true
       }
@@ -55,14 +55,15 @@ const actions = (row: any) => [
       key: 'remove',
       label: 'Remove User',
       icon: 'i-heroicons-trash',
-      click: async() => {
-        try {
-          await useCybandyClient().admin.users.delete(row.data.id as string)
-          toastNotification('User deleted').default_toast()
-          refresh()
-        } catch (error) {
-          useToastFailure()
-        }
+      click: async () => {
+        alert("Test: so delete is disconnected")
+        // try {
+        //   await useCybandyClient().admin.users.delete(row.data.id as string)
+        //   toastNotification('User deleted').default_toast()
+        //   refresh()
+        // } catch (error) {
+        //   useToastFailure()
+        // }
       }
     },
   ]
@@ -73,7 +74,7 @@ const actions_invite = (row: any) => [
       key: 'resend',
       label: 'Resend invitation',
       icon: 'i-heroicons-arrow-path-rounded-square',
-      click: async() => {
+      click: async () => {
         try {
           await useCybandyClient().admin.invites.resend(row.data.id)
           toastNotification('Invitation sent').default_toast()
@@ -89,10 +90,10 @@ const actions_invite = (row: any) => [
       icon: 'i-ph-copy',
       click: () => {
         const link = ref(`${defaultWindow?.origin}/invite?token=${row.data.token}&id=${row.data.id}&email=${row.email}`)
-        const {copy,copied} = useClipboard({source:link})
+        const { copy, copied } = useClipboard({ source: link })
         copy()
-        if(copied.value){
-          toastNotification('copied','',3000,'i-heroicons-check').default_toast()
+        if (copied.value) {
+          toastNotification('copied', '', 3000, 'i-heroicons-check').default_toast()
         }
       }
     },
@@ -100,14 +101,15 @@ const actions_invite = (row: any) => [
       key: 'delete',
       label: 'Cancel Invitation',
       icon: 'i-heroicons-no-symbol',
-      click: async() => {
-        try {
-          await useCybandyClient().admin.invites.delete(row.data.id as string)
-          toastNotification('Invitation canceled').default_toast()
-          refresh()
-        } catch (error) {
-          useToastFailure()
-        }
+      click: async () => {
+        alert("Test: so delete is disconnected")
+        // try {
+        //   await useCybandyClient().admin.invites.delete(row.data.id as string)
+        //   toastNotification('Invitation canceled').default_toast()
+        //   refresh()
+        // } catch (error) {
+        //   useToastFailure()
+        // }
       }
     },
   ]
@@ -118,7 +120,7 @@ const isLoading = ref(true)
 // const rows_ = asyncComputed(async () => {
 //   const temp: tableType[] = []
 //   await useLazyAsyncData(async () => {
-    
+
 //     const { users } = await useCybandyClient().admin.users.list()
 //     const { invites } = await useCybandyClient().admin.invites.list()
 //     if (users) {
@@ -152,42 +154,42 @@ const isLoading = ref(true)
 // rows_.value
 
 
-const {refresh} = await useLazyAsyncData(async () => {
-    const temp: tableType[] = []
-    isLoading.value = true
-    const { users } = await useCybandyClient().admin.users.list()
-    const { invites } = await useCybandyClient().admin.invites.list()
-    if (users) {
-      users.map((x) => {
-        temp.push({
-          name: x.first_name + ' ' + x.last_name,
-          email: x.email,
-          role: x.role,
-          data:x
+const { refresh } = await useLazyAsyncData(async () => {
+  const temp: tableType[] = []
+  isLoading.value = true
+  const { users } = await useCybandyClient().admin.users.list()
+  const { invites } = await useCybandyClient().admin.invites.list()
+  if (users) {
+    users.map((x) => {
+      temp.push({
+        name: x.first_name + ' ' + x.last_name,
+        email: x.email,
+        role: x.role,
+        data: x
 
-        })
       })
-    }
+    })
+  }
 
-    if (invites) {
-      invites.map((x) => {
-        temp.push({
-          name: x.user_email,
-          email: x.user_email,
-          role: x.role,
-          status: 'pending',
-          data:x
-        })
+  if (invites) {
+    invites.map((x) => {
+      temp.push({
+        name: x.user_email,
+        email: x.user_email,
+        role: x.role,
+        status: 'pending',
+        data: x
       })
-    }
-    rows.value = temp
-    isLoading.value = false
-  })
+    })
+  }
+  rows.value = temp
+  isLoading.value = false
+})
 
 
 const is_invite = ref(false)
-watch(is_invite,()=>{
-  if(!is_invite.value){
+watch(is_invite, () => {
+  if (!is_invite.value) {
     refresh()
   }
 })
@@ -199,8 +201,8 @@ const currentUser = ref({} as IUser)
 const currentUser_id = ref('')
 const currentUser_email = ref('')
 
-watch(edit_user,()=>{
-  if(!edit_user.value){
+watch(edit_user, () => {
+  if (!edit_user.value) {
     refresh()
   }
 })
@@ -217,7 +219,8 @@ watch(edit_user,()=>{
             <h1 class="text-base lg:text-lg highlight">The Team</h1>
             <p>Manage users of your store</p>
           </div>
-          <UButton @click="()=>is_invite=true" size="xs" variant="solid" color="gray" label="Invite users" icon="i-ph-plus" />
+          <UButton @click="() => is_invite = true" size="xs" variant="solid" color="gray" label="Invite users"
+            icon="i-ph-plus" />
         </div>
       </template>
 
@@ -234,6 +237,7 @@ watch(edit_user,()=>{
       </UTable>
     </UCard>
     <TemplateSettingsTeamInvite v-model="is_invite" />
-    <TemplateSettingsTeamEditUser v-model="edit_user" :id="currentUser_id" :email="currentUser_email" :user="currentUser" />
+    <TemplateSettingsTeamEditUser v-model="edit_user" :id="currentUser_id" :email="currentUser_email"
+      :user="currentUser" />
   </div>
 </template>
