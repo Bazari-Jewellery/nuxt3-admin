@@ -4,7 +4,7 @@ import type { Dict } from "@/types"
 
 definePageMeta({
   layout: 'default',
-  scrollToTop:true
+  scrollToTop: true
 });
 useHead({
   title: 'Customers'
@@ -24,7 +24,7 @@ const count = ref(0)
 // request query
 const reqQuery = computed(() => {
   return {
-    q: search_customer.value==''? undefined: search_customer.value,
+    q: search_customer.value == '' ? undefined : search_customer.value,
     limit: limit.value,
     offset: (offset.value - 1) * limit.value,
     expand: 'orders',
@@ -34,10 +34,10 @@ const reqQuery = computed(() => {
 const isLoading = ref(true)
 
 
-asyncComputed(async() =>{
-  const {data,error} = await useCustomersList(reqQuery)
+asyncComputed(async () => {
+  const { data, error } = await useCustomersList(reqQuery)
 
-  if(data.value){
+  if (data.value) {
     customers.value = data.value.customers
     count.value = data.value.count
     setTimeout(() => isLoading.value = false, 500)
@@ -108,7 +108,7 @@ watch(customers, () => {
 // action for selecting a row
 function selectRow(row: any) {
   nuxtApp.$customer.single.value = row.data
-  
+
   navigateTo(`/customers/${row.data.id}`)
 }
 
@@ -133,25 +133,30 @@ function selectRow(row: any) {
 
           <UButton variant="ghost" label="View Account Requests" to="/customers/account_requests" />
         </div>
+
+
       </div>
     </template>
 
+    <div class="flex items-center justify-end">
+      <UPagination v-model="offset" :total="count" :page-count="limit" :active-button="{ variant: 'solid' }" />
+    </div>
 
     <UTable :columns="columnsTable" :rows="final_data" :loading="isLoading" @select="selectRow">
 
       <template #name-data="{ row }">
         <span class="flex items-center gap-2">
           <!-- <UAvatar :alt="row.name" size="xs" /> -->
-          <UtilitiesAvatar :name="row.name" size="2xs"/>
+          <UtilitiesAvatar :name="row.name" size="2xs" />
           <span>{{ row.name }}</span>
         </span>
       </template>
 
     </UTable>
 
-    <template>
+    <template #footer>
       <div class="flex items-center justify-end">
-        <UPagination v-model="offset" :total="count" />
+        <UPagination v-model="offset" :total="count" :page-count="limit" :active-button="{ variant: 'solid' }" />
       </div>
     </template>
   </UCard>
