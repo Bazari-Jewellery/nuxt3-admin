@@ -212,7 +212,7 @@ watch(add_products, async () => {
           <!-- product column -->
           <template #products-data="{ row }">
             <NuxtLink :to="`/products/${row.products.id}`" class="flex gap-5 items-center w-fit">
-              <NuxtImg format="webp" fit="fill" width="36" height="48" :src="row.products.thumbnail" />
+              <NuxtImg format="webp" fit="fill" width="36" height="48" :src="row.products.thumbnail" provider="weserv" />
               <span>{{ row.products.title }}</span>
             </NuxtLink>
           </template>
@@ -249,5 +249,6 @@ watch(add_products, async () => {
 
     <TemplateCollectionsEdit :id="collection.id" :collection-req="edit_coll" v-model="isEditCol" />
 
-  <TemplateCollectionsAddProducts :id="collection.id" v-model="add_products" />
-</div></template>
+    <TemplateCollectionsAddProducts :id="collection.id" v-model="add_products" />
+  </div>
+</template>

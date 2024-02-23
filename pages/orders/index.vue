@@ -172,6 +172,9 @@ onBeforeMount(async () => {
   await fetchOrders()
 })
 
+// watch(limit, () => {
+//   offset.value = 1
+// })
 </script>
 
 <template>
@@ -199,7 +202,7 @@ onBeforeMount(async () => {
           </USelectMenu>
         </div>
         <div class="flex justify-end">
-          <UPagination v-model="offset" :total="count" :active-button="{ variant: 'solid' }" />
+          <UPagination v-model="offset" :total="count" :page-count="limit" :active-button="{ variant: 'solid' }" />
         </div>
       </template>
       <UTable :columns="columnsTable" class="w-full" :rows="final_data" :loading="loading || !final_data"
@@ -253,7 +256,7 @@ onBeforeMount(async () => {
       </UTable>
       <template #footer>
         <div class="flex justify-end px-3 py-3.5 mt-8">
-          <UPagination v-model="offset" :page-count="limit" :total="count" :active-button="{ variant: 'solid' }" />
+          <UPagination v-model="offset" :total="count" :page-count="limit" :active-button="{ variant: 'solid' }" />
         </div>
       </template>
     </UCard>

@@ -97,21 +97,6 @@ function selectRow(row: any) {
 }
 
 const number_of_rows = ref([10, 20, 30])
-
-const pagination = ref({
-  limit: limit.value,
-  count: count.value,
-  offset: offset.value
-})
-
-watchArray([limit, count, offset], () => {
-  pagination.value = {
-    limit: limit.value,
-    count: count.value,
-    offset: offset.value
-  }
-})
-
 </script>
 
 <template>
@@ -145,8 +130,7 @@ watchArray([limit, count, offset], () => {
         </USelectMenu>
       </div>
       <div class="flex justify-end">
-        <!-- <UPagination v-model="offset" :total="count" :active-button="{ variant: 'solid' }" /> -->
-        <UtilitiesPagination v-model="pagination" />
+        <UPagination v-model="offset" :total="count" :page-count="limit" :active-button="{ variant: 'solid' }" />
       </div>
     </template>
 
@@ -190,8 +174,7 @@ watchArray([limit, count, offset], () => {
     </UTable>
     <template #footer>
       <div class="flex justify-end px-3 py-3.5 mt-8">
-        <!-- <UPagination v-model="offset" :total="count" :page-count="limit" :active-button="{ variant: 'solid' }" /> -->
-        <UtilitiesPagination v-model="pagination" />
+        <UPagination v-model="offset" :total="count" :page-count="limit" :active-button="{ variant: 'solid' }" />
       </div>
     </template>
   </UCard>
