@@ -6,7 +6,7 @@ useHead({
 
 definePageMeta({
   // middleware:['auth']
-  scrollToTop:true
+  scrollToTop: true
 })
 
 const orders = ref<Order[]>([])
@@ -146,16 +146,16 @@ function selectRow(row: any) {
 
 //fetch data
 async function fetchOrders() {
-  const {error} = await useLazyAsyncData('all_orders', async () => {
-    const { orders: _orders, count: _count, response:orders_response } = await useCybandyClient().admin.orders.list({
+  const { error } = await useLazyAsyncData('all_orders', async () => {
+    const { orders: _orders, count: _count, response: orders_response } = await useCybandyClient().admin.orders.list({
       q: q.value,
       limit: limit.value,
       offset: (offset.value - 1) * limit.value,
       expand: 'customer,shipping_address,sales_channel',
       fields: 'id,status,display_id,created_at,email,fulfillment_status,payment_status,total,currency_code',
     })
-    
-    
+
+
     if (_orders) {
       orders.value = _orders
       count.value = _count
@@ -253,7 +253,7 @@ onBeforeMount(async () => {
       </UTable>
       <template #footer>
         <div class="flex justify-end px-3 py-3.5 mt-8">
-          <UPagination v-model="offset" :total="count" :active-button="{ variant: 'solid' }" />
+          <UPagination v-model="offset" :page-count="limit" :total="count" :active-button="{ variant: 'solid' }" />
         </div>
       </template>
     </UCard>

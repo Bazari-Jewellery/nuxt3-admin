@@ -9,6 +9,7 @@ const { width, height } = useElementSize(list_container)
 const categories = useNuxtApp().$product.categories.all
 const open_add_category_modal = ref(false)
 const current_category = {}
+
 function addFunc(data = null) {
   if (data) {
     current_category.value = data

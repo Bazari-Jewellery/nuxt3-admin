@@ -1,13 +1,13 @@
 <script setup lang=ts>
 import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
-import type {ProductCategory,AdminPostProductCategoriesReq} from "@medusajs/medusa"
+import type { ProductCategory, AdminPostProductCategoriesReq } from "@medusajs/medusa"
 import type { PropType } from "vue";
 
 
 const props = defineProps({
   modelValue: Boolean,
-  parentCategory:{
+  parentCategory: {
     type: Object as PropType<ProductCategory>
   }
 })
@@ -18,43 +18,45 @@ const modal = computed({
   get: () => props.modelValue
 })
 
-const title = computed(()=>props.parentCategory?.id ?`Add Category to ${props.parentCategory.name}`: 'Add Category')
+const submitted = ref(false)
 
-const category = ref({} as AdminPostProductCategoriesReq)
+const title = computed(() => props.parentCategory?.id ? `Add Category to ${props.parentCategory.name}` : 'Add Category')
 
-async function createCategory(){
+const category = ref({
+  is_active: true
+} as AdminPostProductCategoriesReq)
+
+async function createCategory() {
   console.log(category.value);
 
-  if(!category.value.name){
-    toastNotification('','Name is required',0).error()
+  if (!category.value.name) {
+    toastNotification('', 'Name is required', 0).error()
     return
   }
 
-  if(props.parentCategory?.id){
+  if (props.parentCategory?.id) {
     category.value.parent_category_id = props.parentCategory.id
   }
-  
-  const {product_category} = await useCybandyClient().admin.productCategories.create(category.value)
-  if(product_category){
+
+  const { product_category } = await useCybandyClient().admin.productCategories.create(category.value)
+  if (product_category) {
+    submitted.value = true
     toastNotification(`${category.value.name} is created`).default_toast()
     await useNuxtApp().$product.categories.getCategories()
     modal.value = false
-  }else{
+  } else {
     toastNotification().error()
   }
 }
 
-watch(category,()=>{
-  console.log(category.value);
-  
-})
 
 
 
 </script>
 
 <template>
-  <ModalTitleButton :title="title" v-model="modal" @send="createCategory" width="min-w-full sm:min-w-[550px] md:min-w-[650px] lg:min-w-[760px]">
-    <FormsCategoriesAddEdit v-model="category" />
+  <ModalTitleButton :title="title" v-model="modal" @send="createCategory"
+    width="min-w-full sm:min-w-[550px] md:min-w-[650px] lg:min-w-[760px]">
+    <FormsCategoriesAddEdit v-model="category" v-model:submit="submitted" />
   </ModalTitleButton>
 </template>

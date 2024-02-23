@@ -97,6 +97,21 @@ function selectRow(row: any) {
 }
 
 const number_of_rows = ref([10, 20, 30])
+
+const pagination = ref({
+  limit: limit.value,
+  count: count.value,
+  offset: offset.value
+})
+
+watchArray([limit, count, offset], () => {
+  pagination.value = {
+    limit: limit.value,
+    count: count.value,
+    offset: offset.value
+  }
+})
+
 </script>
 
 <template>
@@ -130,7 +145,8 @@ const number_of_rows = ref([10, 20, 30])
         </USelectMenu>
       </div>
       <div class="flex justify-end">
-        <UPagination v-model="offset" :total="count" :active-button="{ variant: 'solid' }" />
+        <!-- <UPagination v-model="offset" :total="count" :active-button="{ variant: 'solid' }" /> -->
+        <UtilitiesPagination v-model="pagination" />
       </div>
     </template>
 
@@ -149,7 +165,8 @@ const number_of_rows = ref([10, 20, 30])
       <!--Order number column-->
       <template #name-data="{ row }">
         <div class="flex items-center gap-4">
-          <NuxtImg v-if="row.data.thumbnail" provider="weserv" :src="row.data.thumbnail" preset="prod_small_thumbnail" placeholder class="w-10 h-10" />
+          <NuxtImg v-if="row.data.thumbnail" provider="weserv" :src="row.data.thumbnail" preset="prod_small_thumbnail"
+            placeholder class="w-10 h-10" />
           <span class="">{{ row.name }}</span>
         </div>
       </template>
@@ -173,7 +190,8 @@ const number_of_rows = ref([10, 20, 30])
     </UTable>
     <template #footer>
       <div class="flex justify-end px-3 py-3.5 mt-8">
-        <UPagination v-model="offset" :total="count" :active-button="{ variant: 'solid' }" />
+        <!-- <UPagination v-model="offset" :total="count" :page-count="limit" :active-button="{ variant: 'solid' }" /> -->
+        <UtilitiesPagination v-model="pagination" />
       </div>
     </template>
   </UCard>
