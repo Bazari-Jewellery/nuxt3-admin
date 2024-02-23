@@ -217,11 +217,11 @@ function add_remove_child(id: string) {
     <ClientOnly>
       <!-- <div class="relative"> -->
       <draggable v-model="categories" handle=".handle" @change="(v) => changed(v)" @start="() => drag = true"
-        @end="() => drag = false" item-key="rank" class="grid gap-5">
+        @end="() => drag = false" item-key="rank" class="grid gap-2.5">
         <template #item="{ element }">
 
-          <div>
-            <div class="flex items-center justify-between">
+          <div class="group" :key="Date.now()">
+            <div class="flex items-center justify-between group-hover:bg-gray-200 group-hover:dark:bg-gray-800">
               <div class="flex items-center gap-7">
                 <UIcon name="i-ph-dots-six-vertical" class="w-5 h-5 cursor-grab handle" />
                 <span class="flex items-center gap-3">
