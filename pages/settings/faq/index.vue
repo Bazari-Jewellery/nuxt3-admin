@@ -38,7 +38,7 @@ const sidebar = computed(() => section.value?.map((x) => {
       title.value = x.name
       current_faq_section.value = x
       console.log(section_id.value);
-      
+
     }
   }
 }))
@@ -98,10 +98,13 @@ const items = (item: any) => [
       label: 'Delete',
       icon: 'i-heroicons-trash',
       click: async () => {
-        const { data } = await useFetch('/api/settings/faq/single/delete', { query: { id: item.id as string } })
-        if (data.value) {
+        try {
+          const data = await $fetch('/api/settings/faq/single/delete', { query: { id: item.id as string } })
           refresh()
+        } catch (e) {
+
         }
+
       }
     },
   ]
@@ -117,12 +120,12 @@ const _edit_faq_section = ref(false)
 
 // watch(current_faq_section,async()=>{
 //   await refresh()
-  
+
 // },{deep:true})
 
 const _edit_faq = ref(false)
-watch(_edit_faq,()=>{
-  if(!_edit_faq.value){
+watch(_edit_faq, () => {
+  if (!_edit_faq.value) {
     refresh()
   }
 })
@@ -155,26 +158,27 @@ watch(_edit_faq,()=>{
               class="min-w-[200px] bg-gray-200/80 dark:bg-transparent" />
           </div>
           <div class="flex-grow">
-           
 
-            <UCard class="" :ui="{ divide: '',header:{base:'flex items-center justify-between'} }">
+
+            <UCard class="" :ui="{ divide: '', header: { base: 'flex items-center justify-between' } }">
               <template #header>
                 <div class="space-y-1">
                   <h4 class="text-base lg:text-lg highlight">{{ title }}</h4>
                   <p>{{ description }}</p>
                 </div>
                 <div class="flex items-center gap-5">
-                  <UButton @click="_edit_faq_section=true" variant="solid" color="white" label="Edit Section" />
-                  <UButton v-if="faq?.length" @click="()=> _edit_faq =true" variant="solid" color="white" label="Edit FAQs" />
+                  <UButton @click="_edit_faq_section = true" variant="solid" color="white" label="Edit Section" />
+                  <UButton v-if="faq?.length" @click="() => _edit_faq = true" variant="solid" color="white"
+                    label="Edit FAQs" />
 
                 </div>
               </template>
-               <!-- if no faq exist for the section -->
-            <div v-if="faq?.length == 0">
-              <div class="flex items-center justify-center min-h-[100px]">
-                <UButton @click="addFaq" label="Add FAQ" icon="i-heroicons-plus" variant="outline" size="sm" />
+              <!-- if no faq exist for the section -->
+              <div v-if="faq?.length == 0">
+                <div class="flex items-center justify-center min-h-[100px]">
+                  <UButton @click="addFaq" label="Add FAQ" icon="i-heroicons-plus" variant="outline" size="sm" />
+                </div>
               </div>
-            </div>
 
               <UAccordion v-else :items="accordionFaq" multiple
                 :ui="{ wrapper: 'flex flex-col w-full gap-1', item: { padding: 'px-4 py-5 sm:p-6', base: 'bg-gray-100 dark:bg-gray-800/40' } }">
