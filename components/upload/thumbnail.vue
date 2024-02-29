@@ -9,7 +9,11 @@ const props = defineProps({
     type: Array<string>,
     default: []
   },
-  upload: Boolean
+  upload: Boolean,
+  fileType: {
+    type: Array<string>,
+    default: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif']
+  }
 })
 const emits = defineEmits(['update:modelValue', 'update:files', 'update:imageUrls', 'update:upload', 'upload'])
 const modal = computed({
@@ -42,47 +46,40 @@ const id = useNuxtApp().$product.product.singleProd.value.id as string
  * it emits upload event with urls as argument
  */
 async function uploadFilesFunc() {
-  console.log(image_obj_files.value);
+  // console.log(image_obj_files.value);
 
   try {
     if (isUpload.value) {
-      if(image_obj_files.value.length > 0){
+      if (image_obj_files.value.length > 0) {
         await useAsyncData(async () => {
-        const d = ref<string[]>([])
-        const data = await useUploadImage(image_obj_files.value)
-        if (data.uploads) {
-          // d.value.push(...data.uploads.map((x) => x.url))
-          image_obj_urls.value = data.uploads.map((x) => x.url)
+          const d = ref<string[]>([])
+          const data = await useUploadImage(image_obj_files.value)
+          if (data.uploads) {
+            // d.value.push(...data.uploads.map((x) => x.url))
+            image_obj_urls.value = data.uploads.map((x) => x.url)
 
+            // update single product in context
+            if (useNuxtApp().$product.product.singleProd.value) {
+              const payload = ref({
+                thumbnail: data.uploads.map((x => x.url))[0]
+              })
+              const { data: __data } = await useProductUpdate(id, payload.value)
 
-          console.log(data.uploads);
-          console.log(image_obj_urls.value);
-
-
-          // image_obj_urls.value = d.value
-
-          // update single product in context
-          if (useNuxtApp().$product.product.singleProd.value) {
-            const payload = ref({
-              thumbnail: data.uploads.map((x=>x.url))[0]
-            })
-            const { data: __data } = await useProductUpdate(id, payload.value)
-
-            if (__data.value) {
-              useNuxtApp().$product.product.singleProd.value.thumbnail = __data.value.product.thumbnail
+              if (__data.value) {
+                useNuxtApp().$product.product.singleProd.value.thumbnail = __data.value.product.thumbnail
+              }
             }
+
+            modal.value = false
           }
+        })
+      } else {
 
-          modal.value = false
-        }
-      })
-      }else{
-
-        const _payload = {thumbnail:image_obj_urls.value[0] || null}
+        const _payload = { thumbnail: image_obj_urls.value[0] || null }
         console.log(_payload);
-        
-        const {data} = await useProductUpdate(id, _payload as any)
-        if(data.value?.product){
+
+        const { data } = await useProductUpdate(id, _payload as any)
+        if (data.value?.product) {
           useNuxtApp().$product.product.singleProd.value.thumbnail = data.value.product.thumbnail
         }
       }
@@ -109,7 +106,7 @@ watch(modal, () => {
   <ModalTitleButton @send="uploadFilesFunc" v-model="modal" title="Upload Thumbnail"
     width="w-full sm:min-w-[500px] lg:min-w-[650px]">
 
-    <UtilitiesImageDropZone v-model:files="image_obj_files" v-model:image-urls="image_obj_urls" />
+    <UtilitiesImageDropZone v-model:files="image_obj_files" v-model:image-urls="image_obj_urls" :file-type="fileType" />
 
   </ModalTitleButton>
 </template>

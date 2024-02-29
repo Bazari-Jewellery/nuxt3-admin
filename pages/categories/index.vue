@@ -1,8 +1,8 @@
 <script setup>
-import draggable from 'vuedraggable'
 useHead({
   title: 'Categories'
 })
+await useNuxtApp().$product.categories.getCategories()
 const list_container = ref(null)
 const { width, height } = useElementSize(list_container)
 
@@ -27,7 +27,7 @@ async function delFunc(data) {
   }
 }
 
-await useNuxtApp().$product.categories.getCategories()
+
 </script>
 
 <template>

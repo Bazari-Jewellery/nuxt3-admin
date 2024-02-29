@@ -20,7 +20,11 @@ const props = defineProps({
     type: Array<string>,
     default: []
   },
-  multiple: Boolean
+  multiple: Boolean,
+  fileType: {
+    type: Array<string>,
+    default: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif']
+  }
 
 })
 const emits = defineEmits(['update:files', 'update:imageUrls', 'update:currentImageUrls'])
@@ -81,12 +85,13 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
   onDrop,
 
   // specify the types of data to be received
-  dataTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif']
+  dataTypes: props.fileType
 })
 
 // clickzone
 const { files: _files, open, reset, onChange } = useFileDialog({
-  accept: 'image/*',
+  // accept: 'image/*',
+  accept: props.fileType.join(', '),
   directory: false,
   multiple: props.multiple
 })
@@ -151,28 +156,32 @@ const old_items = (ind: number) => [
     <div @click="() => open()" ref="dropZoneRef"
       :class="[isOverDropZone ? 'border-primary' : 'border-gray-200 dark:border-gray-700']"
       class="w-full cursor-pointer flex flex-col items-center justify-center rounded-lg border-2 border-dashed py-6">
-      <p>Drop your images here, or <span class="text-primary">click to browse</span></p>
-      <p>1200 x 1600 (3:4) recommended, up to 10MB each</p>
+      <slot name="uploadZoneText">
+        <p>Drop your images here, or <span class="text-primary">click to browse</span></p>
+        <p>1200 x 1600 (3:4) recommended, up to 10MB each</p>
+      </slot>
       <p v-if="alertMsg && showAlert" class="my-5 text-rose-500 dark:text-rose-400">{{ alertMsg }}</p>
     </div>
 
     <div class="space-y-2">
       <h5 class="highlight text-base lg:text-lg">Upload</h5>
-      <div class="space-y-5">
-        <div v-if="image_obj_urls" v-for="(src, ind) of image_obj_urls" class="flex items-center justify-between">
-          <NuxtImg v-if="src" :src="src" format="webp" width="64" height="64" provider="weserv" />
-          <UDropdown v-if="src" :items="items(ind)">
-            <UButton variant="solid" color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" />
-          </UDropdown>
+      <slot name="fileDisplay">
+        <div class="space-y-5">
+          <div v-if="image_obj_urls" v-for="(src, ind) of image_obj_urls" class="flex items-center justify-between">
+            <NuxtImg v-if="src" :src="src" format="webp" width="64" height="64" provider="weserv" />
+            <UDropdown v-if="src" :items="items(ind)">
+              <UButton variant="solid" color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+            </UDropdown>
+          </div>
+          <div v-if="old_img_urls && multiple || !multiple && old_img_urls" v-for="(src, ind) of old_img_urls"
+            class="flex items-center justify-between">
+            <NuxtImg v-if="src" :src="src" format="webp" width="64" height="64" provider="weserv" />
+            <UDropdown v-if="src" :items="old_items(ind)">
+              <UButton variant="solid" color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+            </UDropdown>
+          </div>
         </div>
-        <div v-if="old_img_urls && multiple || !multiple && old_img_urls" v-for="(src, ind) of old_img_urls"
-          class="flex items-center justify-between">
-          <NuxtImg v-if="src" :src="src" format="webp" width="64" height="64" provider="weserv" />
-          <UDropdown v-if="src" :items="old_items(ind)">
-            <UButton variant="solid" color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" />
-          </UDropdown>
-        </div>
-      </div>
+      </slot>
     </div>
   </div>
 </template>
