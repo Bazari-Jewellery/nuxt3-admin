@@ -17,6 +17,7 @@ export default defineNuxtConfig({
       medusaBackendUrl: process.env.MEDUSA_URL,
       cyStripePk: process.env.STRIPE_API_PK,
       env: process.env.NODE_ENV,
+      under_construction: process.env.UNDER_CONSTRUCTION
     },
     jwt_secret: process.env.JWT_SECRET,
     account_req_secret: process.env.ACCOUNT_REQUEST_TOKEN_SECRET

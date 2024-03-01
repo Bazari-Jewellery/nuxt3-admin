@@ -21,7 +21,7 @@ const id = useRoute().params.id as string
 
 async function fetchProduct() {
 
-  return await useAsyncData( async () => {
+  return await useAsyncData(async () => {
     isLoading.value = true
     const payload = ref({
       id: id,
@@ -182,8 +182,8 @@ watchDeep(add_varaint, async () => {
 const isThumbnail = ref(false)
 const thumbnail_files = ref([] as File[])
 const thumbnail_urls = ref([singleProd.value.thumbnail] as string[])
-watch(isThumbnail,()=>{
-  if(isThumbnail.value==false){
+watch(isThumbnail, () => {
+  if (isThumbnail.value == false) {
     thumbnail_urls.value = [singleProd.value.thumbnail as string]
   }
 })
@@ -191,44 +191,44 @@ watch(isThumbnail,()=>{
 
 // upload images
 const isEditImages = ref(false)
-const images_urls = ref(singleProd.value.images?.map((x)=>x.url))
-watch(isEditImages,()=>{
-  if(isEditImages.value==false){
-    images_urls.value = singleProd.value.images?.map((x)=>x.url)
+const images_urls = ref(singleProd.value.images?.map((x) => x.url))
+watch(isEditImages, () => {
+  if (isEditImages.value == false) {
+    images_urls.value = singleProd.value.images?.map((x) => x.url)
   }
 })
 
 // set status
 
-async function setStatus(status:'draft'|'published'|'proposed'|'rejected'){
-  const {data} = await useProductUpdate(singleProd.value.id as string, {status:status as any })
-  if(data.value){
+async function setStatus(status: 'draft' | 'published' | 'proposed' | 'rejected') {
+  const { data } = await useProductUpdate(singleProd.value.id as string, { status: status as any })
+  if (data.value) {
     singleProd.value.status = data.value.product.status
   }
 }
 
 const status_menu = [[
   {
-    label:'Draft',
-    click:async()=>{
+    label: 'Draft',
+    click: async () => {
       await setStatus('draft')
     }
   },
   {
-    label:'Published',
-    click:async()=>{
+    label: 'Published',
+    click: async () => {
       await setStatus('published')
     }
   },
   {
-    label:'Proposed',
-    click:async()=>{
+    label: 'Proposed',
+    click: async () => {
       await setStatus('proposed')
     }
   },
   {
-    label:'Rejected',
-    click:async()=>{
+    label: 'Rejected',
+    click: async () => {
       await setStatus('rejected')
     }
   },
@@ -256,10 +256,10 @@ const status_menu = [[
                 </h1>
                 <div class="flex items-center gap-4">
                   <UDropdown :items="status_menu">
-                    
-                  <UButton v-if="singleProd?.status"  size="xs"
-                    :variant="styles.status?.[singleProd.status as string]?.color ? 'outline' : 'solid'"
-                    :label="singleProd.status" :color="styles.status?.[singleProd.status as string]?.color || 'gray'" />
+
+                    <UButton v-if="singleProd?.status" size="xs"
+                      :variant="styles.status?.[singleProd.status as string]?.color ? 'outline' : 'solid'"
+                      :label="singleProd.status" :color="styles.status?.[singleProd.status as string]?.color || 'gray'" />
                   </UDropdown>
 
                   <UDropdown :items="general_menu">
@@ -275,8 +275,10 @@ const status_menu = [[
                 <span v-if="singleProd?.metadata?.description" v-for="des in singleProd?.metadata?.description">
                   {{ des }}
                 </span>
-                <span v-else>
-                  {{ singleProd.description }}
+                <span v-else class="flex flex-col">
+                  <span v-if="singleProd.description" v-for="d in singleProd.description.split('\n')">
+                    {{ d }}
+                  </span>
                 </span>
               </p>
 
@@ -312,7 +314,7 @@ const status_menu = [[
             </template>
 
             <div class="space-y-5">
-              <div v-for="opt of singleProd.options">
+              <div v-for="opt of singleProd.options" class="space-y-0.5">
                 <span class="highlight">{{ opt.title }}</span>
                 <div class="flex flex-wrap items-center gap-2">
                   <UBadge v-for="_opt of opt.values" variant="solid" color="gray" :label="_opt.value" />
@@ -329,13 +331,15 @@ const status_menu = [[
               <div class="flex items-center gap-4 justify-between">
                 <span class="text-base lg:text-lg highlight">Thumbnail</span>
                 <div class="flex items-center gap-4">
-                  <UButton @click="() => isThumbnail = true" size="xs" variant="outline" color="black" >{{ singleProd.thumbnail ? 'Edit' : 'Upload' }}</UButton>
-                  <UButton v-if="singleProd.thumbnail" size="xs" icon="i-heroicons-trash" variant="outline" color="black" />
+                  <UButton @click="() => isThumbnail = true" size="xs" variant="outline" color="black">{{
+                    singleProd.thumbnail ? 'Edit' : 'Upload' }}</UButton>
+                  <UButton v-if="singleProd.thumbnail" size="xs" icon="i-heroicons-trash" variant="outline"
+                    color="black" />
                 </div>
               </div>
             </template>
-            <NuxtImg v-if="singleProd.thumbnail" provider="weserv" class="w-[120px] h-[120px]" :src="(singleProd?.thumbnail as any || '')"
-              preset="prod_small_thumbnail" />
+            <NuxtImg v-if="singleProd.thumbnail" provider="weserv" class="w-[120px] h-[120px]"
+              :src="(singleProd?.thumbnail as any || '')" preset="prod_small_thumbnail" />
           </UCard>
 
           <UCard :ui="u_card_ui">
@@ -343,7 +347,8 @@ const status_menu = [[
               <div class="flex items-center gap-4 justify-between">
                 <span class="text-base lg:text-lg highlight">Images</span>
                 <div class="flex items-center gap-4">
-                  <UButton @click="()=>isEditImages=true" size="xs" label="Edit Media" variant="outline" color="black" />
+                  <UButton @click="() => isEditImages = true" size="xs" label="Edit Media" variant="outline"
+                    color="black" />
                   <!-- <UButton size="xs" icon="i-heroicons-trash" variant="outline" color="black"/> -->
                 </div>
               </div>

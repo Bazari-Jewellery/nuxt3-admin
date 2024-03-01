@@ -22,17 +22,17 @@ const roles = [
   { label: 'Member', value: 'member' },
   { label: 'Developer', value: 'developer' }
 ]
-console.log(props.user);
+
 
 </script>
 
 <template>
   <form v-if="user" class="space-y-1">
     <div class="flex items-center gap-5">
-      <UFormGroup label="First name">
+      <UFormGroup label="First name" class="flex-grow">
         <UInput v-model="user.first_name" />
       </UFormGroup>
-      <UFormGroup label="Last name">
+      <UFormGroup label="Last name" class="flex-grow">
         <UInput v-model="user.last_name" />
       </UFormGroup>
     </div>
