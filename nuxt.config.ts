@@ -6,6 +6,9 @@ export default defineNuxtConfig({
     client: true,
 
   },
+  devServer: {
+    host: 'admin.bazari.local'
+  },
   css: ['~/assets/css/main.css'],
   app: {
     // baseURL: '/orders',

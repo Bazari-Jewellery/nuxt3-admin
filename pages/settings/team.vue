@@ -60,14 +60,13 @@ const actions = (row: any) => [
       label: 'Remove User',
       icon: 'i-heroicons-trash',
       click: async () => {
-        alert("Test: so delete is disconnected")
-        // try {
-        //   await useCybandyClient().admin.users.delete(row.data.id as string)
-        //   toastNotification('User deleted').default_toast()
-        //   refresh()
-        // } catch (error) {
-        //   useToastFailure()
-        // }
+        try {
+          await useCybandyClient().admin.users.delete(row.data.id as string)
+          toastNotification('User deleted').default_toast()
+          refresh()
+        } catch (error) {
+          useToastFailure()
+        }
       }
     },
   ]
