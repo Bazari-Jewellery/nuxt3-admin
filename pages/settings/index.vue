@@ -11,8 +11,8 @@ const items = [
         title: 'API Key Management',
         icon: 'i-heroicons-key',
         description: 'Create and manage API keys',
-        to: '#',
-        condition: false
+        to: '/settings/api-key-management',
+        condition: true
     },
     {
         title: 'Currencies',
@@ -69,7 +69,7 @@ const ui = useAppConfig().ui
             </div>
         </template>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div v-for="item of items.filter((x)=>x.condition)" class="col-span-1">
+            <div v-for="item of items.filter((x) => x.condition)" class="col-span-1">
                 <NuxtLink v-if="item.condition" :to="item.to" class="w-full">
                     <div class="flex items-center gap-5 w-full group hover:shadow-none"
                         :class="[ui.card.base, ui.card.background, ui.card.ring, ui.card.rounded, ui.card.shadow, ui.card.body.padding]">

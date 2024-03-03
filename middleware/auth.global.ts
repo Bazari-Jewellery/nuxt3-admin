@@ -2,7 +2,7 @@ import Medusa from "@medusajs/medusa-js"
 export default defineNuxtRouteMiddleware(async (to, from) => {
   if(to.path=='/invite') return
   try {
-    useAsyncData(async () => {
+    (async () => {
       const user = await useNuxtApp().$currentUser.getUser();
       if (!isCustomerLoggedIn().value && !user?.id) {
         return navigateTo('/auth')

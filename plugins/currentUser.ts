@@ -10,6 +10,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     const {user} = await cybandy.admin.auth.getSession()
     if(user){
       userData.value = user
+      return user
     }
     // const {data, error} = await useAsyncData('currentUser', async()=>await cybandy.admin.auth.getSession(), {pick:['user']})
     // if(data.value && !error.value){
