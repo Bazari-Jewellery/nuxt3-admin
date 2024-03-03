@@ -1,4 +1,7 @@
 <script setup lang='ts'>
+/**
+ * Component for pages with title,description and a button the left
+ */
 defineProps({
   title: String,
   description: String,
