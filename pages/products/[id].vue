@@ -1,5 +1,8 @@
-<script setup lang=ts>
+<script setup lang="ts">
 import type { AdminPostProductsProductVariantsReq, ProductStatus } from "@medusajs/medusa"
+import { defaultDocument } from "@vueuse/core";
+import VueEasyLightbox from 'vue-easy-lightbox'
+import type { ProductShippingAttributes } from "~/types";
 
 definePageMeta({
   scrollToTop: true
@@ -74,7 +77,7 @@ const general_menu = [
   ]
 ]
 
-const details = [
+const details = computed(() => [
   {
     label: 'Subtitle',
     value: singleProd.value.subtitle
@@ -104,8 +107,54 @@ const details = [
     value: singleProd.value.sales_channels?.map((x) => x?.name).join(', ')
   },
 
-]
+])
+// attributes section 
+const attributes = computed(() => {
+  return {
+    dimensions: {
+      title: "Dimensions",
+      content: [
+        {
+          label: 'Height',
+          value: singleProd.value.height
+        },
+        {
+          label: 'Width',
+          value: singleProd.value.width
+        },
+        {
+          label: 'Length',
+          value: singleProd.value.length
+        },
+        {
+          label: 'Weight',
+          value: singleProd.value.weight
+        },
 
+      ]
+    },
+    customs: {
+      title: "Customs",
+      content: [
+        {
+          label: 'MID Code',
+          value: singleProd.value.mid_code
+        },
+        {
+          label: 'HS Code',
+          value: singleProd.value.hs_code
+        },
+        {
+          label: 'Country of origin',
+          value: singleProd.value.origin_country
+        },
+
+      ]
+    },
+  }
+})
+
+// variant menu section
 const variants_menu = [
   [
     {
@@ -136,6 +185,29 @@ const variants_menu = [
         edit_options.value = true
       }
     },
+  ]
+]
+// attributes section menu
+const edit_attributes = ref(false)
+const attribute_obj = ref({
+  weight: singleProd.value.weight,
+  height: singleProd.value.height,
+  length: singleProd.value.length,
+  hs_code: singleProd.value.hs_code,
+  md_code: singleProd.value.mid_code,
+  origin_country: singleProd.value.origin_country
+} as ProductShippingAttributes)
+const attributes_menu = [
+  [
+
+    {
+      label: 'Edit Attributes',
+      icon: 'i-heroicons-pencil-square',
+      click: () => {
+        edit_attributes.value = true
+      }
+    },
+
   ]
 ]
 
@@ -233,6 +305,52 @@ const status_menu = [[
     }
   },
 ]]
+
+// image lightbox
+
+const show_lightbox = ref(false)
+const all_images = ref<string[]>([])
+const mediaImages = ref([])
+
+const current_img_index = ref(0)
+const showImageFunction = (ind = 0) => {
+  if (singleProd.value.images) {
+    all_images.value = singleProd.value.images.map((x) => x.url)
+  }
+
+  show_lightbox.value = true
+}
+const mediaMenu = [[
+  {
+    label: 'View',
+    icon: 'i-heroicons-arrow-up-right',
+    click: async () => {
+      showImageFunction()
+    }
+  },
+  {
+    label: 'Edit',
+    icon: 'i-heroicons-pencil-square',
+    click: async () => {
+      isEditImages.value = true
+    }
+  },
+
+]]
+
+// options part of the variant section needs re-working
+const optionsPresentation = computed(() => singleProd.value.options?.map((_opt) => {
+  const values = ref<string[]>([])
+  _opt.values.map((_val) => {
+    if (!values.value.includes(_val.value)) {
+      values.value.push(_val.value)
+    }
+  })
+  return {
+    title: _opt.title,
+    values: values.value
+  }
+}))
 </script>
 
 <template>
@@ -286,15 +404,10 @@ const status_menu = [[
                 <UBadge variant="solid" color="gray" v-for="tag in singleProd?.tags">{{ tag.value }}</UBadge>
               </div>
 
-              <div class="space-y-4">
-                <h3 class="highlight text-base">Details</h3>
-                <div class="space-y-2">
-                  <div v-for="item of details" class="flex justify-between items-center">
-                    <span>{{ item.label }}</span>
-                    <span>{{ item.value || '-' }}</span>
-                  </div>
-                </div>
-              </div>
+              <GeneralListBetween :options="{
+                title: 'Details',
+                content: details.map((x) => { return { label: x.label as string, value: x.value as string } })
+              }" />
 
             </div>
 
@@ -314,14 +427,40 @@ const status_menu = [[
             </template>
 
             <div class="space-y-5">
-              <div v-for="opt of singleProd.options" class="space-y-0.5">
+              <div v-for="opt of optionsPresentation" class="space-y-0.5">
+                <span class="highlight">{{ opt.title }}</span>
+                <div class="flex flex-wrap items-center gap-2">
+                  <UBadge v-for="_val of opt.values" variant="solid" color="gray" :label="_val" />
+                </div>
+              </div>
+              <!-- <div v-for="opt of singleProd.options" class="space-y-0.5">
                 <span class="highlight">{{ opt.title }}</span>
                 <div class="flex flex-wrap items-center gap-2">
                   <UBadge v-for="_opt of opt.values" variant="solid" color="gray" :label="_opt.value" />
                 </div>
-              </div>
+              </div> -->
             </div>
             <TemplateProductsVariantsTable v-if="singleProd" :products="(singleProd as any)" />
+          </UCard>
+
+          <!-- attributes information -->
+          <UCard :ui="{ ...card_ui }">
+            <template #header>
+              <div class="flex items-center gap-4 justify-between">
+                <span class="text-base lg:text-lg highlight">Attributes</span>
+                <div class="flex items-center gap-4">
+                  <UDropdown :items="attributes_menu">
+                    <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+                  </UDropdown>
+                </div>
+              </div>
+            </template>
+
+            <div class="space-y-5">
+              <GeneralListBetween :options="attributes.dimensions" />
+              <GeneralListBetween :options="attributes.customs" />
+            </div>
+            <!-- <TemplateProductsVariantsTable v-if="singleProd" :products="(singleProd as any)" /> -->
           </UCard>
         </div>
 
@@ -347,15 +486,22 @@ const status_menu = [[
               <div class="flex items-center gap-4 justify-between">
                 <span class="text-base lg:text-lg highlight">Images</span>
                 <div class="flex items-center gap-4">
-                  <UButton @click="() => isEditImages = true" size="xs" label="Edit Media" variant="outline"
-                    color="black" />
+                  <UDropdown :items="mediaMenu">
+                    <UButton size="xs" icon="i-heroicons-bars-3" label="Media Menu" variant="outline" color="black" />
+                  </UDropdown>
+                  <!-- <UButton @click="() => isEditImages = true" size="xs" label="Edit Media" variant="outline"
+                    color="black" /> -->
                   <!-- <UButton size="xs" icon="i-heroicons-trash" variant="outline" color="black"/> -->
                 </div>
               </div>
             </template>
             <div class="flex flex-wrap items-center gap-5">
-              <NuxtImg v-if="singleProd.images" v-for="img of singleProd.images" class="w-[120px] h-[120px]"
-                :src="(img.url as any)" provider="weserv" preset="prod_small_thumbnail" />
+              <template v-for="(img, ind) of singleProd.images">
+                <NuxtImg @click="() => showImageFunction(ind)" ref="mediaImages" v-if="singleProd.images"
+                  class="prod-images w-[120px] h-[120px] cursor-pointer" :src="(img.url as any)" provider="weserv"
+                  preset="prod_small_thumbnail" />
+              </template>
+
             </div>
           </UCard>
         </div>
@@ -371,6 +517,8 @@ const status_menu = [[
       <TemplateProductsVariantsEditPrices v-model="edit_prices" :variants="(singleProd.variants as any)" />
       <TemplateProductsVariantsAdd :product-id="(singleProd.id as string)" :options="(options as any)"
         v-model="add_varaint" v-model:variant-req="add_variant_variable" />
+      <TemplateProductsAttributesEdit v-model="edit_attributes" :product-id="singleProd.id"
+        v-model:attributes="attribute_obj" />
     </div>
 
     <div v-else class="flex justify-between gap-5">
@@ -388,5 +536,9 @@ const status_menu = [[
 
     <UploadThumbnail v-model="isThumbnail" v-model:image-urls="thumbnail_urls" :upload="true" />
     <UploadImagesMedia v-model="isEditImages" upload v-model:current-image-urls="images_urls" />
+    <!-- <ClientOnly> -->
+    <UtilitiesLightbox v-if="all_images.length" v-model:images="all_images" v-model:show="show_lightbox"
+      @hideBox="() => show_lightbox = false" v-model:image-index="current_img_index" optimize />
+    <!-- </ClientOnly> -->
   </div>
 </template>

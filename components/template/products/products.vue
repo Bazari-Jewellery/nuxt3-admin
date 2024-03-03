@@ -96,7 +96,7 @@ function selectRow(row: any) {
   navigateTo(`/products/${row.data.id}`)
 }
 
-const number_of_rows = ref([10, 20, 30])
+const number_of_rows = ref([10, 20, 30, 50])
 </script>
 
 <template>
@@ -173,7 +173,10 @@ const number_of_rows = ref([10, 20, 30])
       </template>
     </UTable>
     <template #footer>
-      <div class="flex justify-end px-3 py-3.5 mt-8">
+      <div class="flex justify-between items-center px-3 py-3.5 mt-8">
+        <span class="flex truncate">
+          {{ (offset - 1) * limit + 1 }} - {{ Math.min(offset * final_data.length, count) }} of {{ count }} products
+        </span>
         <UPagination v-model="offset" :total="count" :page-count="limit" :active-button="{ variant: 'solid' }" />
       </div>
     </template>

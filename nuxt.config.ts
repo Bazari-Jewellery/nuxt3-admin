@@ -7,7 +7,12 @@ export default defineNuxtConfig({
 
   },
   devServer: {
-    host: 'admin.bazari.local'
+    host: 'admin.bazari.local',
+    port: 443,
+    https:{
+      cert:"./ssl/admin.bazari.local.pem",
+      key:"./ssl/admin.bazari.local-key.pem"
+    }
   },
   css: ['~/assets/css/main.css'],
   app: {
@@ -29,6 +34,8 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxt/image',
     '@vueuse/nuxt',
+    'nuxt-security',
+    '@nuxtjs/seo',
     // '@nuxtjs/html-validator',
   ],
   ui: {
@@ -38,7 +45,7 @@ export default defineNuxtConfig({
     inject: true,
     dir: 'assets/images',
     format: ['webp', 'avif', 'png'],
-    domains: [process.env.MEDUSA_URL as string],
+    domains: [process.env.MEDUSA_URL as string, process.env.DO_SPACES_IMAGES_BUCKET as string],
     presets: {
       prod_small_thumbnail: {
         modifiers: {
@@ -61,6 +68,20 @@ export default defineNuxtConfig({
       baseURL: process.env.NODE_ENV === 'production' ? 'https://bash.bazari.it' : "http://localhost:3000"
     }
   },
+  security:{
+    headers:{
+      crossOriginEmbedderPolicy: process.env.NODE_ENV === 'development' ? 'unsafe-none' : 'require-corp',
+      contentSecurityPolicy:{
+        "img-src":["'self'","data:","https://wsrv.nl", "https://flagcdn.com",process.env.DO_SPACES_IMAGES_BUCKET as string],
+        "object-src": [process.env.MEDUSA_URL || 'https://backend.bazari.it', "https://flagcdn.com"]
+      },
+      crossOriginResourcePolicy: process.env.NODE_ENV === 'development' ? 'cross-origin' : 'same-origin'
+    }
+  },
+  site:{
+    indexable:false
+  },
+  ogImage: { enabled: false },
   experimental: {
     inlineRouteRules: true
   },

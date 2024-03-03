@@ -90,3 +90,22 @@ export type IUser = {
   api_token?:string
   metadata?:any
 }
+
+export type IcontentListBetweenOption = {
+  title:string,
+  content:Array<{
+    label:string,
+    value:string | number | null | undefined
+  }>
+}
+
+export type ProductShippingAttributes = {
+  height:number | undefined,
+  width:number | undefined,
+  length:number | undefined,
+  weight:number  | undefined,
+  md_code:string | undefined,
+  hs_code:string | undefined,
+  origin_country:string | undefined,
+  
+}

@@ -27,7 +27,7 @@ const props = defineProps({
   }
 
 })
-const emits = defineEmits(['update:files', 'update:imageUrls', 'update:currentImageUrls'])
+const emits = defineEmits(['update:files', 'update:imageUrls', 'update:currentImageUrls', 'makeThumbnail'])
 
 const old_img_urls = computed({
   set: (val) => emits('update:currentImageUrls', val),
@@ -135,12 +135,19 @@ const items = (ind: number) => [
 const old_items = (ind: number) => [
   [
     {
+      label: 'Make thumbnail',
+      icon: 'i-heroicons-check',
+      click: () => {
+        emits('makeThumbnail', ind)
+      }
+    },
+    {
       label: 'Delete',
       icon: 'i-heroicons-trash',
       click: () => {
         OldDel(ind)
       }
-    }
+    },
   ]
 ]
 
