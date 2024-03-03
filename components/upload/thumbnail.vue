@@ -56,12 +56,12 @@ async function uploadFilesFunc() {
           const data = await useUploadImage(image_obj_files.value)
           if (data.uploads) {
             // d.value.push(...data.uploads.map((x) => x.url))
-            image_obj_urls.value = data.uploads.map((x) => x.url)
+            image_obj_urls.value = data.uploads?.map((x) => x.url)
 
             // update single product in context
             if (useNuxtApp().$product.product.singleProd.value) {
               const payload = ref({
-                thumbnail: data.uploads.map((x => x.url))[0]
+                thumbnail: data.uploads?.map((x => x.url))[0]
               })
               const { data: __data } = await useProductUpdate(id, payload.value)
 

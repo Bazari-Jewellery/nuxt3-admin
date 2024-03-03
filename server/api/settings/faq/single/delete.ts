@@ -1,4 +1,4 @@
-import { IFAQ } from "~/types"
+import type { IFAQ } from "~/types"
 
 export default defineEventHandler(async (event) => {
   const cookie = getCookie(event,'x-bazari-token')

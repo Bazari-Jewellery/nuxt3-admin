@@ -18,7 +18,7 @@ const product_ids = ref([] as string[])
 const selected_products = ref([] as any)
 
 async function addProducts() {
-  product_ids.value = selected_products.value.map((x: { id: string; }) => x.id as string)
+  product_ids.value = selected_products.value?.map((x: { id: string; }) => x.id as string)
   const { collection: col } = await useCybandyClient().admin.collections.addProducts(props.id, { product_ids: product_ids.value })
   if (col) {
     toastNotification('', 'Products are added to collection').default_toast()
@@ -71,7 +71,7 @@ const cols = [
 ]
 
 
-const final_data = computed(() => products.value.map((x, ind) => {
+const final_data = computed(() => products.value?.map((x, ind) => {
   return {
     products: x,
     status: x.status,
@@ -101,41 +101,42 @@ const status_col = useNuxtApp().$product.styles.status
       </div>
 
       <UTable v-model="selected_products" :loading="isLoading" :columns="cols" class="w-full" :rows="final_data"
-      :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
-      :empty-state="{ icon: 'i-heroicons-circle-stack-20-solid', label: 'No products.' }" :ui="{
-        tr: {
-          base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
-        },
-        th: {
-          size: 'text-sm capitalize text-black dark:text-white'
-        }
-      }">
+        :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
+        :empty-state="{ icon: 'i-heroicons-circle-stack-20-solid', label: 'No products.' }" :ui="{
+          tr: {
+            base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
+          },
+          th: {
+            size: 'text-sm capitalize text-black dark:text-white'
+          }
+        }">
 
-      <!-- product column -->
-      <template #products-data="{ row }">
-        <div class="flex gap-5 items-center w-fit">
-          <NuxtImg format="webp" fit="fill" width="36" height="48" :src="row.products.thumbnail" />
-          <span>{{ row.products.title }}</span>
-        </div>
-      </template>
+        <!-- product column -->
+        <template #products-data="{ row }">
+          <div class="flex gap-5 items-center w-fit">
+            <NuxtImg format="webp" fit="fill" width="36" height="48" :src="row.products.thumbnail" />
+            <span>{{ row.products.title }}</span>
+          </div>
+        </template>
 
-      <!-- status column -->
-      <template #status-data="{ row }">
-        <UButton variant="ghost" class="" :color="status_col[row.status]?.color ? status_col[row.status]?.color : 'gray'">
-          <span class="capitalize truncate">{{ row.status }}</span>
-        </UButton>
-      </template>
+        <!-- status column -->
+        <template #status-data="{ row }">
+          <UButton variant="ghost" class=""
+            :color="status_col[row.status]?.color ? status_col[row.status]?.color : 'gray'">
+            <span class="capitalize truncate">{{ row.status }}</span>
+          </UButton>
+        </template>
 
-      <!-- action column -->
-      <!-- <template #select-data="{row}">
+        <!-- action column -->
+        <!-- <template #select-data="{row}">
           <UCheckbox />
         </template> -->
 
-    </UTable>
+      </UTable>
 
-    <div class="flex justify-end px-3 py-3.5 mt-8">
-          <UPagination v-model="offset" :total="count" :active-button="{ variant: 'solid' }" />
-        </div>
+      <div class="flex justify-end px-3 py-3.5 mt-8">
+        <UPagination v-model="offset" :total="count" :active-button="{ variant: 'solid' }" />
+      </div>
     </div>
 
 

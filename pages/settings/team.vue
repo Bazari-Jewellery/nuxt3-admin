@@ -164,7 +164,7 @@ const { refresh } = await useLazyAsyncData(async () => {
   const { users } = await useCybandyClient().admin.users.list()
   const { invites } = await useCybandyClient().admin.invites.list()
   if (users) {
-    users.map((x) => {
+    users?.map((x) => {
       temp.push({
         name: x.first_name + ' ' + x.last_name,
         email: x.email,
@@ -176,7 +176,7 @@ const { refresh } = await useLazyAsyncData(async () => {
   }
 
   if (invites) {
-    invites.map((x) => {
+    invites?.map((x) => {
       temp.push({
         name: x.user_email,
         email: x.user_email,

@@ -36,7 +36,7 @@ const imageIndex = computed({
 onMounted(() => {
   if (props.optimize) {
     const img_optimizer = useImage()
-    images.value.map((x) => img_optimizer(x, { fit: 'fill', format: props.format, provider: props.provider }))
+    images.value?.map((x) => img_optimizer(x, { fit: 'fill', format: props.format, provider: props.provider }))
   }
 })
 </script>

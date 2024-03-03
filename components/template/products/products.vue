@@ -70,7 +70,7 @@ const final_data = computed({
 watch(products, () => {
   if (products.value) {
     loading.value = true
-    final_data.value = products.value.map((x) => {
+    final_data.value = products.value?.map((x) => {
       return {
         data: x,
         name: x.title,
@@ -78,7 +78,7 @@ watch(products, () => {
         status: x.status,
         availability: x?.sales_channels?.[0]?.name,
         inventory: x.variants.reduce(function (accumulator: number, cur_val) {
-          cur_val?.inventory_quantity
+          // cur_val?.inventory_quantity
           return accumulator + Number(cur_val?.inventory_quantity);
         }, 0),
         category: x?.categories?.map((x) => x.name).join(',')

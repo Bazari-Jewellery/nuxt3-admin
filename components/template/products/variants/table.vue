@@ -46,7 +46,7 @@ const final_data = computed({
   get: () => tableData.value
 })
 
-final_data.value = variants.value.map((x) => {
+final_data.value = variants.value?.map((x) => {
   return {
     title: x.title,
     ean: x?.ean || '-',
@@ -101,7 +101,7 @@ function edit_duplicate_preprocessor(data: ProductVariant) {
 
 function editVariant(data: ProductVariant) {
 
-  options.value = data.options.map((x: { option_id: any; value: any; }) => {
+  options.value = data.options?.map((x: { option_id: any; value: any; }) => {
     const _title = props.products.options.filter((y) => y.id == x.option_id)[0].title
     return {
       option_id: x.option_id,
@@ -114,7 +114,7 @@ function editVariant(data: ProductVariant) {
 }
 
 function duplicateVariant(data: ProductVariant) {
-  options.value = data.options.map((x: { option_id: any; value: any; }) => {
+  options.value = data.options?.map((x: { option_id: any; value: any; }) => {
     const _title = props.products.options.filter((y) => y.id == x.option_id)[0].title
     return {
       option_id: x.option_id,
@@ -161,7 +161,7 @@ const actions = (row: any) => [
 
 <template>
   <div>
-    <span>Product variant(s): {{ variants.length }}</span>
+    <span>Product variant(s): {{ variants?.length }}</span>
 
     <UTable :columns="columns" :rows="final_data" :ui="{
       td: {

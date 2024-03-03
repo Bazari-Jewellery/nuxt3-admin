@@ -3,7 +3,7 @@ import type { FindParams, Note, OrderEdit, Order } from "@medusajs/medusa/dist"
 import type { Dict } from '~/types';
 
 definePageMeta({
-  scrollToTop:true
+  scrollToTop: true
 })
 
 const emits = defineEmits(['update:modelValue', 'update:openClose'])
@@ -161,15 +161,15 @@ async function cancel_fulfillment_func(fulfillment_id = current_fulfillment.valu
 }
 
 // check if create fulfillment should show
-const isAllFulfilled = computed(()=>{
-  const items_len = order.value.items.reduce((accumulator, x)=>{
+const isAllFulfilled = computed(() => {
+  const items_len = order.value.items.reduce((accumulator, x) => {
     return accumulator + x.quantity
-  },0)
-  const fulfilled_items = order.value.fulfillments.reduce((init, y)=>{
-    return init + y.items.reduce((nu,x)=>{
+  }, 0)
+  const fulfilled_items = order.value.fulfillments.reduce((init, y) => {
+    return init + y.items.reduce((nu, x) => {
       return nu + x.quantity
-    },0)
-  },0)
+    }, 0)
+  }, 0)
 
   return items_len === fulfilled_items
 })
@@ -208,7 +208,7 @@ const customer_menu = (row: any) => [
     icon: 'i-heroicons-arrow-path-rounded-square',
     click: () => {
       changeCustomer.value = true
-      
+
     }
   }],
   [{
@@ -216,7 +216,7 @@ const customer_menu = (row: any) => [
     icon: 'i-carbon-delivery',
     click: () => {
       console.log(row);
-      
+
     }
   }],
   [{
@@ -224,7 +224,7 @@ const customer_menu = (row: any) => [
     icon: 'i-heroicons-credit-card',
     click: () => {
       console.log(row);
-      
+
     }
   }],
   [{
@@ -232,7 +232,7 @@ const customer_menu = (row: any) => [
     icon: 'i-ph-at',
     click: () => {
       console.log(row);
-      
+
     }
   }],
 ]
@@ -248,10 +248,11 @@ const addShippingMethod = ref(false)
 
     <div v-if="order" class="space-y-6 sm:space-y-8">
 
-    
+
       <div class="relative">
-        <UButton to="/orders" label="Back to orders" icon="i-heroicons-arrow-uturn-left" variant="link" class=" right-0" />
-      
+        <UButton to="/orders" label="Back to orders" icon="i-heroicons-arrow-uturn-left" variant="link"
+          class=" right-0" />
+
       </div>
 
 
@@ -443,29 +444,28 @@ const addShippingMethod = ref(false)
                 <UBadge variant="subtle"
                   :color="fulfillment_col[order.fulfillment_status]?.color ? fulfillment_col[order.fulfillment_status]?.color : 'gray'">
 
-                  <span v-if="order.fulfillment_status!=='not_fulfilled'" class="truncate capitalize">
-                    {{ order.fulfillment_status?.split('_').join(' ')}}
+                  <span v-if="order.fulfillment_status !== 'not_fulfilled'" class="truncate capitalize">
+                    {{ order.fulfillment_status?.split('_').join(' ') }}
                   </span>
                   <span v-else>
                     Awaiting fulfillment
                   </span>
                 </UBadge>
-                <UButton v-if="!isAllFulfilled"
-                  label="Create Fulfillment" variant="solid" @click="() => create_fulfillment = true" size="xs"
-                  color="gray" />
+                <UButton v-if="!isAllFulfilled" label="Create Fulfillment" variant="solid"
+                  @click="() => create_fulfillment = true" size="xs" color="gray" />
               </div>
               <TemplateProductsFulfillmentCreate :order="(order as any)" v-model="create_fulfillment" />
             </div>
 
-            <div v-if="order.shipping_methods?.length>0">
+            <div v-if="order.shipping_methods?.length > 0">
               <span class="highlight">Shipping Method</span>
               <div v-for="ship of order.shipping_methods" class="space-y-2">
-                <span>{{ship.shipping_option.name }}</span>
+                <span>{{ ship.shipping_option.name }}</span>
               </div>
             </div>
 
             <div v-else>
-              <UButton @click="addShippingMethod=true" color="gray" variant="ghost" label="Add shipping method" />
+              <UButton @click="addShippingMethod = true" color="gray" variant="ghost" label="Add shipping method" />
               <TemplateProductsFulfillmentAddShippingMethod :order="(order as any)" v-model="addShippingMethod" />
             </div>
 
@@ -478,7 +478,7 @@ const addShippingMethod = ref(false)
 
                   <p v-if="fulfillment.shipped_at">
                     Tracking <span class="text-primary">
-                      {{ fulfillment.tracking_links.map((x) => x.tracking_number).join(' ') }}
+                      {{ fulfillment.tracking_links?.map((x) => x.tracking_number).join(' ') }}
                     </span>
                   </p>
                   <p v-else>Not shipped</p>
@@ -497,11 +497,10 @@ const addShippingMethod = ref(false)
               base: 'space-y-8 text-gray-700 dark:text-gray-200'
             }
           }">
-          <div class="flex justify-between">
+            <div class="flex justify-between">
               <h5 class="title">Customer</h5>
               <div class="flex items-center gap-5">
-                <UDropdown
-                  :items="customer_menu(order.customer)">
+                <UDropdown :items="customer_menu(order.customer)">
                   <UButton size="xs" color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
                 </UDropdown>
               </div>
@@ -532,7 +531,7 @@ const addShippingMethod = ref(false)
                   <span class="text-gray-500 dark:text-gray-400 capitalize">
                     {{ Object.entries(order.shipping_address).filter(([x, y]) => y && ['address_1', 'address_2',
                       'company',
-                      'city', 'country_code', 'postal_code'].includes(x)).map(([x, y]) => y).join(', ') }}
+                      'city', 'country_code', 'postal_code'].includes(x))?.map(([x, y]) => y).join(', ') }}
                   </span>
                   <UAvatar :src="`https://flagcdn.com/${order.shipping_address?.country_code}.svg` || ''"
                     :alt="(order.shipping_address?.country_code || '')" size="3xs" :ui="{ rounded: 'rounded-none' }" />
@@ -546,7 +545,7 @@ const addShippingMethod = ref(false)
                 <span class="flex gap-2">
                   <span class="text-gray-500 dark:text-gray-400 capitalize">
                     {{ Object.entries(order.billing_address).filter(([x, y]) => y && ['address_1', 'address_2', 'company',
-                      'city', 'country_code', 'postal_code'].includes(x)).map(([x, y]) => y).join(', ') }}
+                      'city', 'country_code', 'postal_code'].includes(x))?.map(([x, y]) => y).join(', ') }}
                   </span>
                   <UAvatar :src="`https://flagcdn.com/${order.shipping_address?.country_code}.svg` || ''"
                     :alt="(order.billing_address.country_code || '')" size="3xs" :ui="{ rounded: 'rounded-none' }" />
@@ -689,7 +688,7 @@ const addShippingMethod = ref(false)
     <TemplateProductsFulfillmentMarkShipped v-model="mark_fulfillment_shipped" :order="(order as Order)"
       :fulfillment_id="current_fulfillment" />
     <DialogueCancelConfirm v-model="cancel_fulfillment" what="fulfillment" @confirm="cancel_fulfillment_func" />
-    <TemplateOrdersChangeCustomer :order="(order as Order)" v-model="changeCustomer"/>
+    <TemplateOrdersChangeCustomer :order="(order as Order)" v-model="changeCustomer" />
   </div>
 </template>
 

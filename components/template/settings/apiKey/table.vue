@@ -7,7 +7,7 @@ const props = defineProps({
 const keys = ref<PublishableApiKey[]>([])
 
 const rows = computed(() => {
-  return keys.value.map((x) => {
+  return keys.value?.map((x) => {
     return {
       name: x.title,
       token: x.id,

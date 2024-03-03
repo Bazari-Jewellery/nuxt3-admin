@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { AdminPostProductsProductVariantsReq } from "@medusajs/medusa/dist"
 import type { PropType } from "vue";
-type IOption = { option_id: string, value: string, title:string }
+type IOption = { option_id: string, value: string, title: string }
 
 const props = defineProps({
   variantReq: {
@@ -20,9 +20,9 @@ const variant = computed({
 })
 
 if (variant.value) {
-  variant.value.options = props.options.map((x)=>{
+  variant.value.options = props.options?.map((x) => {
     return {
-      option_id:x.option_id,
+      option_id: x.option_id,
       value: x.value
     }
   })
@@ -75,7 +75,7 @@ const items = [{
     </template>
 
     <template #general>
-      <UCard :ui="{body:{base:'space-y-5'}}">
+      <UCard :ui="{ body: { base: 'space-y-5' } }">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <UFormGroup label="Custom title">
             <UInput v-model="variant.title" placeholder="Blue / XL..." />

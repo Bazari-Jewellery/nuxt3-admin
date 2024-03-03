@@ -63,13 +63,13 @@ const catList = asyncComputed(async () => {
 const typeList = asyncComputed(async () => {
   const { data } = await useproductsTypeList()
   if (data.value) {
-    return data.value.product_types.map((x) => x.value)
+    return data.value.product_types?.map((x) => x.value)
   }
 })
 const tagList = asyncComputed(async () => {
   const { data } = await useproductsTagList()
   if (data.value) {
-    return data.value.product_tags.map((x) => x.value)
+    return data.value.product_tags?.map((x) => x.value)
   }
 })
 const collectionList = asyncComputed(async () => {
@@ -82,7 +82,7 @@ const collectionList = asyncComputed(async () => {
 const _tag = computed({
   get: () => tags.value,
   set: (val) => {
-    const promises = val.map((_label) => {
+    const promises = val?.map((_label) => {
       if (typeof _label == 'object') {
         const _val = _label?.['label'] as string
         if (_val) {
@@ -102,10 +102,10 @@ const _tag = computed({
 const _type = computed({
   get: () => types.value,
   set: (val) => {
-    
-    const filter = typeList.value?.filter((x)=>val===x)
-    if(filter){
-      if(filter.length > 0){
+
+    const filter = typeList.value?.filter((x) => val === x)
+    if (filter) {
+      if (filter.length > 0) {
         types.value = val
         return
       }
@@ -118,22 +118,22 @@ const _type = computed({
 
 
 async function onSubmit(event: FormSubmitEvent<any>) {
-  const payload = ref({...state} as Dict)
-  payload.value.type = {value:types.value}
-  payload.value.tags = tags.value.map((x)=>{return{value:x}})
-  payload.value.categories = categories.value?.map((x)=>{return{id:x}})
+  const payload = ref({ ...state } as Dict)
+  payload.value.type = { value: types.value }
+  payload.value.tags = tags.value.map((x) => { return { value: x } })
+  payload.value.categories = categories.value?.map((x) => { return { id: x } })
 
-  const {data} = await useProductUpdate(product.value.id as string, payload.value)
-  if(data.value){
+  const { data } = await useProductUpdate(product.value.id as string, payload.value)
+  if (data.value) {
     useNuxtApp().$product.product.singleProd.value = data.value.product
   }
 }
 
-function clearType(){
+function clearType() {
   types.value = undefined
 }
 
-function clearCollection(){
+function clearCollection() {
   collection_id.value = undefined
 }
 </script>
@@ -170,13 +170,14 @@ function clearCollection(){
               <template #label>
                 <UButton v-if="types" variant="solid" color="gray" size="xs" :label="types ? types : 'Select type'">
                   <template #trailing>
-                    
-                <UButton @click="clearType" size="2xs" v-if="types" color="gray"  variant="solid" icon="i-heroicons-x-mark"/>
+
+                    <UButton @click="clearType" size="2xs" v-if="types" color="gray" variant="solid"
+                      icon="i-heroicons-x-mark" />
                   </template>
                 </UButton>
-              
+
                 <span v-else>Select type</span>
-               
+
               </template>
 
               <template #option-create="{ option }">
@@ -190,13 +191,14 @@ function clearCollection(){
                 <UButton variant="solid" color="gray" size="xs">
                   <template #default>
                     <span v-if="collection_id" class="flex gap-2 items-center">
-                  <span>{{ collectionList?.find((x) => x.id == collection_id)?.title }}</span>
-                  <UButton @click="clearCollection" v-if="collection_id" color="gray" size="2xs" variant="solid" icon="i-heroicons-x-mark"/>
-                </span>
-                <span v-else>Select collection</span>
+                      <span>{{ collectionList?.find((x) => x.id == collection_id)?.title }}</span>
+                      <UButton @click="clearCollection" v-if="collection_id" color="gray" size="2xs" variant="solid"
+                        icon="i-heroicons-x-mark" />
+                    </span>
+                    <span v-else>Select collection</span>
                   </template>
                 </UButton>
-                
+
               </template>
             </USelectMenu>
           </UFormGroup>

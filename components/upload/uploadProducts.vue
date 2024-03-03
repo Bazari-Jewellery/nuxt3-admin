@@ -59,7 +59,7 @@ async function uploadFilesFunc() {
     if (isUpload.value) {
       if (image_obj_files.value.length > 0) {
         const { uploads } = await useCybandyClient().admin.uploads.create(image_obj_files.value)
-        image_obj_urls.value = uploads.map((x) => x.url)
+        image_obj_urls.value = uploads?.map((x) => x.url)
         uploadedObj.value = uploads
       } else {
 

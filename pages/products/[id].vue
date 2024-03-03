@@ -315,7 +315,7 @@ const mediaImages = ref([])
 const current_img_index = ref(0)
 const showImageFunction = (ind = 0) => {
   if (singleProd.value.images) {
-    all_images.value = singleProd.value.images.map((x) => x.url)
+    all_images.value = singleProd.value.images?.map((x) => x.url)
   }
 
   show_lightbox.value = true
@@ -341,7 +341,7 @@ const mediaMenu = [[
 // options part of the variant section needs re-working
 const optionsPresentation = computed(() => singleProd.value.options?.map((_opt) => {
   const values = ref<string[]>([])
-  _opt.values.map((_val) => {
+  _opt.values?.map((_val) => {
     if (!values.value.includes(_val.value)) {
       values.value.push(_val.value)
     }
@@ -358,7 +358,7 @@ const optionsPresentation = computed(() => singleProd.value.options?.map((_opt) 
     <div class="my-6">
       <UButton variant="link" icon="i-heroicons-arrow-uturn-left" to="/products" label="Back to Products" />
     </div>
-    <div v-if="singleProd.id">
+    <div v-if="singleProd">
 
       <div class="grid grid-cols-10 gap-5">
 
@@ -406,7 +406,7 @@ const optionsPresentation = computed(() => singleProd.value.options?.map((_opt) 
 
               <GeneralListBetween :options="{
                 title: 'Details',
-                content: details.map((x) => { return { label: x.label as string, value: x.value as string } })
+                content: details?.map((x) => { return { label: x.label as string, value: x.value as string } })
               }" />
 
             </div>
@@ -517,7 +517,7 @@ const optionsPresentation = computed(() => singleProd.value.options?.map((_opt) 
       <TemplateProductsVariantsEditPrices v-model="edit_prices" :variants="(singleProd.variants as any)" />
       <TemplateProductsVariantsAdd :product-id="(singleProd.id as string)" :options="(options as any)"
         v-model="add_varaint" v-model:variant-req="add_variant_variable" />
-      <TemplateProductsAttributesEdit v-model="edit_attributes" :product-id="singleProd.id"
+      <TemplateProductsAttributesEdit v-if="singleProd.id" v-model="edit_attributes" :product-id="singleProd.id"
         v-model:attributes="attribute_obj" />
     </div>
 

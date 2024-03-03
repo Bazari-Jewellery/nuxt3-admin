@@ -60,7 +60,7 @@ const cols = [
 ]
 
 
-const final_data = computed(() => products.value.map((x, ind) => {
+const final_data = computed(() => products.value?.map((x, ind) => {
   return {
     id: ind + 1,
     products: x,

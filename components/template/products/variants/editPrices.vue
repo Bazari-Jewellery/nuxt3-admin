@@ -57,7 +57,7 @@ const currencies = [
   },
   {
     key: 'cad',
-    label:'Prices (CAD)',
+    label: 'Prices (CAD)',
     currency_code: 'usd',
     region_id: undefined as undefined | string
   },
@@ -77,7 +77,7 @@ asyncComputed(async () => {
   const { data } = await useRegionsList()
   if (data.value) {
 
-    regionList.value = data.value.regions.map((x) => {
+    regionList.value = data.value.regions?.map((x) => {
       return {
         key: x.id,
         label: x.name,
@@ -110,13 +110,13 @@ interface tableType extends Dict {
 const tableData = ref([] as tableType[])
 const _tableData = computed(() => {
   const data = ref([] as tableType[])
-  variants.value.map((_variants) => {
+  variants.value?.map((_variants) => {
     const temp = {} as tableType
     temp['data'] = _variants
     temp['id'] = {} as Dict
     temp.product = _variants.title
     // price
-    _variants.prices.map((_price) => {
+    _variants.prices?.map((_price) => {
       if (_price.region_id) {
         temp[_price.region_id] = priceFormatterNoSymbol(Number(_price.amount), _price.currency_code) || priceFormatterNoSymbol(Number(0), _price.currency_code)
         temp['id'][_price.region_id] = _price.id
@@ -124,13 +124,13 @@ const _tableData = computed(() => {
       }
       temp[_price.currency_code] = _price.amount ? priceFormatterNoSymbol(Number(_price.amount), _price.currency_code) : priceFormatterNoSymbol(Number(0), _price.currency_code)
       temp['id'][_price.currency_code] = _price.id
-     
+
     })
 
     // check for columns without data and put undefined there
-    const col_keys = columnsTable.value.map((x) => x['key'])
+    const col_keys = columnsTable.value?.map((x) => x['key'])
 
-    col_keys.map((x) => {
+    col_keys?.map((x) => {
       if (!Object.keys(temp).includes(x)) {
         temp[x] = undefined
       }
@@ -147,7 +147,7 @@ const _tableData = computed(() => {
 
 function changeAllCol(col: string, amount: number) {
 
-  _tableData.value.map((_row) => {
+  _tableData.value?.map((_row) => {
     _row[col] = amount
   })
 
@@ -165,36 +165,36 @@ async function updatePrices() {
 
   try {
     const final_data = ref([] as Dict[])
-  for (let i = 0; i < tableData.value.length; i++) {
-    const data = tableData.value[i];
-    const row = [] as Dict[]
+    for (let i = 0; i < tableData.value.length; i++) {
+      const data = tableData.value[i];
+      const row = [] as Dict[]
 
 
 
-    for (let j = 0; j < columnsTable.value.length; j++) {
-      const col = columnsTable.value[j];
-      if (col.key != 'product') {
-        const payload = {} as Dict
-        payload.amount = data[col.key] * 100
-        if (col.region_id) {
-          payload.region_id = col.region_id
+      for (let j = 0; j < columnsTable.value.length; j++) {
+        const col = columnsTable.value[j];
+        if (col.key != 'product') {
+          const payload = {} as Dict
+          payload.amount = data[col.key] * 100
+          if (col.region_id) {
+            payload.region_id = col.region_id
+          }
+
+          payload['id'] = data['id'][col.key]
+          payload['currency_code'] = col.currency_code
+
+
+
+          row.push(payload)
+
         }
 
-        payload['id'] = data['id'][col.key]
-        payload['currency_code'] = col.currency_code
-
-        
-
-        row.push(payload)
-
       }
-
+      await update(data.data.id, data.data.product_id, { prices: [...row] })
+      final_data.value.push([...row])
     }
-    await update(data.data.id, data.data.product_id, { prices: [...row] })
-    final_data.value.push([...row])
-  }
-    useToastSuccess('','Prices updated')
-  } catch (error:any) {
+    useToastSuccess('', 'Prices updated')
+  } catch (error: any) {
     useToastFailure('')
   }
 
@@ -217,13 +217,14 @@ async function updatePrices() {
           </UButton>
           <div class="flex items-center gap-5">
             <UButton @click="() => modal = false" variant="solid" color="gray" label="Discard" />
-            <UButton @click="savePrices=true" variant="solid" color="primary" label="Save and close" />
+            <UButton @click="savePrices = true" variant="solid" color="primary" label="Save and close" />
           </div>
         </div>
       </template>
 
       <div class="flex items-center">
-        <USelectMenu v-model="selected_currencies" :options="currencies" multiple :ui="{trigger:'w-fit', width:'w-fit'}">
+        <USelectMenu v-model="selected_currencies" :options="currencies" multiple
+          :ui="{ trigger: 'w-fit', width: 'w-fit' }">
           <UButton color="gray" variant="ghost" size="sm" icon="i-heroicons-view-columns" label="currencies" />
         </USelectMenu>
         <USelectMenu v-model="selected_regions" :options="regionList" multiple>
@@ -270,7 +271,7 @@ async function updatePrices() {
     </UCard>
 
     <DialogueCancelConfirm @confirm="() => modal = false" v-model="confirm_close" title="Close"
-      description="Are you sure you want to close this editor without saving?" what="" confirm-button-color="red"/>
+      description="Are you sure you want to close this editor without saving?" what="" confirm-button-color="red" />
     <DialogueCancelConfirm @confirm="() => updatePrices" v-model="savePrices" title="Saving Changes"
       description="Saving edited prices" what="" />
   </UModal>

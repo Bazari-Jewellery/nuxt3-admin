@@ -135,7 +135,7 @@ type tableType = {
 /**
  * column styles
  */
- const fulfillment_col = useNuxtApp().$order.styles.fulfillment_col
+const fulfillment_col = useNuxtApp().$order.styles.fulfillment_col
 
 const payment_col = useNuxtApp().$order.styles.payment_col
 
@@ -147,7 +147,7 @@ const final_data = computed({
 watch(orders, () => {
   if (orders.value) {
 
-    final_data.value = orders.value.map((x) => {
+    final_data.value = orders.value?.map((x) => {
       return {
         date_added: dateFormatter(x.created_at.toString()),
         order: x.display_id,
@@ -170,13 +170,13 @@ watch(orders, () => {
 <template>
   <UCard :ui="{
     divide: '',
-    body:{
+    body: {
       padding: 'p-0 sm:p-0'
     },
-    header:{
+    header: {
       padding: 'p-0 sm:p-0'
     },
-    footer:{
+    footer: {
       padding: 'p-0 sm:p-0'
     },
   }">

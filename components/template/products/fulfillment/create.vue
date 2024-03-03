@@ -24,7 +24,7 @@ function filter_items(item_id: string) {
   return _item[0]
 }
 
-// const quantity_input_boxes = computed(()=> order.value.items.map((item)=>{
+// const quantity_input_boxes = computed(()=> order.value.items?.map((item)=>{
 //  const fulfilled_quantity = order.value.fulfillments.reduce( function(accumulator:number, cur_val){
 //   return  cur_val.items.reduce((acc:number, it_cu_val)=>{
 //     return item.id==it_cu_val.item_id ? acc + it_cu_val.quantity: 0
@@ -57,8 +57,8 @@ function reset() {
     }
   })
 
-  order.value.fulfillments.map((x) => {
-    x.items.map((_it) => {
+  order.value.fulfillments?.map((x) => {
+    x.items?.map((_it) => {
       if (!x.canceled_at) {
         res_inp_boxes.value[_it.item_id].fulfilled += _it.quantity
         res_inp_boxes.value[_it.item_id].to_fulfil -= _it.quantity
@@ -107,7 +107,7 @@ function cancel() {
 const send_notification = ref(true)
 
 async function send_fulfillment() {
-  const _items = Object.values(quantity_input_boxes.value).map((x) => {
+  const _items = Object.values(quantity_input_boxes.value)?.map((x) => {
     return {
       quantity: x.to_fulfil,
       item_id: x.id

@@ -93,7 +93,7 @@ watch(customers, () => {
   if (customers.value) {
     // console.log(customers.value);
 
-    final_data.value = customers.value.map((x) => {
+    final_data.value = customers.value?.map((x) => {
       return {
         date_added: dateFormatter(x.created_at),
         orders: x.orders.length,

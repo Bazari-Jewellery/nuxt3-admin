@@ -119,7 +119,7 @@ const final_data = computed({
 watch(orders, () => {
   if (orders.value) {
 
-    final_data.value = orders.value.map((x) => {
+    final_data.value = orders.value?.map((x) => {
       return {
         date_added: dateFormatter(x.created_at.toString()),
         order: x.display_id,

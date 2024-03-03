@@ -17,7 +17,7 @@ const { width, height } = useElementSize(list_container)
 
 const categories = computed({
   set: (val) => emits('update:categories', val),
-  get: () => props.categories.map((x) => {
+  get: () => props.categories?.map((x) => {
     return {
       ...x,
       show_child: false
@@ -109,7 +109,7 @@ function add_remove_child(id: string) {
 
     <ClientOnly>
       <!-- <div class="relative"> -->
-      <draggable v-model="categories" handle=".handle" @change="(v) => changed(v)" @start="() => drag = true"
+      <draggable v-model="categories" handle=".handle" @change="(v: any) => changed(v)" @start="() => drag = true"
         @end="() => drag = false" item-key="rank" class="grid gap-2.5">
         <template #item="{ element }">
 

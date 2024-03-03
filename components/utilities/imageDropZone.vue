@@ -77,7 +77,7 @@ function onDrop(files: File[] | null) {
     })
   } else {
     image_obj_files.value = files
-    image_obj_urls.value = files.map((x) => useObjectUrl(x).value as string)
+    image_obj_urls.value = files?.map((x) => useObjectUrl(x).value as string)
   }
 }
 
