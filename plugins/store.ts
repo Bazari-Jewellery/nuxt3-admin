@@ -1,5 +1,11 @@
-import type { AdminPostStoreReq } from "@medusajs/medusa"
+import type { AdminPostStoreReq as _AdminPostReq } from "@medusajs/medusa"
 import type { IStore as Store } from "~/types"
+
+interface AdminPostStoreReq extends _AdminPostReq {
+  privacy_policy?: string,
+  tnc?: string
+}
+
 export default defineNuxtPlugin((nuxtApp) => {
   const store = ref<Store>()
   async function getStoreDetails() {

@@ -3,8 +3,8 @@ const store = useNuxtApp().$store.store
 
 async function submit() {
   try {
-    await useNuxtApp().$store.updateStoreDetails({ tnc: store.value?.tnc })
-    useToastSuccess('Tnc Updated')
+    await useNuxtApp().$store.updateStoreDetails({ privacy_policy: store.value?.privacy_policy })
+    useToastSuccess('Privacy Policy Updated')
   } catch (error) {
     useToastFailure()
   }
@@ -15,11 +15,11 @@ async function submit() {
 <template>
   <form v-if="store" @submit.prevent="submit" class="space-y-5">
     <div class="space-y-1">
-      <span class="highlight text-base">Terms & Condition</span>
-      <p>Terms & Conditions of your Store. This will be on the store front</p>
+      <span class="highlight text-base">Privacy Policy</span>
+      <p>Privacy Policy of your Store. This will be on the store front</p>
     </div>
     <UFormGroup label="">
-      <UTextarea v-model="store.tnc" autoresize :rows="10" />
+      <UTextarea v-model="store.privacy_policy" autoresize :rows="10" />
 
 
     </UFormGroup>

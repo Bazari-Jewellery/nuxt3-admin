@@ -14,7 +14,7 @@ const items = [
     },
     {
         label: 'Privacy Policy',
-        slot: 'Privacy'
+        slot: 'privacy'
     },
     {
         label: 'Terms and Condition',
@@ -37,7 +37,13 @@ const items = [
             </template>
 
             <div>
-                <UAccordion :items="items" multiple default-open variant="solid" color="gray">
+                <UAccordion :items="items" multiple variant="solid" color="gray" :ui="{
+            item: {
+                base: 'base_i',
+                container: 'cont_i',
+                wrapper: 'wrap_i'
+            }
+        }">
 
                     <template #general>
                         <UCard :ui="{ divide: '' }">
@@ -57,6 +63,13 @@ const items = [
                         <UCard :ui="{ divide: '' }">
 
                             <StoreTnc />
+                        </UCard>
+                    </template>
+
+                    <template #privacy>
+                        <UCard :ui="{ divide: '' }">
+
+                            <StorePrivacyPolicy />
                         </UCard>
                     </template>
                 </UAccordion>

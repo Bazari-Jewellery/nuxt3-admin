@@ -9,15 +9,25 @@ export default defineNuxtConfig({
   devServer: {
     host: 'admin.bazari.local',
     port: 443,
-    https:{
-      cert:"./ssl/admin.bazari.local.pem",
-      key:"./ssl/admin.bazari.local-key.pem"
+    https: {
+      cert: "./ssl/admin.bazari.local.pem",
+      key: "./ssl/admin.bazari.local-key.pem"
     }
   },
   css: ['~/assets/css/main.css'],
   app: {
     // baseURL: '/orders',
-    buildAssetsDir: '_cybandy'
+    buildAssetsDir: '_cybandy',
+    head: {
+      script: [
+        // {
+        //   src: "https://cdn.tiny.cloud/1/nehb99vk9dk4g39dss7owr2gjh921nny8rxkmb31rftjbzzy/tinymce/6/tinymce.min.js",
+        //   referrerpolicy: "origin",
+        //   crossorigin: "anonymous",
+        //   defer: true
+        // }
+      ]
+    }
   },
   runtimeConfig: {
     medusaBackendUrl: process.env.MEDUSA_URL,
@@ -68,18 +78,19 @@ export default defineNuxtConfig({
       baseURL: process.env.NODE_ENV === 'production' ? 'https://bash.bazari.it' : "http://localhost:3000"
     }
   },
-  security:{
-    headers:{
+  security: {
+    headers: {
       crossOriginEmbedderPolicy: process.env.NODE_ENV === 'development' ? 'unsafe-none' : 'require-corp',
-      contentSecurityPolicy:{
-        "img-src":["'self'","data:","https://wsrv.nl", "https://flagcdn.com",process.env.DO_SPACES_IMAGES_BUCKET as string],
-        "object-src": [process.env.MEDUSA_URL || 'https://backend.bazari.it', "https://flagcdn.com"]
+      contentSecurityPolicy: {
+        "img-src": ["'self'", "data:", "https://wsrv.nl", "https://flagcdn.com", process.env.DO_SPACES_IMAGES_BUCKET as string],
+        "object-src": [process.env.MEDUSA_URL || 'https://backend.bazari.it', "https://flagcdn.com"],
+        "script-src": ["'self'", "https://cdn.tiny.cloud/1/nehb99vk9dk4g39dss7owr2gjh921nny8rxkmb31rftjbzzy/tinymce/6/tinymce.min.js"]
       },
       crossOriginResourcePolicy: process.env.NODE_ENV === 'development' ? 'cross-origin' : 'same-origin'
     }
   },
-  site:{
-    indexable:false
+  site: {
+    indexable: false
   },
   ogImage: { enabled: false },
   experimental: {
