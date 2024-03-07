@@ -1,20 +1,26 @@
-<script setup lang=ts>
+<script setup>
 const store = useNuxtApp().$store.store
 
 async function submit() {
   try {
     await useNuxtApp().$store.updateStoreDetails({ name: store.value?.name })
-    useToastSuccess('Store Updated')
+    useToastSuccess('Tnc Updated')
   } catch (error) {
     useToastFailure()
   }
 }
+
 </script>
 
 <template>
   <form v-if="store" @submit.prevent="submit" class="space-y-5">
-    <UFormGroup label="Store name">
-      <UInput v-model="store.name" />
+    <div class="space-y-1">
+      <span class="highlight text-base">Terms & Condition</span>
+      <p>Terms & Conditions of your Store. This will be on the store front</p>
+    </div>
+    <UFormGroup label="">
+      <UTextarea v-model="store.tnc" />
+
     </UFormGroup>
     <div class="flex justify-start items-center">
       <UButton label="save" type="submit" />
