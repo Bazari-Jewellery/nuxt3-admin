@@ -84,7 +84,7 @@ export default defineNuxtConfig({
       contentSecurityPolicy: {
         "img-src": ["'self'", "data:", "https://wsrv.nl", "https://flagcdn.com", process.env.DO_SPACES_IMAGES_BUCKET as string],
         "object-src": [process.env.MEDUSA_URL || 'https://backend.bazari.it', "https://flagcdn.com"],
-        "script-src": ["'self'", "https://cdn.tiny.cloud/1/nehb99vk9dk4g39dss7owr2gjh921nny8rxkmb31rftjbzzy/tinymce/6/tinymce.min.js"]
+        // "script-src": ["'self'", "https://cdn.tiny.cloud/1/nehb99vk9dk4g39dss7owr2gjh921nny8rxkmb31rftjbzzy/tinymce/6/tinymce.min.js"]
       },
       crossOriginResourcePolicy: process.env.NODE_ENV === 'development' ? 'cross-origin' : 'same-origin'
     }
