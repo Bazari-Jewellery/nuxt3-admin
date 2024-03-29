@@ -37,7 +37,7 @@ const deleted_faqs = ref([] as Ifaq[])
 
 async function updateFaq() {
   // Do something with data
-  // console.log(event.data);
+  // // console.log(event.data);
 
   const medusa_backend = useRuntimeConfig().public.medusaBackendUrl
   const bazariToken = useNuxtApp().$currentUser.token.value
@@ -64,12 +64,12 @@ async function updateFaq() {
     watch: false,
     async onResponse({ response }) {
       if (response.ok) {
-        // console.log(response._data);
+        // // console.log(response._data);
         modal.value = false
         toastNotification('FAQs added').default_toast()
 
       } else {
-        // console.log(response);
+        // // console.log(response);
         useToastFailure()
       }
     }
@@ -102,6 +102,7 @@ function delFaq(ind: number) {
 <template>
   <ModalTitleButton v-model="modal" @send="updateFaq" :disabled="disable_send" title="Add FAQs"
     button-confirm-label="Save & Close" width="min-w-full sm:min-w-[500px] md:min-w-[650px]">
-    <FormsFaqSingleAdd @add_new="newFaq" @delete="(val) => delFaq(val)" v-model="_state" v-model:section_id="section_id" />
+    <FormsFaqSingleAdd @add_new="newFaq" @delete="(val) => delFaq(val)" v-model="_state"
+      v-model:section_id="section_id" />
   </ModalTitleButton>
 </template>

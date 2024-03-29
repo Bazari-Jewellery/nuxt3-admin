@@ -27,7 +27,7 @@ const category = ref({
 } as AdminPostProductCategoriesReq)
 
 async function createCategory() {
-  console.log(category.value);
+  // console.log(category.value);
 
   if (!category.value.name) {
     toastNotification('', 'Name is required', 0).error()

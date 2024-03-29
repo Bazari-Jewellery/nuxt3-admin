@@ -46,6 +46,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-security',
     '@nuxtjs/seo',
+    'nuxt-bugsnag',
     // '@nuxtjs/html-validator',
   ],
   ui: {

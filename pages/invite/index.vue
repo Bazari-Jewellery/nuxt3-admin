@@ -14,14 +14,14 @@ const id = query.id as string
 const token = query.token as string
 const status = query.status
 
-onBeforeMount(async()=>{
-  console.log(status,id);
-  if(status=='false'){
-  const {deleted} = await useCybandyClient().admin.invites.delete(id)
-  navigateTo('https://bazari.it',{
-    external:true
-  })
-}
+onBeforeMount(async () => {
+  // console.log(status,id);
+  if (status == 'false') {
+    const { deleted } = await useCybandyClient().admin.invites.delete(id)
+    navigateTo('https://bazari.it', {
+      external: true
+    })
+  }
 })
 
 
@@ -32,8 +32,8 @@ import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
 
 const schema = z.object({
-  first_name: z.string().min(1,'Required'),
-  last_name: z.string().min(1,'Required'),
+  first_name: z.string().min(1, 'Required'),
+  last_name: z.string().min(1, 'Required'),
   password: z.string().min(8, 'Must be at least 8 characters')
 })
 
@@ -47,27 +47,27 @@ const state = reactive({
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   // Do something with data
-  
+
   try {
     const res = await useCybandyClient().admin.invites.accept({
-    token:token,
-    user:{
-      first_name:state.first_name as any,
-      last_name:state.last_name as any,
-      password:state.password as any
+      token: token,
+      user: {
+        first_name: state.first_name as any,
+        last_name: state.last_name as any,
+        password: state.password as any
+      }
+    })
+    toastNotification('Welcome to the team', 'You are being redirected...')
+    try {
+      await useLogin(email.value, state.password as any)
+      navigateTo('/orders')
+      return
+    } catch (error) {
+
     }
-  })
-  toastNotification('Welcome to the team', 'You are being redirected...')
-  try {
-    await useLogin(email.value, state.password as any)
-    navigateTo('/orders')
-    return
+    navigateTo('/auth')
   } catch (error) {
-    
-  }
-  navigateTo('/auth')
-  } catch (error) {
-    
+
   }
 }
 
@@ -84,11 +84,11 @@ const togglePassword = () => {
   isPassword.value = !isPassword.value;
 };
 
-watch(passwordType,()=>{
-  if(passwordType.value=='text'){
-    setTimeout(()=>{
+watch(passwordType, () => {
+  if (passwordType.value == 'text') {
+    setTimeout(() => {
       passwordType.value = 'password'
-    },10000)
+    }, 10000)
   }
 })
 </script>
@@ -146,9 +146,3 @@ watch(passwordType,()=>{
     </div>
   </div>
 </template>
-
-
-
-
-
-

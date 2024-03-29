@@ -46,7 +46,7 @@ const id = useNuxtApp().$product.product.singleProd.value.id as string
  * it emits upload event with urls as argument
  */
 async function uploadFilesFunc() {
-  // console.log(image_obj_files.value);
+  // // console.log(image_obj_files.value);
 
   try {
     if (isUpload.value) {
@@ -76,7 +76,7 @@ async function uploadFilesFunc() {
       } else {
 
         const _payload = { thumbnail: image_obj_urls.value[0] || null }
-        console.log(_payload);
+        // console.log(_payload);
 
         const { data } = await useProductUpdate(id, _payload as any)
         if (data.value?.product) {

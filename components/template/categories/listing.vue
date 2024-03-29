@@ -70,9 +70,9 @@ function addFunc(data: any) {
 const open_edit_category_modal = ref(false)
 function editFunc(data: any) {
   if (data) {
-    // console.log(data);
+    // // console.log(data);
     current_category.value = data
-    console.log('current', current_category.value);
+    // console.log('current', current_category.value);
     open_edit_category_modal.value = true
   }
 }

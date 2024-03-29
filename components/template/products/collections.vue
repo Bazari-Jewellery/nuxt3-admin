@@ -94,7 +94,7 @@ watch(collections, () => {
 })
 
 function selectRow(row: any) {
-  // console.log(row);
+  // // console.log(row);
 
   navigateTo(`/collections/${row.data.id}`)
 }
@@ -127,13 +127,13 @@ function selectRow(row: any) {
     <UTable :columns="columnsTable" class="w-full" :rows="final_data" :loading="loading || !final_data"
       @select="selectRow" :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
       :empty-state="{ icon: 'i-heroicons-circle-stack-20-solid', label: 'No collections.' }" :ui="{
-        tr: {
-          base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
-        },
-        th: {
-          size: 'text-sm capitalize text-black dark:text-white'
-        }
-      }">
+    tr: {
+      base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
+    },
+    th: {
+      size: 'text-sm capitalize text-black dark:text-white'
+    }
+  }">
 
 
 

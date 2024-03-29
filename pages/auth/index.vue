@@ -41,7 +41,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 
 watchEffect(() => {
-  // console.log(trial_cookie.value);
+  // // console.log(trial_cookie.value);
 
 })
 

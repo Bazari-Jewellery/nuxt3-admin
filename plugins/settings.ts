@@ -13,7 +13,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         method: 'get',
         onResponse({ response }) {
           if (response.ok) {
-            // console.log(response._data);
+            // // console.log(response._data);
 
             // _faq_section.value = response._data.faq
           }
@@ -28,7 +28,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     //   method: 'get',
     //   onResponse({ response }) {
     //     if (response.ok) {
-    //       // console.log(response._data);
+    //       // // console.log(response._data);
 
     //       // _faq_section.value = response._data.faq
     //     }

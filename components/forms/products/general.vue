@@ -43,11 +43,11 @@ const tags = ref(product.value.tags?.map((x) => x.value) || [])
 
 
 // watchArray([tags, types, categories, collection_id], () => {
-//   console.log('tags', tags.value);
-//   console.log('types', types.value);
-//   console.log('tags', tags.value);
-//   console.log('collection_id', collection_id.value);
-//   console.log('categories', categories.value);
+//   // console.log('tags', tags.value);
+//   // console.log('types', types.value);
+//   // console.log('tags', tags.value);
+//   // console.log('collection_id', collection_id.value);
+//   // console.log('categories', categories.value);
 
 // }, { deep: true })
 
@@ -186,7 +186,8 @@ function clearCollection() {
             </USelectMenu>
           </UFormGroup>
           <UFormGroup label="Collection">
-            <USelectMenu v-model="collection_id" option-attribute="title" value-attribute="id" :options="collectionList">
+            <USelectMenu v-model="collection_id" option-attribute="title" value-attribute="id"
+              :options="collectionList">
               <template #label>
                 <UButton variant="solid" color="gray" size="xs">
                   <template #default>

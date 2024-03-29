@@ -54,7 +54,7 @@ export function useCybandyClient(token = '') {
   const payload = {} as Config
   const bazariToken = computed(() => token ? token : useNuxtApp().$currentUser.token.value)
 
-  // console.log('useCybandyClient: token', bazariToken.value);
+  // // console.log('useCybandyClient: token', bazariToken.value);
 
 
   payload.baseUrl = useRuntimeConfig().public.medusaBackendUrl

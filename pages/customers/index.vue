@@ -88,10 +88,10 @@ const final_data = computed({
 })
 
 watch(customers, () => {
-  // console.log('watch is working');
+  // // console.log('watch is working');
 
   if (customers.value) {
-    // console.log(customers.value);
+    // // console.log(customers.value);
 
     final_data.value = customers.value?.map((x) => {
       return {

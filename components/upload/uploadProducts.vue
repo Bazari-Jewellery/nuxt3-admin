@@ -53,7 +53,7 @@ const id = useNuxtApp().$product.product.singleProd.value.id as string
  * it emits upload event with urls as argument
  */
 async function uploadFilesFunc() {
-  // console.log(image_obj_files.value);
+  // // console.log(image_obj_files.value);
 
   try {
     if (isUpload.value) {

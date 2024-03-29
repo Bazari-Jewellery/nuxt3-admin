@@ -37,7 +37,7 @@ const sidebar = computed(() => section.value?.map((x) => {
       description.value = x.description
       title.value = x.name
       current_faq_section.value = x
-      console.log(section_id.value);
+      // console.log(section_id.value);
 
     }
   }
@@ -47,7 +47,7 @@ const sidebar = computed(() => section.value?.map((x) => {
 
 
 if (sidebar.value?.length) {
-  console.log(sidebar.value);
+  // console.log(sidebar.value);
   if (section_id.value == undefined) {
     const __sec = sidebar.value[0].data
     section_id.value = __sec.id

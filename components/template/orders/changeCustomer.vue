@@ -70,7 +70,7 @@ function cancelFunc() {
 
 
 async function confirmFunc() {
-  console.log(selected_customer.value);
+  // console.log(selected_customer.value);
 
   const { data, error } = await useOrderUpdate(props.order.id, {
     email: selected_customer.value.data.email,
@@ -127,7 +127,7 @@ const placeholder = computed(() => 'Select Customer')
             <UBadge variant="subtle"
               :color="payment_col[order.payment_status]?.color ? payment_col[order.payment_status]?.color : 'gray'">
               <span class="truncate capitalize">{{ order.payment_status == 'captured' ? 'Paid' : order.payment_status
-              }}</span>
+                }}</span>
             </UBadge>
             <UBadge variant="subtle"
               :color="fulfillment_col[order.fulfillment_status]?.color ? fulfillment_col[order.fulfillment_status]?.color : 'gray'">
@@ -163,8 +163,8 @@ const placeholder = computed(() => 'Select Customer')
               <span>New Owner</span>
               <span class="text-xs">The customer to transfer this order to</span>
             </div>
-            <UInputMenu v-model="selected_customer" :search="searchCustomer" :loading="loading" :placeholder="placeholder"
-              trailing-icon="i-heroicons-chevron-up-down-20-solid" trailing by="label">
+            <UInputMenu v-model="selected_customer" :search="searchCustomer" :loading="loading"
+              :placeholder="placeholder" trailing-icon="i-heroicons-chevron-up-down-20-solid" trailing by="label">
               <!-- 
             <template #option="{option:current_customer}">
               <span class="truncate">

@@ -7,7 +7,7 @@ useHead({
 })
 
 
-console.log(useRuntimeConfig());
+// console.log(useRuntimeConfig());
 
 
 const columns = [

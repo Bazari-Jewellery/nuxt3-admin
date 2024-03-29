@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 const store = useNuxtApp().$store.store
-console.log(store);
+// console.log(store);
 // update social media
 const cybandy = useCybandyClient()
 async function updateSocial() {

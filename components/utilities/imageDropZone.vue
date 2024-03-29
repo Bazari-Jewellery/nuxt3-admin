@@ -52,7 +52,7 @@ const showAlert = ref(false)
 const dropZoneRef = ref<HTMLDivElement>()
 
 function onDrop(files: File[] | null) {
-  // console.log(files);
+  // // console.log(files);
   showAlert.value = false
 
   if (!files) return
@@ -192,4 +192,3 @@ const old_items = (ind: number) => [
     </div>
   </div>
 </template>
-

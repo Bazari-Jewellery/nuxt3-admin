@@ -215,7 +215,7 @@ const customer_menu = (row: any) => [
     label: 'Edit Shipping Address',
     icon: 'i-carbon-delivery',
     click: () => {
-      console.log(row);
+      // console.log(row);
 
     }
   }],
@@ -223,7 +223,7 @@ const customer_menu = (row: any) => [
     label: 'Edit Billing Address',
     icon: 'i-heroicons-credit-card',
     click: () => {
-      console.log(row);
+      // console.log(row);
 
     }
   }],
@@ -231,7 +231,7 @@ const customer_menu = (row: any) => [
     label: 'Edit Email Address',
     icon: 'i-ph-at',
     click: () => {
-      console.log(row);
+      // console.log(row);
 
     }
   }],
@@ -260,10 +260,10 @@ const addShippingMethod = ref(false)
         <div class="col-span-6 space-y-8">
           <!-- pre data -->
           <UCard class="" :ui="{
-            body: {
-              base: 'space-y-8 text-gray-700 dark:text-gray-200'
-            }
-          }">
+      body: {
+        base: 'space-y-8 text-gray-700 dark:text-gray-200'
+      }
+    }">
             <div class="text-base">
               <span>Order #</span>
               <span class="font-medium">{{ order.display_id }}</span>
@@ -275,7 +275,8 @@ const addShippingMethod = ref(false)
                 <span class="text-gray-500 dark:text-gray-400">{{ order.email }}</span>
               </div>
               <div>
-                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 "></div>
+                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 ">
+                </div>
               </div>
               <div class="flex flex-col gap-2">
                 <span>Phone</span>
@@ -284,7 +285,8 @@ const addShippingMethod = ref(false)
                 </span>
               </div>
               <div>
-                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 "></div>
+                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 ">
+                </div>
               </div>
               <div class="flex flex-col gap-2">
                 <span>Payment</span>
@@ -301,10 +303,10 @@ const addShippingMethod = ref(false)
 
           <!-- summary -->
           <UCard class="" :ui="{
-            body: {
-              base: 'space-y-8 text-gray-700 dark:text-gray-200'
-            }
-          }">
+      body: {
+        base: 'space-y-8 text-gray-700 dark:text-gray-200'
+      }
+    }">
             <div class="flex justify-between">
               <h5 class="title">Summary</h5>
               <div class="flex items-center gap-5">
@@ -382,7 +384,7 @@ const addShippingMethod = ref(false)
                   <span>Total</span>
                   <span class="flex gap-3">
                     <span class="text-lg md:text-xl xl:text-2xl font-semibold">{{ priceFormatter(order.total,
-                      order.currency_code) }}</span>
+      order.currency_code) }}</span>
                     <!-- <span class="uppercase">{{ order.currency_code }}</span> -->
                   </span>
                 </div>
@@ -395,17 +397,18 @@ const addShippingMethod = ref(false)
 
           <!-- payment section -->
           <UCard v-if="order.payments" class="" :ui="{
-            body: {
-              base: 'space-y-8 text-gray-700 dark:text-gray-200'
-            }
-          }">
+      body: {
+        base: 'space-y-8 text-gray-700 dark:text-gray-200'
+      }
+    }">
             <div class="flex justify-between">
               <h5 class="title">Payment</h5>
               <div class="flex items-center gap-5">
                 <UBadge variant="subtle"
                   :color="payment_col[order.payment_status]?.color ? payment_col[order.payment_status]?.color : 'gray'">
-                  <span class="truncate capitalize">{{ order.payment_status == 'captured' ? 'Paid' : order.payment_status
-                  }}</span>
+                  <span class="truncate capitalize">{{ order.payment_status == 'captured' ? 'Paid' :
+      order.payment_status
+                    }}</span>
                 </UBadge>
                 <UButton v-if="order.payment_status == 'awaiting'" label="Capture Payment" variant="outline"
                   @click="capture_payment" size="xs" />
@@ -434,10 +437,10 @@ const addShippingMethod = ref(false)
 
           <!-- fulfillment section -->
           <UCard v-if="order.fulfillments" class="" :ui="{
-            body: {
-              base: 'space-y-8 text-gray-700 dark:text-gray-200'
-            }
-          }">
+      body: {
+        base: 'space-y-8 text-gray-700 dark:text-gray-200'
+      }
+    }">
             <div class="flex justify-between">
               <h5 class="title">Fulfillment</h5>
               <div class="flex items-center gap-5">
@@ -473,7 +476,7 @@ const addShippingMethod = ref(false)
               <div class="flex justify-between">
                 <div>
                   <p v-if="!fulfillment.canceled_at">Fulfillment #{{ ind + 1 }} by <span class="capitalize">{{
-                    fulfillment.provider_id }}</span></p>
+      fulfillment.provider_id }}</span></p>
                   <p v-if="fulfillment.canceled_at">Fulfillment canceled</p>
 
                   <p v-if="fulfillment.shipped_at">
@@ -493,10 +496,10 @@ const addShippingMethod = ref(false)
 
           <!-- customer info -->
           <UCard :ui="{
-            body: {
-              base: 'space-y-8 text-gray-700 dark:text-gray-200'
-            }
-          }">
+      body: {
+        base: 'space-y-8 text-gray-700 dark:text-gray-200'
+      }
+    }">
             <div class="flex justify-between">
               <h5 class="title">Customer</h5>
               <div class="flex items-center gap-5">
@@ -513,7 +516,7 @@ const addShippingMethod = ref(false)
                 <span class="text-gray-900 dark:text-white font-semibold">{{ first_name }} {{ last_name }}</span>
                 <span class="text-gray-700 dark:text-gray-400">{{ order.shipping_address?.city }}, <span
                     class="uppercase">{{
-                      order.shipping_address?.country?.display_name }}</span></span>
+      order.shipping_address?.country?.display_name }}</span></span>
               </div>
             </div>
 
@@ -523,29 +526,32 @@ const addShippingMethod = ref(false)
                 <span class="text-gray-500 dark:text-gray-400">{{ order?.email }}</span>
               </div>
               <div>
-                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 "></div>
+                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 ">
+                </div>
               </div>
               <div v-if="order.shipping_address" class="flex flex-col gap-2">
                 <span>Shipping</span>
                 <span class="flex gap-2">
                   <span class="text-gray-500 dark:text-gray-400 capitalize">
                     {{ Object.entries(order.shipping_address).filter(([x, y]) => y && ['address_1', 'address_2',
-                      'company',
-                      'city', 'country_code', 'postal_code'].includes(x))?.map(([x, y]) => y).join(', ') }}
+      'company',
+      'city', 'country_code', 'postal_code'].includes(x))?.map(([x, y]) => y).join(', ') }}
                   </span>
                   <UAvatar :src="`https://flagcdn.com/${order.shipping_address?.country_code}.svg` || ''"
                     :alt="(order.shipping_address?.country_code || '')" size="3xs" :ui="{ rounded: 'rounded-none' }" />
                 </span>
               </div>
               <div>
-                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 "></div>
+                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 ">
+                </div>
               </div>
               <div v-if="order.billing_address" class="flex flex-col gap-2">
                 <span>Billing</span>
                 <span class="flex gap-2">
                   <span class="text-gray-500 dark:text-gray-400 capitalize">
-                    {{ Object.entries(order.billing_address).filter(([x, y]) => y && ['address_1', 'address_2', 'company',
-                      'city', 'country_code', 'postal_code'].includes(x))?.map(([x, y]) => y).join(', ') }}
+                    {{ Object.entries(order.billing_address).filter(([x, y]) => y && ['address_1', 'address_2',
+      'company',
+      'city', 'country_code', 'postal_code'].includes(x))?.map(([x, y]) => y).join(', ') }}
                   </span>
                   <UAvatar :src="`https://flagcdn.com/${order.shipping_address?.country_code}.svg` || ''"
                     :alt="(order.billing_address.country_code || '')" size="3xs" :ui="{ rounded: 'rounded-none' }" />
@@ -560,13 +566,14 @@ const addShippingMethod = ref(false)
 
           <!-- notes -->
           <UCard :ui="{
-            body: {
-              base: 'space-y-8 text-gray-700 dark:text-gray-200'
-            }
-          }">
+      body: {
+        base: 'space-y-8 text-gray-700 dark:text-gray-200'
+      }
+    }">
             <div class="space-y-2">
               <h5 class="title">Notes</h5>
-              <p class="text-xs text-gray">Write anything you want to remember or other should take note of when handling
+              <p class="text-xs text-gray">Write anything you want to remember or other should take note of when
+                handling
                 this order</p>
             </div>
             <!-- write a notes -->
@@ -574,7 +581,8 @@ const addShippingMethod = ref(false)
               <UInput v-model="q_notes" placeholder="Write a note" :ui="{ icon: { trailing: { pointer: '' } } }">
 
                 <template #trailing>
-                  <UIcon name="i-carbon-send-alt" class="w-4 h-4 cursor-pointer hover:text-primary" @click="createNote" />
+                  <UIcon name="i-carbon-send-alt" class="w-4 h-4 cursor-pointer hover:text-primary"
+                    @click="createNote" />
                 </template>
               </UInput>
             </div>
@@ -616,10 +624,10 @@ const addShippingMethod = ref(false)
 
           <!-- order edits -->
           <UCard :ui="{
-            body: {
-              base: 'space-y-10 text-gray-700 dark:text-gray-200'
-            }
-          }">
+      body: {
+        base: 'space-y-10 text-gray-700 dark:text-gray-200'
+      }
+    }">
             <div class="space-y-2">
               <h5 class="title">Order History</h5>
             </div>
@@ -691,5 +699,3 @@ const addShippingMethod = ref(false)
     <TemplateOrdersChangeCustomer :order="(order as Order)" v-model="changeCustomer" />
   </div>
 </template>
-
-

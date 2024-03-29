@@ -42,7 +42,7 @@ async function fetchProduct() {
 }
 
 onMounted(async () => {
-  console.log('call function');
+  // console.log('call function');
   await fetchProduct()
 })
 
@@ -213,7 +213,7 @@ const attributes_menu = [
 
 const deleteProductVar = ref(false)
 async function deleteProductFunction() {
-  console.log('delete');
+  // console.log('delete');
   const { id: _id, object, deleted } = await useCybandyClient().admin.products.delete(id)
   if (id == _id && deleted) {
     useToastSuccess('Product deleted')
@@ -377,7 +377,8 @@ const optionsPresentation = computed(() => singleProd.value.options?.map((_opt) 
 
                     <UButton v-if="singleProd?.status" size="xs"
                       :variant="styles.status?.[singleProd.status as string]?.color ? 'outline' : 'solid'"
-                      :label="singleProd.status" :color="styles.status?.[singleProd.status as string]?.color || 'gray'" />
+                      :label="singleProd.status"
+                      :color="styles.status?.[singleProd.status as string]?.color || 'gray'" />
                   </UDropdown>
 
                   <UDropdown :items="general_menu">
@@ -405,9 +406,9 @@ const optionsPresentation = computed(() => singleProd.value.options?.map((_opt) 
               </div>
 
               <GeneralListBetween :options="{
-                title: 'Details',
-                content: details?.map((x) => { return { label: x.label as string, value: x.value as string } })
-              }" />
+      title: 'Details',
+      content: details?.map((x) => { return { label: x.label as string, value: x.value as string } })
+    }" />
 
             </div>
 
@@ -471,7 +472,7 @@ const optionsPresentation = computed(() => singleProd.value.options?.map((_opt) 
                 <span class="text-base lg:text-lg highlight">Thumbnail</span>
                 <div class="flex items-center gap-4">
                   <UButton @click="() => isThumbnail = true" size="xs" variant="outline" color="black">{{
-                    singleProd.thumbnail ? 'Edit' : 'Upload' }}</UButton>
+      singleProd.thumbnail ? 'Edit' : 'Upload' }}</UButton>
                   <UButton v-if="singleProd.thumbnail" size="xs" icon="i-heroicons-trash" variant="outline"
                     color="black" />
                 </div>
@@ -511,8 +512,8 @@ const optionsPresentation = computed(() => singleProd.value.options?.map((_opt) 
 
 
       <FormsProductsGeneral v-model="edit_product_info" :product="(singleProd as any)" />
-      <DialogueCancelConfirm v-model="deleteProductVar" title="Delete" description="Are you sure you want to delete this"
-        what="product" @confirm="deleteProductFunction" />
+      <DialogueCancelConfirm v-model="deleteProductVar" title="Delete"
+        description="Are you sure you want to delete this" what="product" @confirm="deleteProductFunction" />
       <TemplateProductsOptionsEdit :product="(singleProd as any)" v-model="edit_options" />
       <TemplateProductsVariantsEditPrices v-model="edit_prices" :variants="(singleProd.variants as any)" />
       <TemplateProductsVariantsAdd :product-id="(singleProd.id as string)" :options="(options as any)"

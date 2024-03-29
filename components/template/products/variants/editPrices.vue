@@ -161,7 +161,7 @@ async function update(variant_id: string, product_id: string, payload: object) {
 const savePrices = ref(false)
 async function updatePrices() {
 
-  // console.log('update', _tableData.value);
+  // // console.log('update', _tableData.value);
 
   try {
     const final_data = ref([] as Dict[])
@@ -198,7 +198,7 @@ async function updatePrices() {
     useToastFailure('')
   }
 
-  // console.log(final_data.value);
+  // // console.log(final_data.value);
 
 
   // modal.value = false

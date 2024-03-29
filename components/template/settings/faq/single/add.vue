@@ -1,7 +1,7 @@
 <script setup lang=ts>
 
 const props = defineProps({
-  modelValue:Boolean,
+  modelValue: Boolean,
 })
 const emits = defineEmits(['update:modelValue'])
 const modal = computed({
@@ -20,7 +20,7 @@ const _state = ref([] as Ifaq[])
 
 async function createFaq() {
   // Do something with data
-  // console.log(event.data);
+  // // console.log(event.data);
 
   await useLazyFetch('/api/settings/faq/single/create', {
     method: 'post',
@@ -28,15 +28,15 @@ async function createFaq() {
       faq: _state.value,
       section_id: section_id.value
     },
-    watch:false,
+    watch: false,
     async onResponse({ response }) {
       if (response.ok) {
-        // console.log(response._data);
+        // // console.log(response._data);
         modal.value = false
         toastNotification('FAQs added').default_toast()
 
-      }else{
-        // console.log(response);
+      } else {
+        // // console.log(response);
         useToastFailure()
       }
     }
@@ -44,29 +44,31 @@ async function createFaq() {
 
 }
 
-watch(modal,()=>{
-  if(modal.value == false){
+watch(modal, () => {
+  if (modal.value == false) {
     section_id.value = ''
     _state.value = []
   }
 })
 
-const disable_send = computed(()=>{
-  const _filter = _state.value.filter((x)=> !x.answer || !x.question)
+const disable_send = computed(() => {
+  const _filter = _state.value.filter((x) => !x.answer || !x.question)
   return _filter.length > 0 || _state.value.length == 0
 })
 
-function newFaq(){
+function newFaq() {
   _state.value.push({ question: '', answer: '' })
 }
 
-function delFaq(ind:number){
-  _state.value.splice(ind,1)
+function delFaq(ind: number) {
+  _state.value.splice(ind, 1)
 }
 </script>
 
 <template>
-  <ModalTitleButton v-model="modal" @send="createFaq" :disabled="disable_send" title="Add FAQs" button-confirm-label="Save & Close" width="min-w-full sm:min-w-[500px] md:min-w-[650px]">
-    <FormsFaqSingleAdd @add_new="newFaq" @delete="(val)=>delFaq(val)" v-model="_state" v-model:section_id="section_id"/>
+  <ModalTitleButton v-model="modal" @send="createFaq" :disabled="disable_send" title="Add FAQs"
+    button-confirm-label="Save & Close" width="min-w-full sm:min-w-[500px] md:min-w-[650px]">
+    <FormsFaqSingleAdd @add_new="newFaq" @delete="(val) => delFaq(val)" v-model="_state"
+      v-model:section_id="section_id" />
   </ModalTitleButton>
 </template>
