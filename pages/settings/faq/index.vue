@@ -65,17 +65,18 @@ function addFaq() {
   _add_faq.value = true
 }
 
-
-
-const { refresh } = await useLazyFetch('/api/settings/faq/single/list', {
-  watch: [section_id],
-  query: {
-    section_id
-  },
-  onResponse({ response }) {
-    faq.value = response._data.faq
+async function fetchFAQ() {
+  const { faq: faq_ } = await useCybandyClient().customMethods.faq.list('', section_id.value as string)
+  if (faq_) {
+    faq.value = faq_
   }
+}
+
+watch(section_id, async () => {
+  await fetchFAQ()
 })
+
+
 
 const accordionFaq = computed(() => faq.value.map((x) => {
   return {
@@ -100,7 +101,7 @@ const items = (item: any) => [
       click: async () => {
         try {
           const data = await $fetch('/api/settings/faq/single/delete', { query: { id: item.id as string } })
-          refresh()
+          fetchFAQ()
         } catch (e) {
 
         }
@@ -112,21 +113,21 @@ const items = (item: any) => [
 
 watch(_add_faq, () => {
   if (_add_faq.value == false) {
-    refresh()
+    fetchFAQ()
   }
 })
 
 const _edit_faq_section = ref(false)
 
 // watch(current_faq_section,async()=>{
-//   await refresh()
+//   await fetchFAQ()
 
 // },{deep:true})
 
 const _edit_faq = ref(false)
 watch(_edit_faq, () => {
   if (!_edit_faq.value) {
-    refresh()
+    fetchFAQ()
   }
 })
 </script>

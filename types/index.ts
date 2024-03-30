@@ -23,6 +23,19 @@ export type SocialMedia = {
 
 export type Dict = { [key: string]: any };
 
+export type listWithCount = {
+  limit: number,
+  offset: number,
+  count: number
+}
+
+export type deletedData = { deleted: true, id: string }
+
+export type faqSectionPostParams = {
+  name: string,
+  description?: string,
+  metadata?: Dict
+}
 export type IFAQSECTION = {
   created_at: string,
   updated_at: string,

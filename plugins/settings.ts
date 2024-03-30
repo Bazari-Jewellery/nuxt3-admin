@@ -8,36 +8,13 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   async function getFaqSection() {
     try {
-      const data = await $fetch('/api/settings/faq/section/faqSectionList', {
-        key: 'faq_sections',
-        method: 'get',
-        onResponse({ response }) {
-          if (response.ok) {
-            // // console.log(response._data);
+      const { faq_section } = await useCybandyClient().customMethods.faqSection.list()
 
-            // _faq_section.value = response._data.faq
-          }
-        }
-      })
-      _faq_section.value = data.faq
+      _faq_section.value = faq_section
+
     } catch (error) {
 
     }
-    // const {data, error, status, pending} = await useFetch('/api/settings/faq/section/faqSectionList', {
-    //   key: 'faq_sections',
-    //   method: 'get',
-    //   onResponse({ response }) {
-    //     if (response.ok) {
-    //       // // console.log(response._data);
-
-    //       // _faq_section.value = response._data.faq
-    //     }
-    //   }
-    // })
-    // if(!pending.value && !error.value && data.value){
-    //   _faq_section.value = data.value.faq
-
-    // }
   }
   return {
     provide: {
