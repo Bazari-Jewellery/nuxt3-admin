@@ -77,7 +77,7 @@ const cus_menu = [
 <template>
   <div>
 
-    <div v-if="cus_loading">
+    <div v-if="!loading">
       <UCard :ui="{ divide: '' }">
         <template #header>
           <div class="relative space-y-8">
@@ -106,7 +106,8 @@ const cus_menu = [
                 <span class="text-gray-500 dark:text-gray-400">{{ dateFormatter(customer.created_at) }}</span>
               </div>
               <div>
-                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 "></div>
+                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 ">
+                </div>
               </div>
               <div class="flex flex-col gap-2">
                 <span>Phone</span>
@@ -115,7 +116,8 @@ const cus_menu = [
                 </span>
               </div>
               <div>
-                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 "></div>
+                <div class="flex flex-col h-full my-1 border-s border-solid border-gray-200 dark:border-gray-700 ">
+                </div>
               </div>
               <div class="flex flex-col gap-2">
                 <span>Customer</span>
@@ -146,6 +148,6 @@ const cus_menu = [
       loading...
     </div>
 
-    <TemplateCustomerEdit v-if="customer" v-model="is_edit" v-model:customer="(customer as any)" />
+    <TemplateCustomerEdit v-if="customer" v-model="is_edit" :customer="(customer as any)" />
   </div>
 </template>

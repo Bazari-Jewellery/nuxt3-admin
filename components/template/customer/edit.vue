@@ -19,43 +19,70 @@ const modal = computed({
   get: () => props.modelValue
 })
 
-let _old = props.customer
-onMounted(() => {
-  _old = props.customer
-})
-const changed = computed(() => _old != customer.value)
+// let _old = props.customer
+// onMounted(() => {
+//   _old = props.customer
+// })
+// const changed = computed(() => _old != customer.value)
+const changed = ref(false)
+const _old = customer.value
+watch(customer, () => {
+  changed.value = customer.value !== _old
+}, { deep: true })
 
 async function updateInfo() {
-  if (!changed.value) {
+  try {
+    const { customer: _cus } = await useCybandyClient().admin.customers.update(customer.value.id, {
+      first_name: customer.value.first_name,
+      last_name: customer.value.last_name,
+      phone: customer.value.phone,
+      metadata: customer.value.metadata
+    })
+    customer.value = _cus
     modal.value = false
+  } catch (error) {
+
   }
 }
 </script>
 
 <template>
-  <ModalTitleButton @send="updateInfo" v-model="modal" title="Customer Details" :disabled="!changed"
-    button-confirm-label="Save and Close">
+  <ModalTitleButton @send="updateInfo" v-model="modal" title="Customer Details" button-confirm-label="Save and Close">
 
     <div class="space-y-8 lg:min-w-[550px] xl:min-w-[600px]">
       <div class="space-y-2">
-        <h4 class="font-medium">General</h4>
-        <div class="w-full flex items-center gap-5 justify-between">
-          <UInput v-model="customer.first_name" class="flex-grow"></UInput>
-          <UInput v-model="customer.last_name" class="flex-grow"></UInput>
+        <h4 class="font-medium text-base pb-2">General</h4>
+        <div class="w-full grid grid-cols-2 items-center gap-5 justify-between">
+          <UFormGroup label="First Name">
+            <UInput v-model="customer.first_name" class="flex-grow"></UInput>
+          </UFormGroup>
+
+          <UFormGroup label="Last Name">
+            <UInput v-model="customer.last_name" class="flex-grow"></UInput>
+          </UFormGroup>
         </div>
       </div>
       <div class="space-y-2">
-        <h4 class="font-medium">Contact</h4>
-        <div class="w-full flex items-center gap-5 justify-between">
-          <UInput v-model="customer.email" class="flex-grow"></UInput>
-          <UInput v-model="customer.phone" class="flex-grow"></UInput>
+        <h4 class="font-medium text-base pb-2">Contact</h4>
+        <div class="w-full grid grid-cols-2 items-center gap-5 justify-between">
+          <UFormGroup label="Email">
+            <UInput v-model="customer.email" class="flex-grow" disabled></UInput>
+          </UFormGroup>
+
+          <UFormGroup label="Phone">
+            <UInput v-model="customer.phone" class="flex-grow"></UInput>
+          </UFormGroup>
         </div>
       </div>
       <div class="space-y-2">
-        <h4 class="font-medium">Company</h4>
-        <div class="w-full flex items-center gap-5 justify-between">
-          <UInput v-model="(customer.metadata.vat_id as string)" class="flex-grow"></UInput>
-          <UInput v-model="(customer.metadata.company_name as string)" class="flex-grow"></UInput>
+        <h4 class="font-medium text-base pb-2">Company</h4>
+        <div class="w-full grid grid-cols-2 items-center gap-5 justify-between">
+          <UFormGroup label="VAT ID">
+            <UInput v-model="(customer.metadata.vat_id as string)" class="flex-grow"></UInput>
+          </UFormGroup>
+          <UFormGroup label="Company Name">
+            <UInput v-model="(customer.metadata.company_name as string)" class="flex-grow"></UInput>
+          </UFormGroup>
         </div>
       </div>
     </div>
