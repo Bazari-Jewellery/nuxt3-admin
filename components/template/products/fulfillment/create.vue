@@ -129,7 +129,7 @@ async function send_fulfillment() {
 </script>
 
 <template>
-  <UModal v-model="modal" :fullscreen="true" :ui="{ base: 'items-center' }">
+  <UModal v-model="modal" :fullscreen="true" :ui="{ base: 'items-center overflow-y-auto' }">
     <div>
 
 
@@ -179,7 +179,8 @@ async function send_fulfillment() {
                       <span class="flex items-center gap-1">
                         <span>/{{ quantity_input_boxes[it_ff.id].quantity }}</span>
                         <span class="flex items-center gap-2">
-                          <UIcon @click="() => minus(it_ff.id)" name="i-heroicons-minus" class="w-4 h-4 cursor-pointer" />
+                          <UIcon @click="() => minus(it_ff.id)" name="i-heroicons-minus"
+                            class="w-4 h-4 cursor-pointer" />
                           <UIcon @click="() => plus(it_ff.id)" name="i-heroicons-plus" class="w-4 h-4 cursor-pointer" />
                         </span>
                       </span>

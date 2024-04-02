@@ -6,7 +6,7 @@ export interface IStore extends Store {
   privacy_policy?: string,
   tnc?: string,
   address: Address,
-  social_media: SocialMedia
+  social_media?: SocialMedia
 }
 
 export type SocialMedia = {

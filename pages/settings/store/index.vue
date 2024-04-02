@@ -3,6 +3,10 @@ useHead({
     title: 'Store Details',
 })
 
+onBeforeMount(async () => {
+    await useNuxtApp().$store.getStoreDetails()
+})
+
 const items = [
     {
         label: 'General',

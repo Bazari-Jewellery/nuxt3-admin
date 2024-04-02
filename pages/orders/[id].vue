@@ -171,7 +171,8 @@ const isAllFulfilled = computed(() => {
     }, 0)
   }, 0)
 
-  return items_len === fulfilled_items
+  // return order.value.shipping_methods.length > 0 ? false : items_len === fulfilled_items
+  return order.value.shipping_methods.length > 0 && (items_len === fulfilled_items)
 })
 
 
@@ -468,7 +469,7 @@ const addShippingMethod = ref(false)
             </div>
 
             <div v-else>
-              <UButton @click="addShippingMethod = true" color="gray" variant="ghost" label="Add shipping method" />
+              <UButton @click="addShippingMethod = true" color="primary" variant="solid" label="Add shipping method" />
               <TemplateProductsFulfillmentAddShippingMethod :order="(order as any)" v-model="addShippingMethod" />
             </div>
 
