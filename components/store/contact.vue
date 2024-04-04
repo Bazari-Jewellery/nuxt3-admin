@@ -8,14 +8,26 @@ const social_media: SocialMedia = reactive(store.value?.social_media ?? {})
 const address: Address = reactive(store.value?.address_id ? store.value.address : {}) as Address
 
 
+
 // update social media
 const cybandy = useCybandyClient()
 async function updateSocial() {
 
-  const res = await cybandy.customMethods.updateStoreSocialMedia(social_media, store.value?.social_media_id as string)
+  if (store.value?.social_media_id) {
+    const res = await cybandy.customMethods.socialMedia.update(social_media, store.value?.social_media_id as string)
 
-  if (res && store.value) {
-    store.value.social_media = res
+    if (res && store.value) {
+      store.value.social_media = res
+    }
+  } else {
+    const res = await cybandy.customMethods.socialMedia.create(social_media, store.value?.id as string)
+
+    if (res) {
+      const __pp = { social_media_id: res.id as string } as any
+      await useNuxtApp().$store.updateStoreDetails(__pp)
+    }
+
+    toastNotification('Updated').default_toast()
   }
 }
 
@@ -24,6 +36,10 @@ async function updateSocial() {
 async function updateAddress() {
 
   const res = await cybandy.customMethods.updateStoreAddress(address)
+
+  if (!store.value?.address_id) {
+    await useNuxtApp().$store.updateStoreDetails({ address_id: res.id } as any)
+  }
 
   if (res && store.value) {
     useToastSuccess('Address updated')

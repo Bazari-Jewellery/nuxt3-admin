@@ -25,17 +25,7 @@ class cybandyCustom extends Medusa {
 
 
   customMethods = {
-    updateStoreSocialMedia: async (data: any, id: string) => {
 
-
-      const res = await $fetch(`${this.config.baseUrl}/cybandy/admin/social-media`, {
-        headers: { ...this.config.customHeaders },
-        method: 'PATCH',
-        query: { id },
-        body: data
-      })
-      return res as SocialMedia
-    },
     updateStoreAddress: async (data: any) => {
       const _config = useRuntimeConfig()
       const res = await $fetch(`${_config.public.medusaBackendUrl}/cybandy/admin/shop`, {
@@ -81,6 +71,15 @@ class cybandyCustom extends Medusa {
       },
 
     },
+    socialMedia: {
+      update: async (data: any, id: string) => {
+        return await this.cybandyFetch('/cybandy/admin/social-media', 'patch', data, { id }) as SocialMedia
+      },
+
+      create: async (data: any, resource_id: string) => {
+        return await this.cybandyFetch('/cybandy/admin/social-media', 'post', data, { resource_id }) as SocialMedia
+      },
+    }
   }
 
 }

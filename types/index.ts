@@ -1,5 +1,11 @@
 import type { Store, Address } from "@medusajs/medusa"
 
+export type ModelEntityBaseType = {
+  id?: string;
+  created_at?: Date;
+  updated_at?: Date;
+};
+
 export interface IStore extends Store {
   address_id?: string | undefined,
   social_media_id?: string,
@@ -18,7 +24,7 @@ export type SocialMedia = {
   whatsapp?: string | undefined,
   instagram?: string | undefined,
 
-}
+} & ModelEntityBaseType
 
 
 export type Dict = { [key: string]: any };
