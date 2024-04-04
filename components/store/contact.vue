@@ -54,7 +54,6 @@ async function updateAddress() {
 
 <template>
   <div class="space-y-8">
-    works
     <!-- social media section -->
     <form v-if="store" @submit.prevent="updateSocial" class="space-y-5">
       <div class="space-y-1">

@@ -43,6 +43,7 @@ export default defineNuxtConfig({
     'nuxt-security',
     '@nuxtjs/seo',
     'nuxt-bugsnag',
+    '@pinia/nuxt',
     // '@nuxtjs/html-validator',
   ],
   ui: {
