@@ -123,6 +123,9 @@ async function updateAddress() {
           <!-- <UInput v-model="address.country_code" /> -->
           <UtilitiesCountriesList v-model="(address.country_code as string)" />
         </UFormGroup>
+        <UFormGroup label="Phone">
+          <UInput v-model="address.phone" placeholder="+39 xxxx xxx xxx" />
+        </UFormGroup>
 
       </div>
       <div class="flex justify-start items-center">

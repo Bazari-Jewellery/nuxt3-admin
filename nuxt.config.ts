@@ -19,15 +19,11 @@ export default defineNuxtConfig({
     // baseURL: '/orders',
     buildAssetsDir: '_cybandy',
     head: {
-      script: [
-        // {
-        //   src: "https://cdn.tiny.cloud/1/nehb99vk9dk4g39dss7owr2gjh921nny8rxkmb31rftjbzzy/tinymce/6/tinymce.min.js",
-        //   referrerpolicy: "origin",
-        //   crossorigin: "anonymous",
-        //   defer: true
-        // }
-      ]
-    }
+      titleTemplate: "%s %separator %siteName",
+      templateParams: {
+        separator: "|",
+      },
+    },
   },
   runtimeConfig: {
     medusaBackendUrl: process.env.MEDUSA_URL,
@@ -91,7 +87,9 @@ export default defineNuxtConfig({
     }
   },
   site: {
-    indexable: false
+    indexable: false,
+    name: 'Bazari Wholesale Dashboard',
+    description: "Dashboard application"
   },
   ogImage: { enabled: false },
   experimental: {
