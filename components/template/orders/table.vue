@@ -25,20 +25,29 @@ const props = defineProps({
     default: 0
   },
 })
-
+const emits = defineEmits(['update:offset', 'update:count', 'update:limit', 'update:loading'])
 const orders = computed(() => props.orders)
-const loading = ref(props.loading)
+const loading = computed({
+  set: (val) => emits('update:loading', val),
+  get: () => props.loading,
+})
 
 const nuxtApp = useNuxtApp()
 
 //filters
-const limit = ref(props.limit)
+const limit = computed({
+  set: (val) => emits('update:limit', val),
+  get: () => props.limit,
+})
 const pre_offset = ref(props.offset)
 const offset = computed({
-  set: (val) => pre_offset.value = val,
-  get: () => pre_offset.value,
+  set: (val) => emits('update:offset', val),
+  get: () => props.offset,
 })
-const count = ref(props.count)
+const count = computed({
+  set: (val) => emits('update:count', val),
+  get: () => props.count,
+})
 
 const orderInView = ref({} as Order)
 function selectRow(row: any) {
@@ -144,7 +153,8 @@ const final_data = computed({
   set: (val) => tableData.value = val,
   get: () => tableData.value
 })
-watch(orders, () => {
+
+function populateTable() {
   if (orders.value) {
 
     final_data.value = orders.value?.map((x) => {
@@ -155,16 +165,22 @@ watch(orders, () => {
         payment_status: x.payment_status == 'captured' ? 'paid' : x.payment_status,
         total: priceFormatter(x.total, x.currency_code),
         // sales_channel: x.sales_channel.name,
-        customer: `${x.customer.first_name || x.shipping_address.first_name} ${x.customer.last_name || x.shipping_address.last_name}`,
-        currency_code: x.currency_code,
-        flag: `https://flagcdn.com/${x.shipping_address.country_code}.svg`,
+        customer: `${x.customer?.first_name || x.shipping_address?.first_name} ${x.customer?.last_name || x.shipping_address?.last_name}`,
+        currency_code: x?.currency_code,
+        flag: `https://flagcdn.com/${x.shipping_address?.country_code}.svg`,
         order_data: x
       } as any
     })
     loading.value = false
 
   }
-})
+}
+
+onMounted(populateTable)
+
+watch(orders, () => {
+  populateTable()
+}, { deep: true })
 </script>
 
 <template>
@@ -184,13 +200,13 @@ watch(orders, () => {
     <UTable :columns="columnsTable" class="w-full" :rows="final_data" :loading="loading || !final_data"
       @select="selectRow" :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
       :empty-state="{ icon: 'i-heroicons-circle-stack-20-solid', label: 'No orders.' }" :ui="{
-        tr: {
-          base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
-        },
-        th: {
-          size: 'text-sm capitalize text-black dark:text-white'
-        }
-      }">
+    tr: {
+      base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
+    },
+    th: {
+      size: 'text-sm capitalize text-black dark:text-white'
+    }
+  }">
 
       <!--Order number column-->
       <template #order-data="{ row }">
@@ -240,7 +256,7 @@ watch(orders, () => {
 
     <template #footer>
       <div class="flex justify-end px-3 py-3.5 mt-8">
-        <UPagination v-model="offset" :total="count" :active-button="{ variant: 'solid' }" />
+        <UPagination v-model="offset" :total="count" :page-count="limit" :active-button="{ variant: 'solid' }" />
       </div>
     </template>
   </UCard>

@@ -1,16 +1,16 @@
 <script setup lang=ts>
 const props = defineProps({
-  title:{
+  title: {
     type: String,
     default: 'Cancel'
   },
-  description:{
+  description: {
     type: String,
     default: 'Are you sure you want to cancel'
   },
-  what:String,
-  modelValue:Boolean,
-  confirmButtonColor:String
+  what: String,
+  modelValue: Boolean,
+  confirmButtonColor: String
 })
 
 const emits = defineEmits(['cancel', 'confirm', 'update:modelValue'])
@@ -20,13 +20,13 @@ const modal = computed({
   get: () => props.modelValue
 })
 
-function cancelFunc(){
+function cancelFunc() {
   emits('cancel')
   modal.value = false
-  
+
 }
 
-function confirmFunc(){
+function confirmFunc() {
   emits('confirm')
   modal.value = false
 }
@@ -34,12 +34,12 @@ function confirmFunc(){
 
 <template>
   <UModal v-model="modal">
-    <UCard :ui="{footer:{base:'flex justify-end'}, base:'min-w-full lg:min-w-[500px]'}">
+    <UCard :ui="{ footer: { base: 'flex justify-end' }, base: 'min-w-full lg:min-w-[500px]' }">
       <div>
         <h3 class="text-base lg:text-xl font-semibold text-gray-900 dark:text-white">
           <slot name="title">
-          {{ title }} <span v-if="what">{{ what }}</span> ?
-        </slot>
+            {{ title }} <span v-if="what">{{ what }}</span> ?
+          </slot>
         </h3>
         <p>
           <slot name="description">
@@ -50,17 +50,17 @@ function confirmFunc(){
 
       <template #footer>
         <span class="flex items-center gap-5">
-          <UButton @click="cancelFunc" type="button" variant="outline" >
-            <slot name="cancelButton">
+          <slot name="cancelButton">
+            <UButton @click="cancelFunc" type="button" variant="outline">
               Cancel
-            </slot>
-          </UButton>
-
-          <UButton @click="confirmFunc" type="button" variant="solid" :color="confirmButtonColor? confirmButtonColor: 'primary'" >
-            <slot name="confirmButton">
+            </UButton>
+          </slot>
+          <slot name="confirmButton">
+            <UButton @click="confirmFunc" type="button" variant="solid"
+              :color="confirmButtonColor ? confirmButtonColor : 'primary'">
               Yes, confirm
-            </slot>
-          </UButton>
+            </UButton>
+          </slot>
         </span>
       </template>
     </UCard>

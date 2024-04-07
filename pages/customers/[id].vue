@@ -77,7 +77,7 @@ const cus_menu = [
 <template>
   <div>
 
-    <div v-if="!loading">
+    <div>
       <UCard :ui="{ divide: '' }">
         <template #header>
           <div class="relative space-y-8">
@@ -136,17 +136,18 @@ const cus_menu = [
       <UCard :ui="{ divide: '' }">
         <template #header>
           <div class="flex flex-col gap-2">
-            <span class="text-lg md:text-xl">Orders {{ customer.orders.length }}</span>
+            <span class="text-lg md:text-xl">Orders #{{ customer.orders.length }}</span>
             <span>An overview of Customer Orders</span>
           </div>
         </template>
-        <TemplateOrdersTable :orders="orders" :loading="loading" :offset="offset" :count="count" :limit="limit" />
+        <TemplateOrdersTable :orders="orders" v-model:loading="loading" v-model:offset="offset" v-model:count="count"
+          v-model:limit="limit" />
       </UCard>
     </div>
 
-    <div v-else>
+    <!-- <div v-else>
       loading...
-    </div>
+    </div> -->
 
     <TemplateCustomerEdit v-if="customer" v-model="is_edit" :customer="(customer as any)" />
   </div>

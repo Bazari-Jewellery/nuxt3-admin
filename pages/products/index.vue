@@ -18,6 +18,8 @@ watch(add_new_coll, () => {
 })
 
 
+// adding new product
+const isNewProduct = ref(false)
 </script>
 
 <template>
@@ -34,7 +36,8 @@ watch(add_new_coll, () => {
       <div>
         <div v-if="view == 'product'" class="flex items-center gap-5">
           <TemplateProductsMenu />
-          <UButton size="xs" variant="solid" color="gray" label="New Product" icon="i-ph-plus" />
+          <UButton @click="() => isNewProduct = true" size="xs" variant="solid" color="gray" label="New Product"
+            icon="i-ph-plus" />
         </div>
         <div v-if="view == 'collection'" class="flex items-center gap-5">
           <UButton @click="() => add_new_coll = true" size="xs" variant="solid" color="gray" label="New Collection"
@@ -52,5 +55,8 @@ watch(add_new_coll, () => {
     </div>
 
     <TemplateCollectionsAdd v-model="add_new_coll" :collection-req="newCollection" />
+
+    <ProductNew v-model="isNewProduct" />
+
   </UCard>
 </template>

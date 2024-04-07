@@ -194,6 +194,7 @@ async function updatePrices() {
       final_data.value.push([...row])
     }
     useToastSuccess('', 'Prices updated')
+    modal.value = false
   } catch (error: any) {
     useToastFailure('')
   }
@@ -245,7 +246,7 @@ async function updatePrices() {
                   <span class="flex items-center gap-5">
                     <span>{{ col.label }}</span>
                     <UInput v-if="col.key != 'product'" type="number"
-                      @update:model-value="(val) => changeAllCol(col.key, val)" size="xs" />
+                      @update:model-value="(val: any) => changeAllCol(col.key, val)" size="xs" />
                   </span>
                 </th>
               </tr>
@@ -270,9 +271,12 @@ async function updatePrices() {
       </template>
     </UCard>
 
+    <!-- closing -->
     <DialogueCancelConfirm @confirm="() => modal = false" v-model="confirm_close" title="Close"
-      description="Are you sure you want to close this editor without saving?" what="" confirm-button-color="red" />
-    <DialogueCancelConfirm @confirm="() => updatePrices" v-model="savePrices" title="Saving Changes"
+      description="Are you sure you want to close this editor without saving?" what="" confirm-button-color="rose" />
+
+    <!-- saving prices -->
+    <DialogueCancelConfirm @confirm="() => updatePrices()" v-model="savePrices" title="Saving Changes"
       description="Saving edited prices" what="" />
   </UModal>
 </template>
