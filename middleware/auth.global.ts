@@ -1,43 +1,40 @@
 import Medusa from "@medusajs/medusa-js"
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  if(to.path=='/invite') return
-  try {
-    (async () => {
-      const user = await useNuxtApp().$currentUser.getUser();
-      if (!isCustomerLoggedIn().value && !user?.id) {
-        return navigateTo('/auth')
-      }else{
-        if(to.path=='/auth'){
-          return navigateTo('/orders')
-        }
-      }
-      return;
-    });
-  } catch (error) {
-    return navigateTo("/auth");
+  // const authStore = useAuthStore()
+  // const { isLoggedIn, user } = storeToRefs(authStore)
+  // if (to.path == '/invite') return
+  // try {
+  //   (async () => {
+  //     // const user = await useNuxtApp().$currentUser.getUser();
+  //     await authStore.getUser()
+  //     if (isLoggedIn.value == false) {
+  //       return navigateTo('/auth')
+  //     } else {
+  //       if (to.path == '/auth') {
+  //         return navigateTo('/orders')
+  //       }
+  //     }
+  //     return;
+  //   });
+  // } catch (error) {
+  //   return navigateTo("/auth");
+  // }
+
+
+  if (to.path == '/invite') return
+
+  if (to.fullPath.split('/').includes('auth')) {
+    return
   }
 
-
-
-  // try {
-  //   const user = await useNuxtApp().$currentUser.getUser()
-
-  //   if (!isCustomerLoggedIn().value) {
-
-  //     if (to.path === '/auth') {
-  //       if(user?.id) return navigateTo(['/', '/auth'].includes(from.path)? '/orders': from.path)
-  //       return
-  //     }
-  //     return navigateTo('/auth')
-  //   } else {
-  //     if (user) {
-  //       isCustomerLoggedIn().value = true
-  //       return
-  //     }
-  //   }
-  //   return
-  // } catch (error: any) {
-  //   isCustomerLoggedIn().value = false
-  //   return navigateTo('/auth')
-  // }
+  if (useAuthStore().isLoggedIn == false) {
+    try {
+      await useAuthStore().getUser()
+      if (useAuthStore().isLoggedIn == false) {
+        return navigateTo('/auth')
+      }
+    } catch (error: any) {
+      return navigateTo("/auth");
+    }
+  }
 })

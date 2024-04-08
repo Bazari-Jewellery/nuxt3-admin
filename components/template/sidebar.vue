@@ -7,13 +7,15 @@ const props = defineProps({
 const emits = defineEmits(['update:modelValue'])
 
 const toggle = computed({
-  set:(val)=>emits('update:modelValue', val),
+  set: (val) => emits('update:modelValue', val),
   get: () => props.modelValue
 })
 
 const nuxtApp = useNuxtApp()
 const collapse = nuxtApp.$theme.sidebar.collapse
-const userData = nuxtApp.$currentUser.data
+// const userData = nuxtApp.$currentUser.data
+const authStore = useAuthStore()
+const { isLoggedIn, user: userData } = storeToRefs(authStore)
 // navigation
 const links = computed(() => {
   return [
@@ -21,7 +23,7 @@ const links = computed(() => {
       label: 'Orders',
       icon: 'i-heroicons-shopping-cart',
       to: '/orders',
-      click:()=>{
+      click: () => {
         toggle.value = false
       }
     },
@@ -29,7 +31,7 @@ const links = computed(() => {
       label: 'Products',
       icon: 'i-heroicons-tag',
       to: '/products',
-      click:()=>{
+      click: () => {
         toggle.value = false
       }
     },
@@ -37,7 +39,7 @@ const links = computed(() => {
       label: 'Categories',
       icon: 'i-carbon-category',
       to: '/categories',
-      click:()=>{
+      click: () => {
         toggle.value = false
       }
     },
@@ -45,7 +47,7 @@ const links = computed(() => {
       label: 'Customers',
       icon: 'i-heroicons-users',
       to: '/customers',
-      click:()=>{
+      click: () => {
         toggle.value = false
       }
     },
@@ -53,7 +55,7 @@ const links = computed(() => {
       label: 'Discounts',
       icon: 'i-heroicons-chart-bar',
       to: '/discounts',
-      click:()=>{
+      click: () => {
         toggle.value = false
       }
     },
@@ -61,7 +63,7 @@ const links = computed(() => {
       label: 'Gift Cards',
       icon: 'i-heroicons-gift',
       to: '/gift-cards',
-      click:()=>{
+      click: () => {
         toggle.value = false
       }
     },
@@ -69,7 +71,7 @@ const links = computed(() => {
       label: 'Pricing',
       icon: 'i-heroicons-currency-euro',
       to: '/pricing',
-      click:()=>{
+      click: () => {
         toggle.value = false
       }
     },
@@ -77,20 +79,20 @@ const links = computed(() => {
       label: 'Settings',
       icon: 'i-heroicons-cog-6-tooth',
       to: '/settings',
-      click:()=>{
+      click: () => {
         toggle.value = false
       }
     },
     {
       label: '',
       icon: collapse.value ? 'i-heroicons-arrow-right' : 'i-heroicons-arrow-left',
-      click: ()=> collapse.value = ! collapse.value
+      click: () => collapse.value = !collapse.value
     }
   ]
 })
 
-const isLoggedIn = computed(()=>isCustomerLoggedIn().value)
-const name = computed(()=>userData.value.first_name + ' ' + userData.value.last_name)
+// const isLoggedIn = computed(()=>isCustomerLoggedIn().value)
+const name = computed(() => userData.value.first_name + ' ' + userData.value.last_name)
 const userMenu = [
   // [
   // {
@@ -109,20 +111,19 @@ const userMenu = [
   // },
   // ],
   [
-  {
-    label:'Logout',
-    icon: 'i-ph-sign-out',
-    click: async()=>{
-      useLogout()
-    }
-  },
+    {
+      label: 'Logout',
+      icon: 'i-ph-sign-out',
+      click: async () => {
+        authStore.logout()
+      }
+    },
   ]
 ]
 </script>
 
 <template>
-  <UCard 
-  :ui="{
+  <UCard :ui="{
     base: 'overflow-hidden h-full flex flex-col w-full',
     background: '',
     divide: '',
@@ -140,35 +141,35 @@ const userMenu = [
   }">
     <template #header>
       <div class="w-full h-10 grid items-center justify-center">
-        <LogoIcon class="" :class="collapse ? 'inline-block': 'sm:hidden'"/>
-      <LogoSvg class="" :class="collapse ? 'hidden': 'hidden sm:inline-block sm:h-3 md:h-4 lg:h-5 w-auto'"/>
+        <LogoIcon class="" :class="collapse ? 'inline-block' : 'sm:hidden'" />
+        <LogoSvg class="" :class="collapse ? 'hidden' : 'hidden sm:inline-block sm:h-3 md:h-4 lg:h-5 w-auto'" />
       </div>
     </template>
 
     <div>
       <UVerticalNavigation :links="links" :ui="{
-        wrapper: 'relative flex flex-col gap-2',
-        label: collapse ? 'hidden truncate relative': 'truncate relative'
-      }"/>
+    wrapper: 'relative flex flex-col gap-2',
+    label: collapse ? 'hidden truncate relative' : 'truncate relative'
+  }" />
     </div>
 
 
     <template #footer>
       <ClientOnly>
         <div v-if="userData.id" class="flex items-center justify-center gap-5">
-        <UtilitiesAvatar src="" :name="name" />
-        <div class="w-fit h-fit flex flex-col gap-1">
-          <span :class="collapse ? 'hidden' : 'inline-block capitalize'">{{ userData?.first_name }}</span>
-          <span :class="collapse ? 'hidden' : 'inline-block capitalize'">{{ userData?.role }}</span>
+          <UtilitiesAvatar src="" :name="name" />
+          <div class="w-fit h-fit flex flex-col gap-1">
+            <span :class="collapse ? 'hidden' : 'inline-block capitalize'">{{ userData?.first_name }}</span>
+            <span :class="collapse ? 'hidden' : 'inline-block capitalize'">{{ userData?.role }}</span>
+          </div>
+          <UDropdown :items="userMenu">
+            <UButton variant="link" color="gray" icon="i-heroicons-chevron-down" />
+          </UDropdown>
         </div>
-        <UDropdown :items="userMenu">
-          <UButton variant="link" color="gray" icon="i-heroicons-chevron-down" />
-        </UDropdown>
-      </div>
 
-      <div v-else class="w-full flex items-center justify-center">
-        <UButton to="/auth" icon="i-ph-user" color="gray" variant="ghost" size="md" />
-      </div>
+        <div v-else class="w-full flex items-center justify-center">
+          <UButton to="/auth" icon="i-ph-user" color="gray" variant="ghost" size="md" />
+        </div>
       </ClientOnly>
     </template>
   </UCard>

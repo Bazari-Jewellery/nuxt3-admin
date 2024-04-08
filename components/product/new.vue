@@ -38,7 +38,7 @@ const items = [{
   label: 'Organize',
   icon: 'i-carbon-inventory-management',
   required: false,
-  slot: 'stock'
+  slot: 'organize'
 }, {
   label: 'Attributes',
   icon: 'i-carbon-delivery',
@@ -47,10 +47,19 @@ const items = [{
 },
 
 ]
+const generalStore = useGeneralStore()
+const organizeOptions = storeToRefs(generalStore)
 
-// const product = computed(props.product.products)
+//fetch
+// onMounted(async () => {
+//   await Promise.all([
+//     generalStore.getCategories, generalStore.getCollections,
+//     generalStore.getTags, generalStore.getTypes
+//   ])
+// })
 
 const product = ref({ discountable: true } as AdminPostProductsReq)
+const categories = ref([] as string[])
 
 async function createProduct(status: string | null = null) {
   if (status) {
@@ -58,6 +67,11 @@ async function createProduct(status: string | null = null) {
   } else {
     product.value.status = "draft" as any
   }
+  product.value.categories = categories.value.map((x) => {
+    return {
+      id: x
+    }
+  })
   const { product: _product } = await useCybandyClient().admin.products.create(product.value)
 
   if (_product) {
@@ -92,7 +106,7 @@ async function createProduct(status: string | null = null) {
       <!-- body -->
       <UAccordion :items="items" multiple :ui="{ wrapper: 'flex flex-col w-full' }">
         <template #default="{ item, index, open }">
-          <UButton color="gray" product="ghost" size="sm" class="border-b border-gray-200 dark:border-gray-700"
+          <UButton color="gray" variant="ghost" size="sm" class="border-b border-gray-200 dark:border-gray-700"
             :ui="{ rounded: 'rounded-none', padding: { sm: 'p-3' } }">
             <template #leading>
               <div class="w-6 h-6 rounded-full bg-transparent flex items-center justify-center -my-1">
@@ -203,6 +217,37 @@ async function createProduct(status: string | null = null) {
                 </UFormGroup>
               </div>
             </div>
+          </UCard>
+        </template>
+
+        <template #organize>
+          <UCard :ui="{ body: { base: 'space-y-5', } }">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <UFormGroup label="Type">
+                <USelectMenu v-model="product.type" :options="organizeOptions.types.value" option-attribute="value"
+                  searchable>
+
+                </USelectMenu>
+              </UFormGroup>
+
+              <UFormGroup label="Collection">
+                <USelectMenu v-model="product.collection_id" :options="organizeOptions.collections.value"
+                  option-attribute="title" value-attribute="id" searchable>
+
+                </USelectMenu>
+              </UFormGroup>
+
+            </div>
+
+            <div class="grid">
+              <UFormGroup label="Categories">
+                <USelectMenu v-model="categories" :options="organizeOptions.categories.value" option-attribute="name"
+                  value-attribute="id" searchable multiple>
+
+                </USelectMenu>
+              </UFormGroup>
+            </div>
+
           </UCard>
         </template>
 
