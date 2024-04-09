@@ -111,6 +111,7 @@ function del(ind: number) {
     image_obj_urls.value.splice(ind, 1)
   }
 }
+
 function OldDel(ind: number) {
 
   if (old_img_urls.value.length > 0) {
@@ -175,14 +176,16 @@ const old_items = (ind: number) => [
       <slot name="fileDisplay">
         <div class="space-y-5">
           <div v-if="image_obj_urls" v-for="(src, ind) of image_obj_urls" class="flex items-center justify-between">
-            <NuxtImg v-if="src" :src="src" format="webp" width="64" height="64" provider="weserv" />
+            <!-- <NuxtImg v-if="src" :src="src" format="webp" width="64" height="64" provider="weserv" /> -->
+            <img :src="src" alt="" class="w-16 h-16" crossorigin="anonymous" />
             <UDropdown v-if="src" :items="items(ind)">
               <UButton variant="solid" color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" />
             </UDropdown>
           </div>
           <div v-if="old_img_urls && multiple || !multiple && old_img_urls" v-for="(src, ind) of old_img_urls"
             class="flex items-center justify-between">
-            <NuxtImg v-if="src" :src="src" format="webp" width="64" height="64" provider="weserv" />
+            <NuxtImg v-if="src" :src="src" format="webp" width="64" height="64" provider="weserv"
+              crossorigin="anonymous" class="prod_img aspect-square" />
             <UDropdown v-if="src" :items="old_items(ind)">
               <UButton variant="solid" color="gray" icon="i-heroicons-ellipsis-horizontal-20-solid" />
             </UDropdown>

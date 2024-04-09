@@ -94,7 +94,7 @@ const opened_children = ref([] as string[])
 function add_remove_child(id: string) {
 
   if (opened_children.value.includes(id)) {
-    const ind = opened_children.value.findIndex((x) => id)
+    const ind = opened_children.value.findIndex((x) => x === id)
     opened_children.value.splice(ind, 1)
     return
   }
