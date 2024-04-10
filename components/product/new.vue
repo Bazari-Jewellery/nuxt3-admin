@@ -86,25 +86,34 @@ async function createProduct(status: string | null = null) {
   } else {
     product.value.status = "draft" as any
   }
+
+  const uploadStatus = await uploadImages()
+  if (!uploadStatus) {
+    toastNotification('uploading images failed').error()
+  }
   product.value.categories = categories.value.map((x) => {
     return {
       id: x
     }
   })
   product.value.type = { value: type.value.value }
-  // const { product: _product } = await useCybandyClient().admin.products.create(product.value)
 
-  // if (_product) {
-  //   // if (status) {
-  //   closeModal()
-  //   useToastSuccess('Product published')
-  //   navigateTo(`/products/${_product.id}`)
-  //   // }
-  // }
+  progressValue.value = 80
+  const { product: _product } = await useCybandyClient().admin.products.create(product.value)
 
-  product.value.images = imageUrls.value
-  product.value.thumbnail = imageUrls.value[thumbnailIndex.value as number]
-  console.log(product.value);
+  progressValue.value = 99
+
+  if (_product) {
+    // if (status) {
+    closeModal()
+    useToastSuccess('Product published')
+    navigateTo(`/products/${_product.id}`)
+    // }
+  }
+
+  // product.value.images = imageUrls.value
+  // product.value.thumbnail = imageUrls.value[thumbnailIndex.value as number]
+  // console.log(product.value);
 
 }
 
@@ -139,11 +148,17 @@ const uploadImages = async () => {
     return false
 
   }
+  progressValue.value = 15
   if (imageFiles.value.length) {
     const data = await useUploadImage(imageFiles.value)
 
     if (data.uploads) {
+      progressValue.value = 70
       product.value.images = data.uploads.map((x) => x.url)
+      progressValue.value = 72
+
+      product.value.thumbnail = data.uploads[thumbnailIndex.value as number].url
+      progressValue.value = 73
       return true
     }
   }
@@ -194,7 +209,7 @@ const progressValue = ref(5)
       </template>
 
       <!-- body -->
-      <UProgress :value="progressValue">
+      <UProgress :value="progressValue" :max="100" indicator>
 
       </UProgress>
 
