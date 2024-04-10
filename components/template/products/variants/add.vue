@@ -14,9 +14,10 @@ const props = defineProps({
   productId: {
     type: String,
     required: true
-  }
+  },
+  newProduct: Boolean
 })
-const emits = defineEmits(['update:modelValue', 'update:variantReq'])
+const emits = defineEmits(['update:modelValue', 'update:variantReq', 'update:options', 'append'])
 
 const modal = computed({
   set: (val) => emits('update:modelValue', val),
@@ -26,8 +27,16 @@ const variant = computed({
   set: (val) => emits('update:variantReq', val),
   get: () => props.variantReq
 })
+const options = computed({
+  set: (val) => emits('update:options', val),
+  get: () => props.options
+})
 
 async function addVariant() {
+  emits('append')
+  if (props.newProduct) {
+    return
+  }
   try {
     variant.value.options = variant.value.options?.map((x) => {
       if (x.value == '' || !x.value) {

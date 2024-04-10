@@ -35,7 +35,7 @@ const isNewProduct = ref(false)
       </div>
       <div>
         <div v-if="view == 'product'" class="flex items-center gap-5">
-          <TemplateProductsMenu />
+          <!-- <TemplateProductsMenu /> -->
           <UButton @click="() => isNewProduct = true" size="xs" variant="solid" color="gray" label="New Product"
             icon="i-ph-plus" />
         </div>

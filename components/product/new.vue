@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import type { AdminPostProductsReq, ProductType } from "@medusajs/medusa"
+import type { AdminPostProductsReq, ProductType, AdminPostProductsProductVariantsReq } from "@medusajs/medusa"
 
 const props = defineProps({
   modelValue: Boolean,
@@ -47,17 +47,18 @@ const items = [{
   required: false,
   slot: 'organize'
 }, {
+  label: 'Variants',
+  icon: 'i-carbon-delivery',
+  required: false,
+  slot: 'variants'
+},
+{
   label: 'Attributes',
   icon: 'i-carbon-delivery',
   required: false,
   slot: 'attributes'
 },
-// {
-//   label: "Thumbnail",
-//   slot: 'thumbnail',
-//   required: false,
-//   icon: 'i-carbon-image'
-// },
+
 {
   label: "Images",
   slot: 'images',
@@ -71,7 +72,7 @@ const generalStore = useGeneralStore()
 const organizeOptions = storeToRefs(generalStore)
 
 // payload for creating product
-const product = ref({ discountable: true } as AdminPostProductsReq)
+const product = ref({ discountable: true, options: [] as any, variants: [] as any } as AdminPostProductsReq)
 // selected categories
 const categories = ref([] as string[])
 
@@ -86,6 +87,9 @@ async function createProduct(status: string | null = null) {
   } else {
     product.value.status = "draft" as any
   }
+
+  // console.log(product.value);
+
 
   const uploadStatus = await uploadImages()
   if (!uploadStatus) {
@@ -104,16 +108,12 @@ async function createProduct(status: string | null = null) {
   progressValue.value = 99
 
   if (_product) {
-    // if (status) {
     closeModal()
     useToastSuccess('Product published')
     navigateTo(`/products/${_product.id}`)
-    // }
+
   }
 
-  // product.value.images = imageUrls.value
-  // product.value.thumbnail = imageUrls.value[thumbnailIndex.value as number]
-  // console.log(product.value);
 
 }
 
@@ -145,11 +145,12 @@ const deleteImage = (ind: number) => {
 const uploadImages = async () => {
   if (thumbnailIndex.value == null) {
     toastNotification('Select thumbnail', 'Tick the checkbox of the thumbnail image', 4000).error()
+    throw createError('select thumbnail')
     return false
 
   }
   progressValue.value = 15
-  if (imageFiles.value.length) {
+  if (imageFiles.value.length > 0) {
     const data = await useUploadImage(imageFiles.value)
 
     if (data.uploads) {
@@ -186,7 +187,22 @@ const finalCreatableType = computed({
   }
 })
 
+// loading indicator
 const progressValue = ref(5)
+
+
+
+// variants
+const addVariantModal = ref(false)
+const variantObj = ref({ prices: [] as any } as AdminPostProductsProductVariantsReq)
+
+const appendVariant = () => {
+  console.log(variantObj.value);
+
+  product.value.variants?.push(variantObj.value)
+  variantObj.value = { prices: [] as any } as AdminPostProductsProductVariantsReq
+  addVariantModal.value = false
+}
 </script>
 
 <template>
@@ -209,9 +225,9 @@ const progressValue = ref(5)
       </template>
 
       <!-- body -->
-      <UProgress :value="progressValue" :max="100" indicator>
+      <!-- <UProgress :value="progressValue" :max="100" indicator>
 
-      </UProgress>
+      </UProgress> -->
 
 
       <UAccordion :items="items" multiple :ui="{ wrapper: 'flex flex-col w-full' }">
@@ -374,6 +390,31 @@ const progressValue = ref(5)
               </UFormGroup>
             </div>
 
+          </UCard>
+        </template>
+
+        <template #variants>
+          <UCard :ui="{}">
+            <template #header>
+              <div>
+                <p>Add variations of this product</p>
+                <p>Offer your customers different options for color, size, shape, etc.</p>
+              </div>
+            </template>
+
+            <div class="space-y-5">
+              <TemplateProductsOptionsAdd v-model:options="(product.options as any)" />
+
+              <UCard :ui="{ base: 'space-y-5' }">
+                <h3 class="text-base lg:text-lg">Product variants ({{ product.variants?.length }})</h3>
+                <UButton @click="() => addVariantModal = true" variant="solid" color="gray"
+                  icon="i-heroicons-plus-20-solid" label="Add a variant" block />
+              </UCard>
+            </div>
+
+            <TemplateProductsVariantsAdd v-model="addVariantModal" product-id=""
+              v-model:options="(product.options as any)" v-model:variant-req="variantObj" @append="appendVariant"
+              new-product />
           </UCard>
         </template>
 

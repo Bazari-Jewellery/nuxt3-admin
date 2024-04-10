@@ -51,30 +51,30 @@ const links = computed(() => {
         toggle.value = false
       }
     },
-    {
-      label: 'Discounts',
-      icon: 'i-heroicons-chart-bar',
-      to: '/discounts',
-      click: () => {
-        toggle.value = false
-      }
-    },
-    {
-      label: 'Gift Cards',
-      icon: 'i-heroicons-gift',
-      to: '/gift-cards',
-      click: () => {
-        toggle.value = false
-      }
-    },
-    {
-      label: 'Pricing',
-      icon: 'i-heroicons-currency-euro',
-      to: '/pricing',
-      click: () => {
-        toggle.value = false
-      }
-    },
+    // {
+    //   label: 'Discounts',
+    //   icon: 'i-heroicons-chart-bar',
+    //   to: '/discounts',
+    //   click: () => {
+    //     toggle.value = false
+    //   }
+    // },
+    // {
+    //   label: 'Gift Cards',
+    //   icon: 'i-heroicons-gift',
+    //   to: '/gift-cards',
+    //   click: () => {
+    //     toggle.value = false
+    //   }
+    // },
+    // {
+    //   label: 'Pricing',
+    //   icon: 'i-heroicons-currency-euro',
+    //   to: '/pricing',
+    //   click: () => {
+    //     toggle.value = false
+    //   }
+    // },
     {
       label: 'Settings',
       icon: 'i-heroicons-cog-6-tooth',
