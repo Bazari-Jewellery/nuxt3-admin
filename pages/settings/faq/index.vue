@@ -130,6 +130,23 @@ watch(_edit_faq, () => {
     fetchFAQ()
   }
 })
+
+// delete faq section
+const delete_faq_section = ref(false)
+
+async function deleteFaqSectionFunc() {
+  const d__ = await useCybandyClient().customMethods.faqSection.delete(current_faq_section.value.id)
+
+  if (d__.deleted) {
+    await useNuxtApp().$settings.faq.section.getFaqSection()
+
+    delete_faq_section.value = false
+
+    toastNotification('FAQ section deleted').default_toast()
+  } else {
+    useToastFailure()
+  }
+}
 </script>
 
 <template>
@@ -169,6 +186,7 @@ watch(_edit_faq, () => {
                 </div>
                 <div class="flex items-center gap-5">
                   <UButton @click="_edit_faq_section = true" variant="solid" color="white" label="Edit Section" />
+                  <UButton @click="delete_faq_section = true" variant="solid" color="white" label="Delete Section" />
                   <UButton v-if="faq?.length" @click="() => _edit_faq = true" variant="solid" color="white"
                     label="Edit FAQs" />
 
@@ -220,6 +238,15 @@ watch(_edit_faq, () => {
     <TemplateSettingsFaqSectionAdd v-model="_add_section" />
     <TemplateSettingsFaqSingleAdd v-model="_add_faq" />
     <TemplateSettingsFaqSectionEdit v-model="_edit_faq_section" :faq="current_faq_section" />
-    <TemplateSettingsFaqSingleEdit v-if="faq?.length" :faqs="faq" v-model:section_id="section_id" v-model="_edit_faq" />
+    <TemplateSettingsFaqSingleEdit v-if="faq?.length" :faqs="faq" v-model:section_id="(section_id as string)"
+      v-model="_edit_faq" />
+
+    <!--faq section delete-->
+    <!-- <ModalTitleButton v-model="delete_faq_section" :title="`Delete ${current_faq_section.name}`"
+      button-confirm-label="Delete" @send="deleteFaqSectionFunc" >
+      <p>Are you sure you want to delete </p>
+    </ModalTitleButton> -->
+    <DialogueCancelConfirm title="Delete" description="Are you sure you want to delete" :what="current_faq_section.name"
+      v-model="delete_faq_section" confirm-button-color="rose" @confirm="deleteFaqSectionFunc" />
   </UCard>
 </template>

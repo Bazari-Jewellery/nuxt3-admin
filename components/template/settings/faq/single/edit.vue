@@ -9,7 +9,7 @@ const props = defineProps({
   modelValue: Boolean,
   section_id: {
     type: String,
-
+    required: true
   },
   faqs: {
     type: Array<Ifaq>,
@@ -44,36 +44,47 @@ async function updateFaq() {
 
 
   if (deleted_faqs.value.length > 0) {
-    const del_ids = deleted_faqs.value?.map((x) => x.id).join(',')
-    await useLazyFetch('/api/settings/faq/single/delete', {
-      query: {
-        id: del_ids
-      }
-    })
+    // const del_ids = deleted_faqs.value?.map((x) => x.id).join(',')
+    // await useLazyFetch('/api/settings/faq/single/delete', {
+    //   query: {
+    //     id: del_ids
+    //   }
+    // })
+    await Promise.all(deleted_faqs.value.map((x) => useCybandyClient().customMethods.faq.delete(x.id as string)))
   }
 
-  await useLazyFetch(`${medusa_backend}/admin/faq/section/update`, {
-    headers: {
-      Authorization: `Bearer ${bazariToken}`
-    },
-    method: 'post',
-    body: {
-      faq: _state.value,
-      section_id: section_id.value
-    },
-    watch: false,
-    async onResponse({ response }) {
-      if (response.ok) {
-        // // console.log(response._data);
-        modal.value = false
-        toastNotification('FAQs added').default_toast()
-
+  await Promise.all(
+    _state.value.map((x) => {
+      if (x.id) {
+        return useCybandyClient().customMethods.faq.update(x.id as string, { question: x.question, answer: x.answer, faq_section_id: section_id.value as string })
       } else {
-        // // console.log(response);
-        useToastFailure()
+        return useCybandyClient().customMethods.faq.create({ question: x.question, answer: x.answer, faq_section_id: section_id.value as string })
       }
-    }
-  })
+    })
+  )
+
+  // await useLazyFetch(`${medusa_backend}/admin/faq/section/update`, {
+  //   headers: {
+  //     Authorization: `Bearer ${bazariToken}`
+  //   },
+  //   method: 'post',
+  //   body: {
+  //     faq: _state.value,
+  //     section_id: section_id.value
+  //   },
+  //   watch: false,
+  //   async onResponse({ response }) {
+  //     if (response.ok) {
+  //       // // console.log(response._data);
+  //       modal.value = false
+  //       toastNotification('FAQs added').default_toast()
+
+  //     } else {
+  //       // // console.log(response);
+  //       useToastFailure()
+  //     }
+  //   }
+  // })
 
 }
 

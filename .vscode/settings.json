@@ -9,5 +9,7 @@
     "vuedraggable",
     "vueuse",
     "weserv"
-  ]
+  ],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFoldingRangeProvider": "Nuxtr.nuxtr-vscode"
 }

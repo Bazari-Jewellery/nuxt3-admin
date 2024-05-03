@@ -1,5 +1,5 @@
 <script setup lang=ts>
-
+import type { IFAQPostParams } from '~/types';
 const props = defineProps({
   modelValue: Boolean,
 })
@@ -22,25 +22,38 @@ async function createFaq() {
   // Do something with data
   // // console.log(event.data);
 
-  await useLazyFetch('/api/settings/faq/single/create', {
-    method: 'post',
-    body: {
-      faq: _state.value,
-      section_id: section_id.value
-    },
-    watch: false,
-    async onResponse({ response }) {
-      if (response.ok) {
-        // // console.log(response._data);
-        modal.value = false
-        toastNotification('FAQs added').default_toast()
+  const data_ = await Promise.all([
+    _state.value.map((x) => useCybandyClient().customMethods.faq.create({ question: x.question, answer: x.answer, faq_section_id: section_id.value }))
+  ])
 
-      } else {
-        // // console.log(response);
-        useToastFailure()
-      }
-    }
-  })
+  if (data_) {
+    modal.value = false
+    // await useNuxtApp().$settings.faq.section.getFaqSection()
+
+    toastNotification('FAQ created').default_toast()
+  } else {
+    useToastFailure()
+  }
+
+  // await useLazyFetch('/api/settings/faq/single/create', {
+  //   method: 'post',
+  //   body: {
+  //     faq: _state.value,
+  //     section_id: section_id.value
+  //   },
+  //   watch: false,
+  //   async onResponse({ response }) {
+  //     if (response.ok) {
+  //       // // console.log(response._data);
+  //       modal.value = false
+  //       toastNotification('FAQs added').default_toast()
+
+  //     } else {
+  //       // // console.log(response);
+  //       useToastFailure()
+  //     }
+  //   }
+  // })
 
 }
 

@@ -60,6 +60,12 @@ export type IFAQ = {
   metadata: Dict
 }
 
+export type IFAQPostParams = {
+  question: string,
+  answer: string,
+  faq_section_id: string
+}
+
 export type AccountRequest = {
   id: string,
   created_at: string,

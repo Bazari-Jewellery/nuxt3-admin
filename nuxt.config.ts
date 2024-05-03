@@ -93,6 +93,9 @@ export default defineNuxtConfig({
     description: "Dashboard application"
   },
   ogImage: { enabled: false },
+  schemaOrg: {
+    enabled: false
+  },
   experimental: {
     inlineRouteRules: true
   },

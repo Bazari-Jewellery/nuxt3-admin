@@ -1,7 +1,7 @@
 import Medusa from "@medusajs/medusa-js"
 import type { Config } from "@medusajs/medusa-js"
 import type { Address } from "@medusajs/medusa/dist/models/address"
-import type { IFAQ, IFAQSECTION, SocialMedia, deletedData, faqSectionPostParams, listWithCount } from "~/types"
+import type { IFAQ, IFAQPostParams, IFAQSECTION, SocialMedia, deletedData, faqSectionPostParams, listWithCount } from "~/types"
 class cybandyCustom extends Medusa {
   config: Config
   constructor(conf: Config) {
@@ -42,7 +42,7 @@ class cybandyCustom extends Medusa {
       update: async (id: string, payload: faqSectionPostParams) => {
         return await this.cybandyFetch('/admin/faq_section', 'patch', payload, { id }) as IFAQSECTION
       },
-      delete: async (id: string, payload: faqSectionPostParams) => {
+      delete: async (id: string) => {
         return await this.cybandyFetch('/admin/faq_section', 'delete', null, { id }) as deletedData
       },
       create: async (payload: faqSectionPostParams) => {
@@ -57,13 +57,13 @@ class cybandyCustom extends Medusa {
       list: async (id = "", section_id = '') => {
         return await this.cybandyFetch('/admin/faq', 'get', null, { id, section_id }) as listWithCount & { faq: IFAQ[] }
       },
-      update: async (id: string, payload: faqSectionPostParams) => {
+      update: async (id: string, payload: IFAQPostParams) => {
         return await this.cybandyFetch('/admin/faq', 'patch', payload, { id }) as IFAQ
       },
-      delete: async (id: string, payload: faqSectionPostParams) => {
+      delete: async (id: string) => {
         return await this.cybandyFetch('/admin/faq', 'delete', null, { id }) as deletedData
       },
-      create: async (payload: faqSectionPostParams) => {
+      create: async (payload: IFAQPostParams) => {
         return await this.cybandyFetch('/admin/faq', 'post', payload) as IFAQ
       },
       retrieve: async (id: string) => {
