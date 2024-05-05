@@ -238,7 +238,7 @@ async function deleteFaqSectionFunc() {
     <TemplateSettingsFaqSectionAdd v-model="_add_section" />
     <TemplateSettingsFaqSingleAdd v-model="_add_faq" />
     <TemplateSettingsFaqSectionEdit v-model="_edit_faq_section" :faq="current_faq_section" />
-    <TemplateSettingsFaqSingleEdit v-if="faq?.length" :faqs="faq" v-model:section_id="(section_id as string)"
+    <TemplateSettingsFaqSingleEdit v-if="faq?.length" :faqs="faq" :section_id="(section_id as string)"
       v-model="_edit_faq" />
 
     <!--faq section delete-->
