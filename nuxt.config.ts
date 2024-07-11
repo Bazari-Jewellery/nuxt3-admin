@@ -19,7 +19,7 @@ export default defineNuxtConfig({
     // baseURL: '/orders',
     buildAssetsDir: '_cybandy',
     head: {
-      titleTemplate: "%s %separator %siteName",
+      titleTemplate: "%s %separator Bazari Wholesale",
       templateParams: {
         separator: "|",
       },
@@ -90,7 +90,8 @@ export default defineNuxtConfig({
   site: {
     indexable: false,
     name: 'Bazari Wholesale Dashboard',
-    description: "Dashboard application"
+    description: "Dashboard application",
+    defaultLocale: "en",
   },
   ogImage: { enabled: false },
   schemaOrg: {

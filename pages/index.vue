@@ -1,15 +1,15 @@
 <script setup lang=ts>
 useHead({
-  title:'Homepage'
+  title: 'Dashboard'
 })
 definePageMeta({
-  middleware:['home-redirect']
+  middleware: ['home-redirect']
 })
 
 </script>
 
 <template>
   <div>
-homepage
+    homepage
   </div>
 </template>
