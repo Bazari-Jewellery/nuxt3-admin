@@ -1,6 +1,32 @@
 import type { AdminGetCustomersParams } from "@medusajs/medusa"
 import type { Ref, ComputedRef, WritableComputedRef } from "vue"
 import type { AccountRequest, AccountRequestGetParams, AccountRequestPostParams, AccountRequestPatchParams } from "~/types"
+
+/**
+ * Custom $fetch
+ */
+export function useCybandyFetch() {
+  const userToken = useNuxtApp().$currentUser.token
+  const config = useRuntimeConfig()
+  const api = $fetch.create({
+    baseURL: config.public.medusaBackendUrl,
+    onRequest({ request, options, error }) {
+      if (userToken.value) {
+        const headers = options.headers ||= {}
+        if (Array.isArray(headers)) {
+          headers.push(['Authorization', `Bearer ${userToken.value}`])
+        } else if (headers instanceof Headers) {
+          headers.set('Authorization', `Bearer ${userToken.value}`)
+        } else {
+          headers['Authorization'] = `Bearer ${userToken.value}`
+        }
+      }
+    }
+  })
+
+  return { api }
+}
+
 /**
  * Get all customers
  * @param payload 
@@ -25,14 +51,7 @@ export async function useCustomerGetSingle(id: string) {
  * @param id 
  */
 export async function useCustomersAccountRequestGetSingle(id: string) {
-  const userToken = useNuxtApp().$currentUser.token
-  const config = useRuntimeConfig()
-  const data = await $fetch(`${config.public.medusaBackendUrl}/admin/account_request/retrieve`, {
-    query: { id: id },
-    headers: {
-      Authorization: `Bearer ${userToken.value}`,
-      "Content-Type": "application/json",
-    },
+  const data = await useCybandyFetch().api(`/admin/account_request/retrieve/${id}`, {
     method: 'get'
   })
   if (data) {
@@ -42,16 +61,9 @@ export async function useCustomersAccountRequestGetSingle(id: string) {
 
 
 export async function useCustomersAccountRequestList(query: Ref<AccountRequestGetParams> | ComputedRef<AccountRequestGetParams> | WritableComputedRef<AccountRequestGetParams>) {
-  const userToken = useNuxtApp().$currentUser.token
-  const config = useRuntimeConfig()
-  const data = await $fetch(`${config.public.medusaBackendUrl}/admin/account_request/list`, {
-    query: query,
-    headers: {
-      Authorization: `Bearer ${userToken.value}`,
-      "Content-Type": "application/json",
-    },
+  const data = await useCybandyFetch().api(`/admin/account_request`, {
+    query: query.value,
     method: 'get',
-    watch: [query]
   })
   if (data) {
     return data as { account_requests: AccountRequest[], count: number, limit: number, offset: number }
@@ -61,14 +73,8 @@ export async function useCustomersAccountRequestList(query: Ref<AccountRequestGe
 
 
 export async function useCustomersAccountRequestCreate(payload: AccountRequestPostParams) {
-  const userToken = useNuxtApp().$currentUser.token
-  const config = useRuntimeConfig()
-  const data = await $fetch(`${config.public.medusaBackendUrl}/admin/account_request/create`, {
+  const data = await useCybandyFetch().api(`/admin/account_request`, {
     body: payload,
-    headers: {
-      Authorization: `Bearer ${userToken.value}`,
-      "Content-Type": "application/json",
-    },
     method: 'post'
   })
   if (data) {
@@ -80,16 +86,10 @@ export async function useCustomersAccountRequestCreate(payload: AccountRequestPo
 
 
 export async function useCustomersAccountRequestUpdate(payload: AccountRequestPatchParams, id: string) {
-  const userToken = useNuxtApp().$currentUser.token
-  const config = useRuntimeConfig()
-  const data = await $fetch(`${config.public.medusaBackendUrl}/admin/account_request/update`, {
+  const data = await useCybandyFetch().api(`/admin/account_request`, {
     body: payload,
     query: {
       id: id
-    },
-    headers: {
-      Authorization: `Bearer ${userToken.value}`,
-      "Content-Type": "application/json",
     },
     method: 'patch'
   })
@@ -101,16 +101,10 @@ export async function useCustomersAccountRequestUpdate(payload: AccountRequestPa
 }
 
 export async function useCustomersAccountRequestConfirm(id: string) {
-  const config = useRuntimeConfig()
-  const userToken = useNuxtApp().$currentUser.token
-  const data = await $fetch(`${config.public.medusaBackendUrl}/admin/account_request/confirm`, {
+  const data = await useCybandyFetch().api(`/admin/account_request/confirm`, {
     method: 'get',
     query: {
       id: id
-    },
-    headers: {
-      Authorization: `Bearer ${userToken.value}`,
-      "Content-Type": "application/json",
     },
   })
 
@@ -121,34 +115,21 @@ export async function useCustomersAccountRequestConfirm(id: string) {
 
 
 export async function useCustomersAccountRequestDelete(id: string) {
-  const config = useRuntimeConfig()
-  const userToken = useNuxtApp().$currentUser.token
-  const { data } = await useLazyFetch(`${config.public.medusaBackendUrl}/admin/account_request/delete`, {
-    method: 'get',
+  const data = await useCybandyFetch().api(`/admin/account_request`, {
+    method: 'delete',
     query: {
       id: id
     },
-    headers: {
-      Authorization: `Bearer ${userToken.value}`,
-      "Content-Type": "application/json",
-    },
   })
 
-  if (data.value) {
-    return { data: data.value as { deleted: boolean, id: string } }
+  if (data) {
+    return { data: data as { deleted: boolean, id: string } }
   }
 }
 
 
 export async function useUsersResendInvite(invite_id: string) {
-  const userToken = useNuxtApp().$currentUser.token
-  const config = useRuntimeConfig()
-  const data = await $fetch(`${config.public.medusaBackendUrl}/admin/invites/${invite_id}/resend`, {
-
-    headers: {
-      Authorization: `Bearer ${userToken.value}`,
-      "Content-Type": "application/json",
-    },
+  const data = await useCybandyFetch().api(`/admin/invites/${invite_id}/resend`, {
     method: 'post'
   })
   if (data) {

@@ -2,11 +2,11 @@
 import type { AccountRequest, Dict } from '~/types';
 
 definePageMeta({
-    title: 'Account Requests' ,
-    layout: 'default'
+  title: 'Account Requests',
+  layout: 'default'
 });
 useHead({
-    title: useRoute().meta?.title as string
+  title: useRoute().meta?.title as string
 })
 const data = ref([] as AccountRequest[])
 // const temp_data = ref([] as AccountRequest[])
@@ -20,52 +20,64 @@ const offset = ref(1)
 const count = ref(0)
 const q = ref()
 
-const reqQuery = computed(()=>{
+const reqQuery = computed(() => {
   return {
     limit: limit.value,
-    offset: (offset.value -1) * limit.value
+    offset: (offset.value - 1) * limit.value
   }
 })
 
 
-const getAcc = asyncComputed(async()=>{
+// const getAcc = asyncComputed(async () => {
+//   const d = await useCustomersAccountRequestList(reqQuery)
+//   if (d) {
+//     data.value = d.account_requests
+//     count.value = d.count
+//   }
+// })
+
+async function getData() {
   const d = await useCustomersAccountRequestList(reqQuery)
-  if(d){
+  if (d) {
     data.value = d.account_requests
     count.value = d.count
   }
+}
+
+onMounted(async () => {
+  await getData()
+  // getAcc.value
+
+  // console.log(data.value);
+
 })
-getAcc.value
-// onMounted(async()=>{
-//   await getData()
-// })
 
 /**
  * Table Data
  */
 const columns = [
   {
-    key:'vat_id',
+    key: 'vat_id',
     label: 'VAT Number'
   },
   {
-    key:'company_name',
+    key: 'company_name',
     label: 'Company Name'
   },
   {
-    key:'first_name',
+    key: 'first_name',
     label: 'First Name'
   },
   {
-    key:'last_name',
+    key: 'last_name',
     label: 'Last Name'
   },
   {
-    key:'position',
+    key: 'position',
     label: 'Position'
   },
   {
-    key:'email',
+    key: 'email',
     label: 'Email'
   },
   {
@@ -78,12 +90,12 @@ const columns = [
 ]
 
 const selectedColumns = ref(columns)
-const columnsTable = computed(()=>columns.filter((col)=>selectedColumns.value.includes(col)))
+const columnsTable = computed(() => columns.filter((col) => selectedColumns.value.includes(col)))
 
-const number_of_rows = ref([10,20,30,40])
+const number_of_rows = ref([10, 20, 30, 40])
 
 // select row function
-function selectRow(row:any){
+function selectRow(row: any) {
   navigateTo(`/customers/account_requests/${row.id}`)
 }
 
@@ -99,82 +111,81 @@ const filteredRows = computed(() => {
   })
 })
 
-async function update(status:string, id:string, row:any){
+async function update(status: string, id: string, row: any) {
   const d = await useCustomersAccountRequestUpdate({
     status: status
   }, id)
 
-  if(d?.data){
-    getAcc.value
-    const msg = status =='review'? 'Account under review': `Account ${status}`
+  if (d?.data) {
+    await getData()
+    const msg = status == 'review' ? 'Account under review' : `Account ${status}`
     const title = row.vat_id ? row.vat_id : ''
-    useToastSuccess(title,msg)
+    useToastSuccess(title, msg)
   }
 }
 
-const items = (row:any) =>[
+const items = (row: any) => [
   [
     {
       label: 'View',
       icon: 'i-heroicons-arrow-up-right',
-      click: ()=>selectRow(row)
+      click: () => selectRow(row)
     }
   ],
   [
     {
-      label:'Requested',
+      label: 'Requested',
       icon: 'i-carbon-intent-request-create',
-      click: async()=>await update('requested', row.id, row)
+      click: async () => await update('requested', row.id, row)
     },
     {
-      label:'Review',
+      label: 'Review',
       icon: 'i-carbon-intent-request-create',
-      click: async() => async()=>await update('review', row.id, row)
+      click: async () => async () => await update('review', row.id, row)
     },
     {
-      label:'Confirmed',
+      label: 'Confirmed',
       icon: 'i-heroicons-check-circle',
-      click:async()=> async()=>await update('confirmed', row.id, row)
+      click: async () => async () => await update('confirmed', row.id, row)
     },
   ]
 ]
 </script>
 
 <template>
-  <UCard
-    :ui="{
-      divide:'',
-      header:{
-        base:'flex flex-col gap-3.5'
-      }
-    }">
+  <UCard :ui="{
+    divide: '',
+    header: {
+      base: 'flex flex-col gap-3.5'
+    }
+  }">
     <template #header>
       <div class="flex items-center justify-between">
-        <UButton variant="link" icon="i-heroicons-arrow-uturn-left" label="Back to customers" to="/customers"/>
-        <UButton variant="link" label="Add" icon="i-heroicons-plus" to="/customers/account_requests/create"/>
+        <UButton variant="link" icon="i-heroicons-arrow-uturn-left" label="Back to customers" to="/customers" />
+        <UButton variant="link" label="Add" icon="i-heroicons-plus" to="/customers/account_requests/create" />
       </div>
       <div class="flex items-end gap-5">
         <UInput v-model="q" name="q" placeholder="Search..." icon="i-heroicons-magnifying-glass-20-solid"
-            autocomplete="off" :ui="{ icon: { trailing: { pointer: '' } } }">
-            <template #trailing>
-              <UButton v-show="q !== undefined" color="gray" variant="link" icon="i-heroicons-x-mark-20-solid"
-                :padded="false" @click="q = undefined" />
-            </template>
-          </UInput>
+          autocomplete="off" :ui="{ icon: { trailing: { pointer: '' } } }">
+          <template #trailing>
+            <UButton v-show="q !== undefined" color="gray" variant="link" icon="i-heroicons-x-mark-20-solid"
+              :padded="false" @click="q = undefined" />
+          </template>
+        </UInput>
 
-          <UFormGroup label="# of rows">
-            <USelect v-model="limit" :options="number_of_rows" />
-          </UFormGroup>
+        <UFormGroup label="# of rows">
+          <USelect v-model="limit" :options="number_of_rows" />
+        </UFormGroup>
 
-          <USelectMenu class="min-w-[150px]" v-model="selectedColumns" :options="columns" multiple>
-            <UButton class="flex-grow" color="gray" variant="ghost" size="xs" icon="i-heroicons-view-columns">Columns</UButton>
-          </USelectMenu>
+        <USelectMenu class="min-w-[150px]" v-model="selectedColumns" :options="columns" multiple>
+          <UButton class="flex-grow" color="gray" variant="ghost" size="xs" icon="i-heroicons-view-columns">Columns
+          </UButton>
+        </USelectMenu>
 
       </div>
     </template>
-    <UTable 
-      :columns="columnsTable" :rows="filteredRows" @select="selectRow">
-    
+    <UTable :columns="columnsTable" :rows="filteredRows" @select="selectRow">
+
       <!-- <template #view-data="{row}">
         <UButton variant="link" color="gray" label="View" icon="i-heroicons-arrow-up-right" @click="()=>selectRow(row)"/>
       </template> -->
@@ -187,9 +198,9 @@ const items = (row:any) =>[
 
     </UTable>
     <template #footer>
-        <div class="flex justify-end px-3 py-3.5 mt-8">
-          <UPagination v-model="offset" :total="count" :active-button="{ variant: 'solid' }" />
-        </div>
-      </template>
+      <div class="flex justify-end px-3 py-3.5 mt-8">
+        <UPagination v-model="offset" :total="count" :active-button="{ variant: 'solid' }" />
+      </div>
+    </template>
   </UCard>
 </template>

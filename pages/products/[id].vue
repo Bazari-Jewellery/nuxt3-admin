@@ -24,20 +24,22 @@ const id = useRoute().params.id as string
 
 async function fetchProduct() {
 
-  return await useAsyncData(async () => {
-    isLoading.value = true
-    const payload = ref({
-      id: id,
-      expand: 'options,options.values,variants,categories,collection,type,tags,sales_channels,images,variants.prices,variants.options'
-    })
-
-    const { data, error } = await useProductsList(payload)
-    if (data.value) {
-      singleProd.value = data.value.products[0] as any
-    }
-    setTimeout(() => isLoading.value = false, 500)
-    return data.value?.products[0]
+  isLoading.value = true
+  const payload = ref({
+    id: id,
+    expand: 'options,options.values,variants,categories,collection,type,tags,sales_channels,images,variants.prices,variants.options'
   })
+
+  const { data } = await useProductsList(payload)
+  if (data?.value) {
+    singleProd.value = data?.value.products[0] as any
+  }
+  setTimeout(() => isLoading.value = false, 500)
+  return data?.value?.products[0]
+
+  // return await useAsyncData(async () => {
+
+  // })
 
 }
 
@@ -406,9 +408,9 @@ const optionsPresentation = computed(() => singleProd.value.options?.map((_opt) 
               </div>
 
               <GeneralListBetween :options="{
-      title: 'Details',
-      content: details?.map((x) => { return { label: x.label as string, value: x.value as string } })
-    }" />
+                title: 'Details',
+                content: details?.map((x) => { return { label: x.label as string, value: x.value as string } })
+              }" />
 
             </div>
 
@@ -472,7 +474,7 @@ const optionsPresentation = computed(() => singleProd.value.options?.map((_opt) 
                 <span class="text-base lg:text-lg highlight">Thumbnail</span>
                 <div class="flex items-center gap-4">
                   <UButton @click="() => isThumbnail = true" size="xs" variant="outline" color="black">{{
-      singleProd.thumbnail ? 'Edit' : 'Upload' }}</UButton>
+                    singleProd.thumbnail ? 'Edit' : 'Upload' }}</UButton>
                   <UButton v-if="singleProd.thumbnail" size="xs" icon="i-heroicons-trash" variant="outline"
                     color="black" />
                 </div>
