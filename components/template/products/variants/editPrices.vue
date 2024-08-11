@@ -1,7 +1,5 @@
 <script setup lang=ts>
 import type { ProductVariant } from "@medusajs/medusa"
-import type { PropType } from "vue";
-import { useRegionsList } from "~/composables/regions";
 import type { Dict } from "~/types";
 
 const props = defineProps({
@@ -110,7 +108,7 @@ interface tableType extends Dict {
 const tableData = ref([] as tableType[])
 const _tableData = computed(() => {
   const data = ref([] as tableType[])
-  variants.value?.map((_variants) => {
+  variants.value?.map((_variants: ProductVariant) => {
     const temp = {} as tableType
     temp['data'] = _variants
     temp['id'] = {} as Dict
@@ -155,7 +153,8 @@ function changeAllCol(col: string, amount: number) {
 
 
 async function update(variant_id: string, product_id: string, payload: object) {
-  await useLazyAsyncData(async () => await useCybandyClient().admin.products.updateVariant(product_id, variant_id, payload), { pick: ['product'] })
+  // await useLazyAsyncData(async () => await useCybandyClient().admin.products.updateVariant(product_id, variant_id, payload), { pick: ['product'] })
+  await useCybandyClient().admin.products.updateVariant(product_id, variant_id, payload)
 }
 
 const savePrices = ref(false)
@@ -164,7 +163,7 @@ async function updatePrices() {
   // // console.log('update', _tableData.value);
 
   try {
-    const final_data = ref([] as Dict[])
+    const final_data = ref([] as Promise<void>[])
     for (let i = 0; i < tableData.value.length; i++) {
       const data = tableData.value[i];
       const row = [] as Dict[]
@@ -190,9 +189,15 @@ async function updatePrices() {
         }
 
       }
-      await update(data.data.id, data.data.product_id, { prices: [...row] })
-      final_data.value.push([...row])
+
+      final_data.value.push(
+        update(data.data.id, data.data.product_id, { prices: [...row] })
+      )
+      // await update(data.data.id, data.data.product_id, { prices: [...row] })
+      // final_data.value.push([...row])
+      // const d = [update('','',{})]
     }
+    await Promise.all(final_data.value)
     useToastSuccess('', 'Prices updated')
     modal.value = false
   } catch (error: any) {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { AdminPostProductsProductVariantsReq, ProductStatus } from "@medusajs/medusa"
 import { defaultDocument } from "@vueuse/core";
-import VueEasyLightbox from 'vue-easy-lightbox'
+// import VueEasyLightbox from 'vue-easy-lightbox'
 import type { ProductShippingAttributes } from "~/types";
 
 definePageMeta({
@@ -409,7 +409,7 @@ const optionsPresentation = computed(() => singleProd.value.options?.map((_opt) 
 
               <GeneralListBetween :options="{
                 title: 'Details',
-                content: details?.map((x) => { return { label: x.label as string, value: x.value as string } })
+                content: details
               }" />
 
             </div>
