@@ -6,14 +6,6 @@ export default defineNuxtConfig({
     client: true,
 
   },
-  // devServer: {
-  //   host: 'admin.bazari.local',
-  //   port: 443,
-  //   https: {
-  //     cert: "./ssl/admin.bazari.local.pem",
-  //     key: "./ssl/admin.bazari.local-key.pem"
-  //   }
-  // },
   css: ['~/assets/css/main.css'],
   app: {
     // baseURL: '/orders',
@@ -44,7 +36,6 @@ export default defineNuxtConfig({
     '@nuxtjs/seo',
     'nuxt-bugsnag',
     '@pinia/nuxt',
-    // '@nuxtjs/html-validator',
   ],
   ui: {
     icons: ['ph', 'heroicons', 'carbon']
