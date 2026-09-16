@@ -95,12 +95,11 @@ async function createProduct(status: string | null = null) {
   if (!uploadStatus) {
     toastNotification('uploading images failed').error()
   }
-  product.value.categories = categories.value.map((x) => {
-    return {
-      id: x
-    }
-  })
-  product.value.type = { value: type.value.value }
+  if (categories.value.length > 0) {
+    product.value.categories = categories.value.map((x) => ({ id: x }))
+  }
+  
+  if (type.value && Object.values(type.value).length > 0) product.value.type = { value: type.value.value }
 
   progressValue.value = 80
   const { product: _product } = await useCybandyClient().admin.products.create(product.value)

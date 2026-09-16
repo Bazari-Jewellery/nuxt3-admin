@@ -6,14 +6,14 @@ export default defineNuxtConfig({
     client: true,
 
   },
-  devServer: {
-    host: 'admin.bazari.local',
-    port: 443,
-    https: {
-      cert: "./ssl/admin.bazari.local.pem",
-      key: "./ssl/admin.bazari.local-key.pem"
-    }
-  },
+  // devServer: {
+  //   host: 'admin.bazari.local',
+  //   port: 443,
+  //   https: {
+  //     cert: "./ssl/admin.bazari.local.pem",
+  //     key: "./ssl/admin.bazari.local-key.pem"
+  //   }
+  // },
   css: ['~/assets/css/main.css'],
   app: {
     // baseURL: '/orders',
