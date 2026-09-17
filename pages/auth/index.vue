@@ -16,34 +16,10 @@ const state = reactive({
 // const cookie = useCookie('X-Bazari-Token')
 // const trial_cookie = ref([] as String[])
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  // Do something with data
-  // await $fetch('/api/auth/login',{
-  //   key:'login',
-  //   query:{
-  //     email: state.email,
-  //     password: state.password
-  //   },
-  //   watch:false,
-  //   onResponse({response}){
-  //     if(response.ok){
-  //       // useNuxtApp().$user.data.value = response._data
-  //       useToastSuccess('Logged In', 'Redirecting you ...')
-  //       // isCustomerLoggedIn().value = true
-  //       // trial_cookie.value = response.headers.getSetCookie()
-  //       navigateTo('/orders')
-  //     }else{
-  //       useToastFailure()
-  //     }
-  //   }
-  // })
   const res = await useLogin(event.data.email, event.data.password)
 
 }
 
-watchEffect(() => {
-  // // console.log(trial_cookie.value);
-
-})
 
 definePageMeta({
   title: 'Authentication',
@@ -75,27 +51,34 @@ const togglePassword = () => {
 
       <h1 class="text-xl sm:text-2xl font-semibold">Login</h1>
       <div class="mx-auto min-w-[320px] sm:min-w-[450px]">
-        <UForm :schema="schema" :state="state" class="space-y-4 w-full" @submit="onSubmit">
-          <UFormGroup label="Email" name="email">
-            <UInput v-model="state.email" placeholder="test@bazari.com" autocomplete="username" icon="i-ph-at" />
-          </UFormGroup>
+        <UCard class="bg-neutral-100 dark:bg-neutral-900">
+          <UForm :schema="schema" :state="state" class="space-y-6 w-full" @submit="onSubmit">
+            <UFormGroup label="Email" name="email">
+              <UInput v-model="state.email" placeholder="test@bazari.com" autocomplete="username" icon="i-ph-at" />
+            </UFormGroup>
 
-          <UFormGroup label="Password" name="password">
-            <UInput v-model="state.password" :type="passwordType" icon="i-ph-lock" autocomplete="current-password"
-              :ui="{ icon: { trailing: { pointer: '' } } }">
-              <template #trailing>
-                <span class="cursor-pointer" @click="togglePassword">
-                  <UIcon v-if="passwordType == 'password'" name="i-ph-eye" />
-                  <UIcon v-else name="i-ph-eye-slash" />
-                </span>
-              </template>
-            </UInput>
-          </UFormGroup>
+            <UFormGroup label="Password" name="password">
+              <UInput v-model="state.password" :type="passwordType" icon="i-ph-lock" autocomplete="current-password"
+                :ui="{ icon: { trailing: { pointer: '' } } }">
+                <template #trailing>
+                  <span class="cursor-pointer" @click="togglePassword">
+                    <UIcon v-if="passwordType == 'password'" name="i-ph-eye" />
+                    <UIcon v-else name="i-ph-eye-slash" />
+                  </span>
+                </template>
+              </UInput>
+            </UFormGroup>
 
-          <UButton type="submit">
-            Submit
-          </UButton>
-        </UForm>
+            <UButton type="submit" color="black" variant="solid" block>
+              Login
+            </UButton>
+            <div class="flex justify-center items-center">
+              <ULink to="/auth/password-reset" class="text-sm text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200">
+                Forgot Password?
+              </ULink>
+            </div>
+          </UForm>
+        </UCard>
       </div>
     </div>
   </div>
