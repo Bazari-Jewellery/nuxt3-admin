@@ -1,0 +1,72 @@
+name: Deploy Nuxt to Vercel
+
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      UNDER_CONSTRUCTION: ${{ vars.UNDER_CONSTRUCTION }}
+      MEDUSA_URL: ${{ vars.MEDUSA_URL }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # Setup pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      # Setup Node
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
+
+      # Install dependencies
+      - name: Install dependencies
+        run: pnpm pnpm install --frozen-lockfile
+    
+      - name: Build Nuxt app
+        run: pnpm build
+
+      - name: Validate required deployment secrets
+        shell: bash
+        run: |
+          required=(
+            VERCEL_TOKEN
+            VERCEL_ORG_ID
+            VERCEL_PROJECT_ID
+            MEDUSA_URL
+            UNDER_CONSTRUCTION
+          )
+
+          missing=0
+          for name in "${required[@]}"; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Missing required secret: $name"
+              missing=1
+            fi
+          done
+
+          if [ "$missing" -eq 1 ]; then
+            exit 1
+          fi
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      # Deploy
+
+      - name: Deploy to Vercel (Production)
+        run: pnpm dlx vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
