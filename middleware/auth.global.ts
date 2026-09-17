@@ -1,25 +1,5 @@
-import Medusa from "@medusajs/medusa-js"
-export default defineNuxtRouteMiddleware(async (to, from) => {
-  // const authStore = useAuthStore()
-  // const { isLoggedIn, user } = storeToRefs(authStore)
-  // if (to.path == '/invite') return
-  // try {
-  //   (async () => {
-  //     // const user = await useNuxtApp().$currentUser.getUser();
-  //     await authStore.getUser()
-  //     if (isLoggedIn.value == false) {
-  //       return navigateTo('/auth')
-  //     } else {
-  //       if (to.path == '/auth') {
-  //         return navigateTo('/orders')
-  //       }
-  //     }
-  //     return;
-  //   });
-  // } catch (error) {
-  //   return navigateTo("/auth");
-  // }
 
+export default defineNuxtRouteMiddleware(async (to, from) => {
 
   if (to.path == '/invite') return
 
