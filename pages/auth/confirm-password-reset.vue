@@ -1,4 +1,7 @@
 <script setup lang="ts">
+definePageMeta({
+    layout: 'canvas'
+});
 
 useHead({
     title: 'Confirm Password Reset'
