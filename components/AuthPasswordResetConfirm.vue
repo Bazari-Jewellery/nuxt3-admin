@@ -45,7 +45,7 @@ const email = ref(props.email)
 </script>
 
 <template>
-    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+    <UForm :schema="schema" :state="state" class="space-y-6" @submit="onSubmit">
         <UFormGroup label="Email" name="email">
             <UInput v-model="email" disabled icon="i-ph-at" />
         </UFormGroup>
@@ -55,5 +55,11 @@ const email = ref(props.email)
         <FormsPasswordInput v-model="state.confirmPassword" name="confirmPassword" label="Confirm Password" />
 
         <UButton type="submit" variant="solid" block> Confirm Password Reset </UButton>
+        <div class="flex justify-center items-center">
+            <ULink to="/auth"
+                class="text-sm text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200">
+                Go to Login
+            </ULink>
+        </div>
     </UForm>
 </template>

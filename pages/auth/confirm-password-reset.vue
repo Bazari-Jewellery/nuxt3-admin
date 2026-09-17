@@ -32,11 +32,20 @@ async function onSubmit(pwd:string){
 </script>
 
 <template>
-    <UContainer>
-        <div class="py-8 min-w-[300px] sm:min-w-[450px] grid justify-center">
-            <h2 class="font-LibreBaskerville text-center text-2xl sm:text-3xl py-8">Confirm Password Reset</h2>
-
-            <AuthPasswordResetConfirm :email="(query.email as string)" @send="onSubmit" />
+    <div class="w-full h-screen flex flex-col items-center justify-center gap-14">
+        <div class="flex justify-center">
+            <LogoSvg />
         </div>
-    </UContainer>
+
+        <div class=" flex flex-col items-center justify-center space-y-5">
+
+            <h1 class="text-xl sm:text-2xl font-semibold">Confirm Password Reset</h1>
+            <div class="mx-auto min-w-[320px] sm:min-w-[450px]">
+                <UCard class="bg-neutral-100 dark:bg-neutral-900">
+
+                   <AuthPasswordResetConfirm :email="(query.email as string)" @send="onSubmit" />
+                </UCard>
+            </div>
+        </div>
+    </div>
 </template>
